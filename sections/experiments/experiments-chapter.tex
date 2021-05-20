@@ -154,7 +154,7 @@ Since we utilize additional information in the form of context and side-informat
 Instead, we focus on datasets that include side-information and contextual information, and perform a grid-search of hyperparameters to find the optimal settings for each method to ensure a fair comparison.
 
 \subsection{Performance Comparison (RQ1)}
-For context-aware comparisons the leave-one-out method presented in \cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a score is predicted based on the context that this interaction took place in.
+For context-aware comparisons the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a score is predicted based on the context that this interaction took place in.
 In the experiments, CSGCN is compared against the following methods for the first research question regarding context-specific recommendations:
 \begin{itemize}
     \item Factorization Machine (FM)\cite{fmrendle}
@@ -257,7 +257,7 @@ However, this may prove problematic, since an item may score highly in a single 
 Instead, we propose to take an average score across all contexts.
 With this, the item that is only interacted with in exactly one context, has its score lowered by a factor of the amount of contexts observed.
 \\\\
-The results for the non-context specific recommendation task can be seen in \cref{tab:aggregatedresults}.
+The results for the non-context specific recommendation task can be seen in \Cref{tab:aggregatedresults}.
 Generally, we see that both CSGCN methods are among the best performers across all metrics on the datasets, with CSGCN-ADJ outperforming CSGCN-IS on all metrics.
 The main exception is on the Frappe dataset, where BPR and KGAT perform significantly better.
 We suspect that this is due to the density and small size of the dataset.
@@ -276,14 +276,14 @@ All of these results are based on using the mean aggregator, but for the sake of
 	\label{fig:aggregation_effect}
 \end{figure}
 
-In \cref{fig:aggregation_effect} we see the graph over how the choice of aggregation affects the CSGCN-IS model.
+In \Cref{fig:aggregation_effect} we see the graph over how the choice of aggregation affects the CSGCN-IS model.
 What we see is that taking the mean provides the best results, followed by the median.
 In the bottom we have the simple solution of simply taking the lowest or highest score across the contexts.\\
 This supports our previous assumption that while a single item might score high or low in one context, it does not necessarily mean that it is a good recommendation overall, which is better captured through the mean and median aggregations.\\
 While the results are only shown for NDCG@20 for this dataset, they have proven consistent across all the metrics.
 
 
-% For the YelpNC dataset in \cref{tab:yelpnc-aggregated}, we see that CSGCN outperfoms the other methods in every metric, where the second best performing method on all metrics is the LightGCN method.
+% For the YelpNC dataset in \Cref{tab:yelpnc-aggregated}, we see that CSGCN outperfoms the other methods in every metric, where the second best performing method on all metrics is the LightGCN method.
 % We see that CSGCN only gains small improvements ranging between 2-6\%, compared to the second best performing method.
 \todo[color=red]{Comparison of various aggregation methods}
 

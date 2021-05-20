@@ -37,61 +37,97 @@ These new nodes are illustrated as dark nodes in the figure.
 \\
 There are a number of graph convolution layers that update the representation of each central node with information about their neighbor nodes.
 The representation at layer $l+1$ is calculated by taking the normalized sum of the representations of neighbor nodes at layer $l$. 
-As mentioned, neighbor nodes for user are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes
-For each additional layer, information is passed from nodes that are further away from a central node. 
+As mentioned, neighbor nodes for user are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes, which can be seen on \Cref{fig:quadripartite-graph}.
+For each additional layer, information is passed from nodes that are further away from a central node, illustrated on \Cref{fig:aggregation-for-layers}
 After $n$ layers the representations at each of the layers are aggregated into a final representation.
-From these final representations, a score prediction can be calculated between an item, user and a context which is further described in \cref{subsec:csgcn_is_score_prediction}.
-
-\subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
-The main part of the model is the GCN layer where the user and item embeddings are updated by aggregating information about their neighbors for these interactions.
-The inputs to layers are the users and items as well as side-information about users and items, in the form of an adjacency matrix.
-
-% \begin{equation}
-%     e_{i}^{(0)}= e_{i}^{(0)} + \frac{1}{\sqrt{|\mathcal{N}_{is}}|}\sum_{{is}\in \mathcal{N}_{is}}e_{is}
-% \end{equation}\label{eq:item_side_info}
-% \autoref{eq:item_side_info} shows how the initial item embeddings are updated with item side-information. $e_{i}^{(0)}$ is the initial 0th layer item embedding, ${N}_{is}$ are the side-information neighbor nodes for item $i$ and $e_{is}$ is the embedding for side-information node $is$. \autoref{eq:user_side_info} defines the 0th layer embedding for users, including user side-information, where ${N}_{us}$ are the neighboring nodes for user $u$, and $e_{us}$ is the embedding for side-information node $us$
-% \begin{equation}\label{eq:user_side_info}
-%     e_{u}^{(0)}= e_{u}^{(0)} + \frac{1}{\sqrt{|\mathcal{N}_{us}}|}\sum_{{us}\in \mathcal{N}_{us}}e_{us}
-% \end{equation}
-% \autoref{eq:user_side_info} shows the initial user embedding where it is updated with the user side-information
+From these final representations, a score prediction can be calculated between an item, user and a context which is further described in \Cref{subsec:csgcn_is_score_prediction}.
 
 
-\begin{equation}\label{eq:csgcn_is_gc_layer_item}
-    e_{i}^{(l+1)}=\sum_{in\in \mathcal{N}_{i}}\frac{1}{\sqrt{|\mathcal{N}_{i}|} \sqrt{|\mathcal{N}_{in}|}}e_{in}^{(l)}
-\end{equation}
 
-\begin{equation}\label{eq:csgcn_is_gc_layer_user}
-     e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{\sqrt{|\mathcal{N}_{un}|} \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
-\end{equation}
-In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the GCN layer operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighboring nodes for user $u$, including both items and user side-information, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$. 
-A neighbor-node is denoted as $un$ or $in$ for respectively user neighbors and item neighbors, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
-\\\\
-The convolution layer updates user and item nodes' representations by summing the normalized representations of the neighbor nodes.
-Only the item and user nodes are updated as shown, as these embeddings are the only ones used beyond the convolution layer in the prediction function, further described in \Cref{subsec:csgcn_is_score_prediction}.
-The side-info nodes' representations are also updated in the layer but are not being output from the layer since their representations are integrated into the item and user node representations.
-% \todo{move laplacian stuff up before concrete}
-% We use the laplacian symmetric normalization of the adjacency matrix \cite{chung1997spectral} to help scale the embeddings with convolution operations.
-% This normalization is defined in \cref{eq:laplaciannormalization}, where $x$ and $y$ are nodes in the graph, and we let $|\mathcal{N}_{x}|$ denote the degree of node $x$.
-% \begin{figure}[!hbt]
-% \begin{equation}
-%     L(x,y) = \left\{\begin{matrix}
-% 1 & \textrm{if $u = v$,} \\ 
-% \frac{1}{\sqrt{|\mathcal{N}_{x}||\mathcal{N}_{y}|}} & \textrm{if $x$ and $y$ are adjacent,}\\ 
-% 0 & \textrm{otherwise.}
-% \end{matrix}\right.
-% \label{eq:laplaciannormalization}
-% \end{equation}
-% \caption{Symmetric laplacian normalization}
-% \end{figure}
+\begin{figure}[h]
+\centering
 
-\subsection{Score prediction}\label{subsec:csgcn_is_score_prediction}
-To include context in the score prediction, we propose to use context as a learnable embedding, $e_{ic}$, that is added to items to signify that they are popular in a given context.
-After addition of the context embedding the cosine similarity score of the user and item is calculated in regards to the context to produce a score: 
-$$\hat{y}_{uic} = e_u^T(e_i+e_{ic})$$
-The use of $e_{ic}$ is heavily inspired by Ricci and Baltrunas' item splitting approach \cite{baltrunasitemsplitting}, where a context weight for each item in each context is calculated.
-This means that for the set of items $I$ there is $|I| \times |C|$ embeddings, where $C$ is the set of possible contexts.
-This context embedding is updated through sampling in the score prediction function using negative sampling, further described in \cref{subsec:csgcn_is_training}.
 
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.5pt,y=0.5pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Flowchart: Connector [id:dp27406580802635316] 
+\draw   (290.75,139) .. controls (290.75,126.85) and (300.6,117) .. (312.75,117) .. controls (324.9,117) and (334.75,126.85) .. (334.75,139) .. controls (334.75,151.15) and (324.9,161) .. (312.75,161) .. controls (300.6,161) and (290.75,151.15) .. (290.75,139) -- cycle ;
+%Flowchart: Connector [id:dp597318920352127] 
+\draw   (289,81) .. controls (289,68.85) and (298.85,59) .. (311,59) .. controls (323.15,59) and (333,68.85) .. (333,81) .. controls (333,93.15) and (323.15,103) .. (311,103) .. controls (298.85,103) and (289,93.15) .. (289,81) -- cycle ;
+%Flowchart: Connector [id:dp057928841134587516] 
+\draw   (350,143) .. controls (350,130.85) and (359.85,121) .. (372,121) .. controls (384.15,121) and (394,130.85) .. (394,143) .. controls (394,155.15) and (384.15,165) .. (372,165) .. controls (359.85,165) and (350,155.15) .. (350,143) -- cycle ;
+%Flowchart: Connector [id:dp11200641374570286] 
+\draw   (289,197) .. controls (289,184.85) and (298.85,175) .. (311,175) .. controls (323.15,175) and (333,184.85) .. (333,197) .. controls (333,209.15) and (323.15,219) .. (311,219) .. controls (298.85,219) and (289,209.15) .. (289,197) -- cycle ;
+%Flowchart: Connector [id:dp5153973147602738] 
+\draw   (231,137) .. controls (231,124.85) and (240.85,115) .. (253,115) .. controls (265.15,115) and (275,124.85) .. (275,137) .. controls (275,149.15) and (265.15,159) .. (253,159) .. controls (240.85,159) and (231,149.15) .. (231,137) -- cycle ;
+%Flowchart: Connector [id:dp6230129861696904] 
+\draw   (197,59) .. controls (197,46.85) and (206.85,37) .. (219,37) .. controls (231.15,37) and (241,46.85) .. (241,59) .. controls (241,71.15) and (231.15,81) .. (219,81) .. controls (206.85,81) and (197,71.15) .. (197,59) -- cycle ;
+%Flowchart: Connector [id:dp11627558541491778] 
+\draw   (181,213) .. controls (181,200.85) and (190.85,191) .. (203,191) .. controls (215.15,191) and (225,200.85) .. (225,213) .. controls (225,225.15) and (215.15,235) .. (203,235) .. controls (190.85,235) and (181,225.15) .. (181,213) -- cycle ;
+%Flowchart: Connector [id:dp012014051199046416] 
+\draw   (374,61) .. controls (374,48.85) and (383.85,39) .. (396,39) .. controls (408.15,39) and (418,48.85) .. (418,61) .. controls (418,73.15) and (408.15,83) .. (396,83) .. controls (383.85,83) and (374,73.15) .. (374,61) -- cycle ;
+%Flowchart: Connector [id:dp025105219979997373] 
+\draw   (375,220) .. controls (375,207.85) and (384.85,198) .. (397,198) .. controls (409.15,198) and (419,207.85) .. (419,220) .. controls (419,232.15) and (409.15,242) .. (397,242) .. controls (384.85,242) and (375,232.15) .. (375,220) -- cycle ;
+%Flowchart: Connector [id:dp28306483017107376] 
+\draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (282,139) .. controls (282,121.88) and (295.77,108) .. (312.75,108) .. controls (329.73,108) and (343.5,121.88) .. (343.5,139) .. controls (343.5,156.12) and (329.73,170) .. (312.75,170) .. controls (295.77,170) and (282,156.12) .. (282,139) -- cycle ;
+%Flowchart: Connector [id:dp22791557868185153] 
+\draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (223.75,139) .. controls (223.75,90) and (263.15,50.28) .. (311.75,50.28) .. controls (360.35,50.28) and (399.75,90) .. (399.75,139) .. controls (399.75,188) and (360.35,227.72) .. (311.75,227.72) .. controls (263.15,227.72) and (223.75,188) .. (223.75,139) -- cycle ;
+%Flowchart: Connector [id:dp946514520124221] 
+\draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (147.5,142.5) .. controls (147.5,64.9) and (219.13,2) .. (307.5,2) .. controls (395.87,2) and (467.5,64.9) .. (467.5,142.5) .. controls (467.5,220.1) and (395.87,283) .. (307.5,283) .. controls (219.13,283) and (147.5,220.1) .. (147.5,142.5) -- cycle ;
+%Straight Lines [id:da566741285857424] 
+\draw    (235.5,72) -- (288.5,74) ;
+%Straight Lines [id:da31194843739323463] 
+\draw    (228.5,78) -- (238.5,121) ;
+%Straight Lines [id:da32353885946741523] 
+\draw    (240.5,156) -- (212.5,193) ;
+%Straight Lines [id:da5053069271391968] 
+\draw    (311,103) -- (312.75,117) ;
+%Straight Lines [id:da723620476456976] 
+\draw    (290.75,139) -- (275,137) ;
+%Straight Lines [id:da14267027138513144] 
+\draw    (312.75,161) -- (311,175) ;
+%Straight Lines [id:da6090096595211273] 
+\draw    (334.75,139) -- (350,143) ;
+%Straight Lines [id:da11771537978983193] 
+\draw    (396,83) -- (372,121) ;
+%Straight Lines [id:da45445879447578685] 
+\draw    (332.5,206) -- (375,220) ;
+
+% Text Node
+\draw (305,129) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
+% Text Node
+\draw (298,70) node [anchor=north west][inner sep=0.75pt]   [align=left] {US};
+% Text Node
+\draw (364,132) node [anchor=north west][inner sep=0.75pt]   [align=left] {I};
+% Text Node
+\draw (305,186) node [anchor=north west][inner sep=0.75pt]   [align=left] {I};
+% Text Node
+\draw (240,126) node [anchor=north west][inner sep=0.75pt]   [align=left] {US};
+% Text Node
+\draw (211,48) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
+% Text Node
+\draw (195,202) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
+% Text Node
+\draw (387,50) node [anchor=north west][inner sep=0.75pt]   [align=left] {IS};
+% Text Node
+\draw (389,209) node [anchor=north west][inner sep=0.75pt]   [align=left] {IS};
+% Text Node
+\draw (332,97) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=0};
+% Text Node
+\draw (396,94) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=1};
+% Text Node
+\draw (463,89) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=2};
+
+
+\end{tikzpicture}
+
+\caption{Information aggregated through layers}
+\label{fig:aggregation-for-layers}
+\end{figure}
 
 \subsection{Adjacency matrix}\label{subsec:csgcn_is_adj_mat}
 As described in \Cref{sec:problemdef}, GCNs used for CF recommendation typically employ a bipartite graph structure to represent the user-item interactions.
@@ -170,7 +206,7 @@ $$E = E_{US} \cup E_{U} \cup E_{I} \cup E_{IS} $$
 \end{figure}
 This quadripartite graph can be presented as an adjacency matrix $A \in \mathbb{R}^{|U|\times|I|\times|US| \times |IS|}$.
 An entry is 1 if the user has interacted with the item, if the item has the given side-information or if a user has the given side-information, and 0 if none of these are true.
-$A$ consists of the rating matrix $R$ and its transpose $R^T$, as well as sub-matrices containing $US$, $IS$, and their transposes, as seen on \cref{csgcn_is_adj_mat}.
+$A$ consists of the rating matrix $R$ and its transpose $R^T$, as well as sub-matrices containing $US$, $IS$, and their transposes, as seen on \Cref{csgcn_is_adj_mat}.
 \todo{Kunne det være viskulle besakrive hvorfor tingene er der hvor de er i adj mat?}
 \begin{equation}\label{csgcn_is_adj_mat}
     \begin{bmatrix}
@@ -196,6 +232,56 @@ The final embedding matrix after $l$ layers is defined as:
 \end{equation}
 
 
+\subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
+The main part of the model is the GCN layer where the user and item embeddings are updated by aggregating information about their neighbors for these interactions.
+The inputs to layers are the users and items as well as side-information about users and items, in the form of an adjacency matrix.
+
+% \begin{equation}
+%     e_{i}^{(0)}= e_{i}^{(0)} + \frac{1}{\sqrt{|\mathcal{N}_{is}}|}\sum_{{is}\in \mathcal{N}_{is}}e_{is}
+% \end{equation}\label{eq:item_side_info}
+% \autoref{eq:item_side_info} shows how the initial item embeddings are updated with item side-information. $e_{i}^{(0)}$ is the initial 0th layer item embedding, ${N}_{is}$ are the side-information neighbor nodes for item $i$ and $e_{is}$ is the embedding for side-information node $is$. \autoref{eq:user_side_info} defines the 0th layer embedding for users, including user side-information, where ${N}_{us}$ are the neighboring nodes for user $u$, and $e_{us}$ is the embedding for side-information node $us$
+% \begin{equation}\label{eq:user_side_info}
+%     e_{u}^{(0)}= e_{u}^{(0)} + \frac{1}{\sqrt{|\mathcal{N}_{us}}|}\sum_{{us}\in \mathcal{N}_{us}}e_{us}
+% \end{equation}
+% \autoref{eq:user_side_info} shows the initial user embedding where it is updated with the user side-information
+
+
+\begin{equation}\label{eq:csgcn_is_gc_layer_item}
+    e_{i}^{(l+1)}=\sum_{in\in \mathcal{N}_{i}}\frac{1}{\sqrt{|\mathcal{N}_{i}|} \sqrt{|\mathcal{N}_{in}|}}e_{in}^{(l)}
+\end{equation}
+
+\begin{equation}\label{eq:csgcn_is_gc_layer_user}
+     e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{\sqrt{|\mathcal{N}_{un}|} \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
+\end{equation}
+In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the GCN layer operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighboring nodes for user $u$, including both items and user side-information, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$. 
+A neighbor-node is denoted as $un$ or $in$ for respectively user neighbors and item neighbors, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
+\\\\
+The convolution layer updates user and item nodes' representations by summing the normalized representations of the neighbor nodes.
+Only the item and user nodes are updated as shown, as these embeddings are the only ones used beyond the convolution layer in the prediction function, further described in \Cref{subsec:csgcn_is_score_prediction}.
+The side-info nodes' representations are also updated in the layer but are not being output from the layer since their representations are integrated into the item and user node representations.
+% \todo{move laplacian stuff up before concrete}
+% We use the laplacian symmetric normalization of the adjacency matrix \cite{chung1997spectral} to help scale the embeddings with convolution operations.
+% This normalization is defined in \Cref{eq:laplaciannormalization}, where $x$ and $y$ are nodes in the graph, and we let $|\mathcal{N}_{x}|$ denote the degree of node $x$.
+% \begin{figure}[!hbt]
+% \begin{equation}
+%     L(x,y) = \left\{\begin{matrix}
+% 1 & \textrm{if $u = v$,} \\ 
+% \frac{1}{\sqrt{|\mathcal{N}_{x}||\mathcal{N}_{y}|}} & \textrm{if $x$ and $y$ are adjacent,}\\ 
+% 0 & \textrm{otherwise.}
+% \end{matrix}\right.
+% \label{eq:laplaciannormalization}
+% \end{equation}
+% \caption{Symmetric laplacian normalization}
+% \end{figure}
+
+\subsection{Score prediction}\label{subsec:csgcn_is_score_prediction}
+To include context in the score prediction, we propose to use context as a learnable embedding, $e_{ic}$, that is added to items to signify that they are popular in a given context.
+After addition of the context embedding the cosine similarity score of the user and item is calculated in regards to the context to produce a score: 
+$$\hat{y}_{uic} = e_u^T(e_i+e_{ic})$$
+The use of $e_{ic}$ is heavily inspired by Ricci and Baltrunas' item splitting approach \cite{baltrunasitemsplitting}, where a context weight for each item in each context is calculated.
+This means that for the set of items $I$ there is $|I| \times |C|$ embeddings, where $C$ is the set of possible contexts.
+This context embedding is updated through sampling in the score prediction function using negative sampling, further described in \Cref{subsec:csgcn_is_training}.
+
 \subsection{Training}\label{subsec:csgcn_is_training}
 For the top-$k$ recommendation task, we utilize negative sampling and Bayesian Pairwise Ranking (BPR) loss \cite{BPR} as the training function, shown in \autoref{eq:loss-func}.
 \begin{equation}\label{eq:loss-func}
@@ -209,7 +295,7 @@ The positive interaction is an observed interaction between a user and an item, 
 We then randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\
 While using sampling for calculating BPR is biased \cite{nonsampling}, it is usually necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data.
 \\\\
-The model parameters are updated by optimizing the BPR objective function in \cref{eq:loss-func}.
+The model parameters are updated by optimizing the BPR objective function in \Cref{eq:loss-func}.
 For a specific model parameter, this is done by calculating the gradient of the objective function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate. 
 In our implementation, the objective function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}.
 Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the cost function.
@@ -255,7 +341,7 @@ This means that with higher-order connectivity, items and users are updated with
 \todo{do model arfchitecture for csgcnadj}
 
 \subsection{Convolution layers}\label{subsec:csgcn_adj_conv_layer}
-For the graph convolution layer of CSGCN-ADJ, the context is incorporated into the aggregation of neighbors seen in \cref{eq:csgcn_adj_gc_layer_item,eq:csgcn_adj_gc_layer_user}
+For the graph convolution layer of CSGCN-ADJ, the context is incorporated into the aggregation of neighbors seen in \Cref{eq:csgcn_adj_gc_layer_item,eq:csgcn_adj_gc_layer_user}
 \begin{equation}\label{eq:csgcn_adj_gc_layer_item}
     e_{i}^{(l+1)}=\sum_{in\in \mathcal{N}_{i}}\frac{1}{\sqrt{|\mathcal{N}_{i}|} }e_{in}^{(l)}
 \end{equation}
@@ -281,7 +367,7 @@ In this predictor function, we calculate the pairwise interaction between each o
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
 The graph is similar to the one in \Cref{fig:quadripartite-graph}, but context nodes are inserted between the sets of item and user nodes, and edges connect the nodes that have interacted in the context.
 Additionally, we add the identity matrix $I$ to the last quadrant, such that the context embeddings are not updated through the convolution layers.
-The matrix is seen in \cref{csgcn_adj_adj_mat}.
+The matrix is seen in \Cref{csgcn_adj_adj_mat}.
 \begin{equation}\label{csgcn_adj_adj_mat}
     \begin{bmatrix}
     0 & R & US & 0 & UC\\
