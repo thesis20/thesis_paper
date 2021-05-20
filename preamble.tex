@@ -1,0 +1,82 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,twocolumn]{article}
+
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage[left=24mm, right=24mm,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage[table]{xcolor}
+
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+%\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+%\renewcommand\thesubsection{\roman{subsection}} % roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+%\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{mi102f21 $\bullet$ 2021} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{titling} % Customizing the title section
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+% Bibliography
+% http://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add the \citep{key} command which display a
+% reference as [author, year]
+\usepackage[backend=bibtex,
+    bibencoding=utf8
+]{biblatex}
+\addbibresource{bib/mybib}
+\usepackage{csquotes}
+\usepackage[nottoc]{tocbibind}
+\usepackage{amsmath}
+\usepackage{tikz} % Used to create bipartite graph
+\usepackage{pgfplots}
+\pgfplotsset{width=5.5cm,compat=1.8}
+\pgfplotsset{scaled y ticks=false}
+\usetikzlibrary{positioning,chains,fit,shapes,calc}
+\usepackage{amsmath}
+
+
+\definecolor{myblue}{RGB}{80,80,160}
+\definecolor{myred}{RGB}{160,80,80}
+
+\newcommand{\R}{\mathbb{R}}
+\usepackage{amsmath}
+\AfterEndEnvironment{figure}{\noindent\ignorespaces}
+\usepackage{multirow}
+
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{soul}% for underlines
+\usepackage{changepage,threeparttable} % for wide tables
+\usepackage{cleveref}
+\usepackage{todonotes}
+
+\usepackage{booktabs} % for borders and merged ranges

@@ -1,0 +1,97 @@
+\section{\\Results for methods and datasets}\label{app:tables}
+This appendix contains all the average results across 5 folds for the investigated methods and datasets.
+The best values are indicated with a bold number, the worst are indicated by being underlined.
+
+
+\begin{table}[!htp]\centering
+\caption{Frappe results.}\label{tab:frappetable}
+\scriptsize
+\begin{tabular}{lrrrrrr}\toprule
+&\textbf{Precision@10} &\textbf{Recall@10} &\textbf{MAP@10} &\textbf{NDCG} &\textbf{F1} \\\cmidrule{2-6}
+\textbf{Random} &\ul{0.0005} &\ul{0.0004} &\textbf{0.000095} &\textbf{0.354} &\ul{0.0004} \\\cmidrule{1-6}
+\textbf{LightGCN} &\textbf{0.056} &0.071 &0.000012 &\ul{0.086} &0.062 \\\cmidrule{1-6}
+\textbf{NGCF} &0.047 &0.075 &0.000029 &0.126 &0.058 \\\midrule
+\textbf{KGAT} &0.050 &\textbf{0.090} &\ul{0.000001} &0.174 &\textbf{0.064} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htp]\centering
+\caption{LDOS-CoMoDa results.}\label{tab:comodatable}
+\scriptsize
+\begin{tabular}{lrrrrrrrr}\toprule
+&\textbf{RMSE} &\textbf{MAE} &\textbf{Precision@10} &\textbf{Recall@10} &\textbf{MAP@10} &\textbf{NDCG} &\textbf{F1} \\\cmidrule{2-8}
+\textbf{SVD} &1.020 &0.826 &0.482 &0.856 &\textbf{0.021743} &0.502 &\textbf{0.616} \\\cmidrule{1-8}
+\textbf{SVD++} &1.020 &0.828 &0.480 &0.853 &0.020942 &0.487 &0.614 \\\cmidrule{1-8}
+\textbf{CAMF-C} &\textbf{0.669} &\textbf{0.475} &0.487 &0.834 &0.008216 &0.477 &0.615 \\\cmidrule{1-8}
+\textbf{CAMF-CI} &0.824 &0.625 &0.483 &0.823 &0.010292 &0.469 &0.609 \\\cmidrule{1-8}
+\textbf{IS-UserBased} &0.944 &0.629 &0.160 &\textbf{0.905} &0.011000 &0.503 &0.272 \\\cmidrule{1-8}
+\textbf{NMF} &1.173 &0.932 &0.438 &0.739 &0.012189 &0.531 &0.550 \\\cmidrule{1-8}
+\textbf{DeepWalk + kNN} &1.216 &0.887 &0.369 &0.896 &0.010796 &0.597 &0.523 \\\cmidrule{1-8}
+\textbf{Random} &\ul{1.763} &\ul{1.454} &0.305 &0.450 &0.012699 &0.484 &0.364 \\\cmidrule{1-8}
+\textbf{LightGCN} & & &\ul{0.082} &\ul{0.067} &0.003121 &\ul{0.096} &0.074 \\\cmidrule{1-1}\cmidrule{1-8}
+\textbf{NGCF} & & &\textbf{0.536} &0.411 &0.020518 &\textbf{0.667} &0.465 \\\midrule
+\textbf{KGAT} & & &0.123 &0.074 &\ul{0.000021} &0.160 &\ul{0.093} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htp]\centering
+\caption{Yahoo! results.}\label{tab:yahootable}
+\scriptsize
+\begin{tabular}{lrrrrrrrr}\toprule
+&\textbf{RMSE} &\textbf{MAE} &\textbf{Precision@10} &\textbf{Recall@10} &\textbf{MAP@10} &\textbf{NDCG} &\textbf{F1} \\\cmidrule{2-8}
+\textbf{SVD} &1.013 &0.732 &0.390 &0.894 &0.004594 &0.502 &0.543 \\\cmidrule{1-8}
+\textbf{SVD++} &\textbf{0.999} &\textbf{0.709} &0.388 &0.886 &0.006226 &0.507 &0.540 \\\cmidrule{1-8}
+\textbf{CAMF-C} &1.003 &0.736 &\textbf{0.393} &0.903 &0.000133 &0.492 &\textbf{0.548} \\\cmidrule{1-8}
+\textbf{CAMF-CI} &1.030 &0.751 &0.390 &0.892 &0.000068 &0.476 &0.543 \\\cmidrule{1-8}
+\textbf{IS-UserBased} &1.235 &0.794 &0.217 &\textbf{0.910} &\textbf{0.046000} &\textbf{0.558} &0.350 \\\cmidrule{1-8}
+\textbf{NMF} &1.089 &0.790 &0.377 &0.853 &0.000748 &0.473 &0.523 \\\cmidrule{1-8}
+\textbf{DeepWalk + kNN} &1.197 &0.818 &0.290 &0.877 &0.043900 &0.511 &0.436 \\\cmidrule{1-8}
+\textbf{Random} &\ul{1.996} &\ul{1.663} &0.227 &0.481 &0.000546 &0.451 &0.308 \\\cmidrule{1-8}
+\textbf{LightGCN} & & &0.148 &0.341 &\ul{0.000007} &\ul{0.297} &0.206 \\\cmidrule{1-1}\cmidrule{1-8}
+\textbf{NGCF} & & &0.141 &0.328 &0.000011 &0.316 &0.198 \\\midrule
+\textbf{KGAT} & & &\ul{0.139} &\ul{0.322} &0.000002 &0.438 &\ul{0.194} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htp]\centering
+\caption{MovieLens 100k results.}\label{tab:ml100ktable}
+\scriptsize
+\begin{tabular}{lrrrrrrrr}\toprule
+&\textbf{RMSE} &\textbf{MAE} &\textbf{Precision@10} &\textbf{Recall@10} &\textbf{MAP@10} &\textbf{NDCG} &\textbf{F1} \\\cmidrule{2-8}
+\textbf{SVD} &0.935 &\textbf{0.737} &0.719 &0.633 &0.016247 &0.508 &0.673 \\\cmidrule{1-8}
+\textbf{SVD++} &0.962 &0.757 &0.702 &0.606 &0.004709 &0.441 &0.651 \\\cmidrule{1-8}
+\textbf{CAMF-C} &\textbf{0.931} &0.738 &\textbf{0.726} &0.645 &0.002478 &0.375 &\textbf{0.683} \\\cmidrule{1-8}
+\textbf{CAMF-CI} &0.978 &0.773 &0.713 &0.628 &0.000706 &0.402 &0.668 \\\cmidrule{1-8}
+\textbf{IS-UserBased} &1.366 &1.041 &0.344 &\textbf{0.785} &0.012000 &0.527 &0.478 \\\cmidrule{1-8}
+\textbf{NMF} &0.962 &0.757 &0.702 &0.606 &0.004910 &0.443 &0.650 \\\cmidrule{1-8}
+\textbf{DeepWalk + kNN} &1.124 &0.872 &0.679 &0.659 &\textbf{0.027200} &0.518 &0.669 \\\cmidrule{1-8}
+\textbf{Random} &\ul{1.702} &\ul{1.391} &0.538 &0.415 &0.004435 &0.476 &0.469 \\\cmidrule{1-8}
+\textbf{LightGCN} & & &\ul{0.249} &\ul{0.166} &0.000079 &\ul{0.295} &\ul{0.199} \\\cmidrule{1-1}\cmidrule{1-8}
+\textbf{KGAT} & & &0.353 &0.232 &\ul{0.000044} &\textbf{0.650} &0.280 \\\midrule
+\textbf{NGCF} & & &0.339 &0.223 &0.000254 &0.420 &0.269 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htp]\centering
+\caption{MovieLens 1m results.}\label{tab:ml1mtable}
+\scriptsize
+\begin{tabular}{lrrrrrrrr}\toprule
+&\textbf{RMSE} &\textbf{MAE} &\textbf{Precision@10} &\textbf{Recall@10} &\textbf{MAP@10} &\textbf{NDCG} &\textbf{F1} \\\cmidrule{2-8}
+\textbf{SVD} &0.874 &0.686 &0.810 &0.567 &0.0179379 &0.520 &0.667 \\\cmidrule{1-8}
+\textbf{SVD++} &\textbf{0.862} &\textbf{0.672} &\textbf{0.812} &0.567 &\textbf{0.0240000} &0.536 &0.668 \\\cmidrule{1-8}
+\textbf{CAMF-C} &0.910 &0.719 &0.808 &0.563 &0.0000691 &0.338 &0.664 \\\cmidrule{1-8}
+\textbf{CAMF-CI} &0.928 &0.734 &0.800 &0.563 &0.0000691 &0.411 &0.661 \\\cmidrule{1-8}
+\textbf{IS-UserBased} &1.303 &0.977 &0.390 &\textbf{0.795} &0.0080911 &0.540 &0.524 \\\cmidrule{1-8}
+\textbf{NMF} &0.917 &0.724 &0.796 &0.556 &0.0025421 &0.393 &0.655 \\\cmidrule{1-8}
+\textbf{DeepWalk + kNN} &1.102 &0.852 &0.748 &0.605 &0.0218720 &0.516 &\textbf{0.669} \\\cmidrule{1-8}
+\textbf{Random} &\ul{1.709} &\ul{1.397} &0.621 &0.373 &0.0024968 &0.460 &0.466 \\\cmidrule{1-8}
+\textbf{LightGCN} & & &\ul{0.302} &\ul{0.136} &0.0000127 &\ul{0.336} &\ul{0.188} \\\cmidrule{1-1}\cmidrule{1-8}
+\textbf{KGAT} & & &0.340 &0.155 &\ul{0.0000002} &\textbf{0.657} &0.212 \\\midrule
+\textbf{NGCF} & & &0.336 &0.154 &0.0000392 &0.404 &0.211 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,16 @@
+\section{Related work}\label{sec:relatedwork}
+This paper draws inspiration from two primary sources: Graph Convolution Networks (GCN) and Factorization Machines (FM).\\
+This part of the paper will briefly go over some methods belonging to those categories and how they relate to our work.
+
+\subsection{GCN-based methods}
+Neural Graph Collaborative Filtering (NGCF) \cite{NGCF} employs a graph neural network to learn embeddings of users and items through an integration of a bipartite graph structure. This structure captures the collaborative signal through high-order connectivity by stacking multiple embedding propagation layers.
+LightGCN (LGCN)\cite{LightGCN} argues that the reasons for the performance of GCN for recommendation purposes are not well understood, and that previous models such as NGCF incorporate unnecessary complexity.
+LGCN thus proposes to remove feature transformation and nonlinear activation from NGCF, finding that they contribute little to the performance.
+LGCN learns user and item embeddings by linearly propagating them on the bipartite graph structure and uses the weighted sum of the embeddings as the final embedding.
+Knowledge Graph Attention Network (KGAT)\cite{KGAT} extends this model by incorporating side-information through a hybrid graph structure of a knowledge graph containing side-information and a user-item bipartite graph, meaning attributes on items can be propagated as nodes, and be used to refine embeddings.
+
+\subsection{Factorization Machines}
+FMs \cite{fmrendle} model second-order feature interactions by inner product.
+Convolutional Factorization Machine (CFM)\cite{CFM} extends this to the domain of context-aware recommender systems through modelling second-order interactions with outer product to capture correlations between embeddings, and applying convolution to learn high-order interaction signals.
+DeepFM trains a deep neural network and an FM jointly in order to learn low- and high-order feature interactions. Both components share the same feature embedding, ensuring that there is no need for feature engineering of the input.
+% Graph Factorizaion Machines (GFM) extend factorization machines for the purposes of cross-domain recommendation based on graph-structured data. Leveraging data from other domains addresses the data sparsity issue in recommender systems, and the ability of factorization machines to exploit sparse data is used to capture multifactor iteraction information.

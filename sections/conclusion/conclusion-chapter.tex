@@ -1,0 +1,18 @@
+\section{Conclusion}\label{sec:conclusion}
+In this paper, we have shown two ways to include context and side-information in graph convolution neural networks.
+While there are not many competing methods available for comparison in context specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across datasets.
+Likewise, we have shown how the context can be aggregated and used in a general recommendation scenario with competitive results to state-of-the-art methods.
+
+% Skriv noget om at future work kunne være info på edges? Evt hvordan vi har prøvet at implementere det
+% Double training objective
+\todo[color=red]{x - Conclude upon the fun times}
+
+\subsection{Future work}
+The most prominent future work is further contemplation on how to express context in a way that is compatible with the GCN models.
+Our proposal is to look into ways to represent context as edge information in a feasible way.
+While writing this paper, we attempted to model it in a way such that there was an embedding for each (user,item,context) tuple.
+However, this quickly proved infeasible since the amount of embeddings explode with just a few contexts available.
+\\
+Additionally, we have seen that not all context is equal in terms of importance.
+Due to this, it could be beneficial to include an attention mechanism that is able to learn the importance of each context or context combination for the convolution layer.
+
