@@ -22,18 +22,17 @@ While traditional GCN models make use of three main ideas: Feature propagation o
 In fact, removing the linear transformation and nonlinear activation typically does not degrade performance of the models while improving speed significantly \cite{SimplifyingGCN}.
 Based on these considerations, CSGCN-IS is based on the popular LightGCN model \cite{LightGCN}, which has applied these considerations to their model and proven that it outperforms their previous work with NGCF, which used a traditional GCN model with all three components \cite{LightGCN}.
 
-\begin{figure}[hbt!]
+%\begin{figure}[hbt!]
 	%\hspace*{-0.1cm}
-	\centering
-	\small	
-	\includegraphics[width=0.48\textwidth]{figures/CSGCN.pdf}\vspace{-5pt}
-	\caption{An illustration of CSGCN-IS model architecture. User and item neighbors are illustrated as bright nodes, and side-information as dark nodes. In the layer combination, we sum over the embeddings at each layer to obtain the final representations.}\vspace{-10pt}
-	\label{fig:csgcn_is_model}
-\end{figure}
-The model (\Cref{fig:csgcn_is_model}) itself is very similar to LightGCN.
+%	\centering
+%	\small	
+%	\includegraphics[width=0.48\textwidth]{figures/CSGCN.pdf}\vspace{-5pt}
+%	\caption{An illustration of CSGCN-IS model architecture. User and item neighbors are illustrated as bright nodes, and side-information as dark nodes. In the layer combination, we sum over the embeddings at each layer to obtain the final representations.}\vspace{-10pt}
+%	\label{fig:csgcn_is_model}
+%\end{figure}
+The model itself is very similar to LightGCN.
 It is, however, important to note that the neighboring nodes for users now include side-information for users and not only items, which can be seen in each of the layers now receiving a normalized sum of both items and user side-information, rather than just the normalized sum of items.
 The same goes for the neighbors of items.
-These new nodes are illustrated as dark nodes in the figure.
 \\
 There are a number of graph convolution layers that update the representation of each central node with information about their neighbor nodes.
 The representation at layer $l+1$ is calculated by taking the normalized sum of the representations of neighbor nodes at layer $l$. 
