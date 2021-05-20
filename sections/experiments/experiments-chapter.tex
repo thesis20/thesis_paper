@@ -240,8 +240,8 @@ Finally, a simple baseline is evaluated in Top Pop, which simply recommends the 
                         & F1@50        & 0.2797       & 0.2782       & \textbf{0.2907} & 0.2608 & 0.1013          & 0.2819 & {\ul{0.2905}}    &  \\ \bottomrule
 \end{tabular}%
 }
-\caption{}
-\label{tab:my-table}
+\caption{Results for the aggregated results}
+\label{tab:aggregatedresults}
 \end{table*}
 
 Since the CSGCN models use context to make score predictions, they output a score for each item in each context.
@@ -257,7 +257,7 @@ However, this may prove problematic, since an item may score highly in a single 
 Instead, we propose to take an average score across all contexts.
 With this, the item that is only interacted with in exactly one context, has its score lowered by a factor of the amount of contexts observed.
 \\\\
-The results for the non-context specific recommendation task can be seen in \cref{tab:yelpnc-aggregated,tab:yelpon-aggregated,tab:frappe-aggregated,tab:ml1m-aggregated}.
+The results for the non-context specific recommendation task can be seen in \cref{tab:aggregatedresults}.
 Generally, we see that both CSGCN methods are among the best performers across all metrics on the datasets, with CSGCN-ADJ outperforming CSGCN-IS on all metrics.
 The main exception is on the Frappe dataset, where BPR and KGAT perform significantly better.
 We suspect that this is due to the density and small size of the dataset.
@@ -291,8 +291,3 @@ While the results are only shown for NDCG@20 for this dataset, they have proven 
 To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study with multiple ways of considering the side-information.
 First of all, we ran the method as usual as a baseline with all context included.
 Then, we ran it again with the same settings, but only considering respectively user side-information, item side-information and finally no side-information at all.
-
-
-\todo[color=red]{x - Graph of results with and without sideinformation}
-\todo{Graph of results with various choices of sideinformation}
-\todo{Graph of results with context as side-information}
