@@ -33,7 +33,6 @@ Based on these considerations, CSGCN-IS is based on the popular LightGCN model \
 The model itself is very similar to LightGCN.
 It is, however, important to note that the neighboring nodes for users now include side-information for users and not only items, which can be seen in each of the layers now receiving a normalized sum of both items and user side-information, rather than just the normalized sum of items.
 The same goes for the neighbors of items.
-These new nodes are illustrated as dark nodes in the figure.
 \\
 There are a number of graph convolution layers that update the representation of each central node with information about their neighbor nodes.
 The representation at layer $l+1$ is calculated by taking the normalized sum of the representations of neighbor nodes at layer $l$. 
