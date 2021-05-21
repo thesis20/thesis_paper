@@ -282,12 +282,80 @@ In the bottom we have the simple solution of simply taking the lowest or highest
 This supports our previous assumption that while a single item might score high or low in one context, it does not necessarily mean that it is a good recommendation overall, which is better captured through the mean and median aggregations.\\
 While the results are only shown for NDCG@20 for this dataset, they have proven consistent across all the metrics.
 
-
-% For the YelpNC dataset in \Cref{tab:yelpnc-aggregated}, we see that CSGCN outperfoms the other methods in every metric, where the second best performing method on all metrics is the LightGCN method.
-% We see that CSGCN only gains small improvements ranging between 2-6\%, compared to the second best performing method.
-\todo[color=red]{Comparison of various aggregation methods}
-
 \subsection{Performance Comparison (RQ3)}
+\todo{Ved ikke om det jeg har sat ind hører til RQ3 - Var det tænkt at det skulle besvares med en ablation study på context-specific recommendations?}
 To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study with multiple ways of considering the side-information.
-First of all, we ran the method as usual as a baseline with all context included.
-Then, we ran it again with the same settings, but only considering respectively user side-information, item side-information and finally no side-information at all.
+For this first ablation study, we run our proposed method, CSGCN-ADJ, where we use different inputs for the datasets YelpNC and ML1M, and measure the performances with NDCG@20.
+First of all, our method is run with both side-information and context. 
+Then we remove side-information, remove context and finally, we remove both context and side-information.
+This experiment is conducted to test the effects of context and side-information on our model so that we can try to answer RQ3.
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Epoch,
+            ylabel=NDCG@20,
+            height=8cm,
+            width=7cm,
+            grid=major,
+            legend style={at={(0.5,-0.20)},
+        anchor=north,legend columns=2}]
+            
+        \addplot plot coordinates{
+            (20,8.120e-02)
+            (40,9.177e-02)
+            (60,9.735e-02)
+            (80,9.875e-02)
+            (100,1.002e-01)
+            (120,1.018e-01)
+            (140,1.018e-01)
+            (160,1.016e-01)
+        };
+
+        \addplot plot coordinates {
+            (20,8.696e-02)
+            (40,9.651e-02)
+            (60,1.006e-01)
+            (80,1.025e-01)
+            (100,1.038e-01)
+            (120,1.029e-01)
+            (140,1.012e-01)
+            (160,9.98e-02)
+        };
+
+        \addplot plot coordinates {
+            (20,8.358e-02)
+            (40,9.471e-02)
+            (60,9.871e-02)
+            (80,1.007e-01)
+            (100,1.006e-01)
+            (120,1.017e-01)
+            (140,1.0031e-01)
+            (160,1.019e-01)
+        };
+
+        \addplot plot coordinates {
+            (20,9.053e-02)
+            (40,9.955e-02)
+            (60,1.017e-01)
+            (80,1.029e-01)
+            (100,1.027e-01)
+            (120,1.018e-01)
+            (140,9.953e-02)
+            (160,9.809e-02)
+
+        };
+        \legend{Sideinfo + context,Sideinfo,Context,Nothing}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{The performance on NDCG@20 of our model with different types of input}
+    \label{fig:ablation_study_1}
+\end{figure}
+
+In \Cref{fig:ablation_study_1}, we see the performance on NDCG@20 of our model with different input.
+We see that the more input the model takes, the longer it takes to converge to its best performance.
+Overall, the performance does not change drastically with the different types of input.
+Having only side-information as input achieves the best performance, but it is only marginally better than not having side-information and context at all.
+Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input also does not give much better results.
+To conclude from the study on the YelpNC dataset, the usage of context is not able to provide better recommendations.
+Side-information, however, performs the best on this metric on this dataset, which suggest that side-information in our model is able to slightly improve results, compared to having no extra input.
+To answer RQ3, using side-information on top of context achieves the same results as just using context, suggesting that side-information does not improve context-aware recommendations for our model.
