@@ -255,7 +255,7 @@ The inputs to layers are the users and items as well as side-information about u
 In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the GCN layer operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, including both items and user side-information, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$. 
 A neighbor-node is denoted as $un$ for user neighbors $\mathcal{N}_{u}$, and $in$ item neighbors $\mathcal{N}_{i}$, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
 $N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_{in}$ denotes the set of neighbors for the neighbor $in$ of node $i$.
-This means that when neigbor nodes' representations are being propagated, the normalizaton is done with both the number of neighbors for the central node and the number of neighbors for the neighbor node which reprentation is being propagated.
+This means that when neigbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its reprentation propagated.
 \\\\
 The convolution layer propagates user and item nodes' representations by summing the normalized representations of the neighbor nodes.
 Only the item and user nodes' propagations are shown, as these embeddings are the only ones used beyond the convolution layer in the prediction function, further described in \Cref{subsec:csgcn_is_score_prediction}.
