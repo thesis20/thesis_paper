@@ -365,7 +365,9 @@ In this predictor function, we calculate the pairwise interaction between each o
 \subsection{Adjacency matrix and training}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
 The graph is similar to the one in \Cref{fig:quadripartite-graph}, but context nodes are inserted between the sets of item and user nodes, and edges connect the nodes that have interacted in the context.
-Additionally, we add the identity matrix $I$ to the last quadrant, such that the context embeddings are not updated through the convolution layers.
+For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave slightly better performance compared to also propagating information about neighbors to the context embeddings.
+Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacancy matrix.
+Additionally, we add the identity matrix $I$ to the last quadrant so that for each convolution, the context embeddings are only propagated with information about themselves.
 The matrix is seen in \Cref{csgcn_adj_adj_mat}.
 \begin{equation}\label{csgcn_adj_adj_mat}
     \begin{bmatrix}
@@ -382,7 +384,7 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| + |C|) \times (|U| + |I| + |US| + |IS|+ |C|)$ degree matrix. 
 We see that for this model, we only normalize on a row-level by multiplying by $D^{\frac{1}{2}}$ on the left side of the adjacency matrix.
-This is again to ensure that the context embeddings are not updated though convolution, using the identity matrix in the adjacency matrix.
-The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS.
+We found that for this version of the model, it gave slightly better performance compared to multipluying with $D^{\frac{1}{2}}$ on both sides of the adjacency matrix.
+The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representation at each layer.
 \\\\
 Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.
