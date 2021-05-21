@@ -384,7 +384,7 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| + |C|) \times (|U| + |I| + |US| + |IS|+ |C|)$ degree matrix. 
 We see that for this model, we only normalize on a row-level by multiplying by $D^{\frac{1}{2}}$ on the left side of the adjacency matrix.
-We found that for this version of the model, it gave slightly better performance compared to multipluying with $D^{\frac{1}{2}}$ on both sides of the adjacency matrix.
+We found that for this version of the model, it gave slightly better performance compared to multiplying by $D^{\frac{1}{2}}$ on both sides of the adjacency matrix.
 The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
 \\\\
 Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.
