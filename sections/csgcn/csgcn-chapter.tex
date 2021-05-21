@@ -274,12 +274,13 @@ The side-info nodes' representations are also updated in the layer but are not b
 % \end{figure}
 
 \subsection{Score prediction}\label{subsec:csgcn_is_score_prediction}
-To include context in the score prediction, we propose to use context as a learnable embedding, $e_{ic}$, that is added to items to signify that they are popular in a given context.
-After addition of the context embedding the cosine similarity score of the user and item is calculated in regards to the context to produce a score: 
-$$\hat{y}_{uic} = e_u^T(e_i+e_{ic})$$
+To include context in the score prediction, we propose to model each pair of items and context values as learnable embeddings $e_{ic}$.
 The use of $e_{ic}$ is heavily inspired by Ricci and Baltrunas' item splitting approach \cite{baltrunasitemsplitting}, where a context weight for each item in each context is calculated.
-This means that for the set of items $I$ there is $|I| \times |C|$ embeddings, where $C$ is the set of possible contexts.
-This context embedding is updated through sampling in the score prediction function using negative sampling, further described in \Cref{subsec:csgcn_is_training}.
+This means that for the set of items $I$ and the set of possible context values $C$, there are $|I| \times |C|$ embeddings of item and context value combinations $e_{ic}$.
+The objective is to calculate a score between a user and an item in a given context $C'$, where $C' \subseteq C$
+The different $e_{ic}$'s of a given item $i$ and context $C'$ are added to the item to signify its popularity in the given context. \todo{Does that actually what the addition does tho?}
+After the addition of the $e_{ic}$'s to the item embedding $e_i$, the cosine similarity scores of the user embedding $e_u$ and the item-context additions are calculated and summed together to produce a score: 
+$$\hat{y}_{uic} = \sum_{c \in C'} e_u^T(e_i+e_{ic})$$
 
 \subsection{Training}\label{subsec:csgcn_is_training}
 For the top-$k$ recommendation task, we utilize negative sampling and Bayesian Pairwise Ranking (BPR) loss \cite{BPR} as the training function, shown in \autoref{eq:loss-func}.
