@@ -367,7 +367,7 @@ Compared to CSGCN-IS, context is now included in the graph as nodes and therefor
 The graph is similar to the one in \Cref{fig:quadripartite-graph}, but context nodes are inserted between the sets of item and user nodes, and edges connect the nodes that have interacted in the context.
 For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave slightly better performance compared to also propagating information about neighbors to the context embeddings.
 Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacancy matrix.
-Additionally, we add the identity matrix $I$ to the last quadrant so that for each convolution, the context embeddings are only propagated with information about themselves.
+Additionally, we add the identity matrix $I$ to the last quadrant such that the context embeddings are only propagated with information about themselves in each convolution.
 The matrix is seen in \Cref{csgcn_adj_adj_mat}.
 \begin{equation}\label{csgcn_adj_adj_mat}
     \begin{bmatrix}
