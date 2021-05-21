@@ -294,13 +294,13 @@ The positive interaction is an observed interaction between a user and an item, 
 We then randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\
 While using sampling for calculating BPR is biased \cite{nonsampling}, it is usually necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data.
 \\\\
-The model parameters are updated by optimizing the BPR objective function in \Cref{eq:loss-func}.
-For a specific model parameter, this is done by calculating the gradient of the objective function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate. 
-In our implementation, the objective function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}.
-Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the cost function.
-The optimizer chosen determines the training speed and final performance of the model.
+The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
+For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate. 
+In our implementation, the loss function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}, based on empirical testing.
+Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the loss function.
+The chosen optimizer  can impact the training speed and final performance of the model.
 However, there is no theory that explains how to make the decision of which optimizer to use \cite{EmpiricalOptimizers}.
-Unlike simpler optimizers that maintain a single learning rate throughout training,  such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and uncentered variance of the gradient \cite{AdamOptimizer}.
+Unlike simpler optimizers that maintain a single learning rate throughout training, such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and the variance of the gradient and the squared gradient \cite{AdamOptimizer}.
 Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for recommender systems, since they often deal with sparse data.
 
 % \subsection{Implementation details}
