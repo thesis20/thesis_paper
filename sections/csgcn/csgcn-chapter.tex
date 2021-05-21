@@ -296,8 +296,9 @@ While using sampling for calculating BPR is biased \cite{nonsampling}, it is usu
 \\\\
 The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
 For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate.
-The gradient is a vector of partial derivates, which defines the slope of the function.
-The parameters can then by updated in the negative direction of the function based on the learning rate, in order to approach a local minima. 
+The gradient is a vector of partial derivates, which defines the slope of the function, where a partial derivative of a function with multiple variables is the derivate with respect to a single variable with the remaining variables held constant.
+The derivate defines how the output of the function changes based on changes in the input.
+The model parameters can then be updated in the negative direction of the slope of the function, the gradient, based on the learning rate, in order to approach a local minima. 
 In our implementation, the loss function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}, based on empirical testing.
 Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the loss function.
 The chosen optimizer  can impact the training speed and final performance of the model.
