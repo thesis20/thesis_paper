@@ -354,14 +354,14 @@ As a result of context being added as nodes in the graph for CSGCN-ADJ, $\mathca
 Because the identity matrix was added to the adjacency matrix under the context columns, the context embeddings will remain with their initial values throughout the convolution layer.
 
 \subsection{Score prediction}\label{subsec:csgcn_adj_score_pred}
-For the score prediction of CSGCN-ADJ, we draw inspiration from factorization machines and use an FM-like predictor function that considers pair-wise interactions between users, items and context to provide a recommendation.
+For the score prediction of CSGCN-ADJ, we draw inspiration from factorization machines and use an FM-like predictor function that considers pair-wise interactions between users, items and context values to provide a recommendation.
 To do this, we use the prediction function defined in \Cref{eq:csgcn_adj_scorepred}:
 \begin{equation}\label{eq:csgcn_adj_scorepred}
-    \hat{y}_{uic} = e_u^Te_i + \sum_{c \in C}e_u^Te_{c} + \sum_{c \in C}e_i^Te_{c}
+    \hat{y}_{uic} = e_u^Te_i + \sum_{c \in C'}e_u^Te_{c} + \sum_{c \in C'}e_i^Te_{c}
 \end{equation}
-where $C$ is the current context and $c$ is a context value in $C$.
+where $C'$ is the current context,$c$ is a context value in $C'$ and $C' \subseteq C$, where $C$ is the set of possible context values.
 $e_{c}$ is the embedding representation of the context value $c$, $e_i$ is the embedding of the item $i$ and $e_u$ is the embedding of the user $u$.
-In this predictor function, we calculate the pairwise interaction between each of the embeddings. The self-interactions are not calculated since they do not contribute to the score prediction. The embeddings used for items and users are the ones output by the convolution layer while the context embeddings are the initial values before convolution.
+In this predictor function, we calculate the pairwise interaction between each of the embeddings. The self-interactions are not calculated since they do not contribute to the score prediction. The embeddings used for items and users are the ones output by the convolution layer while the context embeddings are the initial values before convolution, since they are only propagated with information about themselves.\todo{ref til hvor vi beskriver det?}
 
 \subsection{Adjacency matrix and training}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
