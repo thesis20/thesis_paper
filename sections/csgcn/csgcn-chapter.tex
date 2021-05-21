@@ -259,7 +259,7 @@ This means that when neigbor nodes' representations are being propagated, the no
 \\\\
 The convolution layer propagates user and item nodes' representations by summing the normalized representations of the neighbor nodes.
 Only the item and user nodes' propagations are shown, as these embeddings are the only ones used beyond the convolution layer in the prediction function, further described in \Cref{subsec:csgcn_is_score_prediction}.
-The side-info nodes' representations are also being propagated with information about their neighbors in the layer but are not being output from the layer since their representations are integrated into the item and user node representations, and therefore they are not used in the score prediction.
+The side-info nodes' representations are also being propagated with information about their neighbors in the layer, but are not being output from the layer since their representations are integrated into the item and user node representations, and therefore they are not used in the score prediction.
 % \todo{move laplacian stuff up before concrete}
 % We use the laplacian symmetric normalization of the adjacency matrix \cite{chung1997spectral} to help scale the embeddings with convolution operations.
 % This normalization is defined in \Cref{eq:laplaciannormalization}, where $x$ and $y$ are nodes in the graph, and we let $|\mathcal{N}_{x}|$ denote the degree of node $x$.
