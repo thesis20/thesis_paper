@@ -78,6 +78,7 @@ Finally, a non-linear activation function such as \textit{ReLU} is applied to th
 \\
 A graph such as the one seen in \Cref{fig:bipartite-graph} can be represented in an adjacency matrix. 
 The adjacency matrix is useful for implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the representation vectors of the graph nodes.
-This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood. 
+This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.
+Finally, a degree matrix can be employed in order to normalize the representations by the number of neighbors.
 This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the the central node\cite{SimplifyingGCN, KOrderConnectivity}.
 If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution so that information can be passed from these nodes as well.
