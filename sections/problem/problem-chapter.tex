@@ -74,7 +74,7 @@ In graph-based collaborative filtering RSs, we typically represent data in the f
 \label{fig:bipartite-graph}
 \end{figure}
 This graph consists of two distinct sets of nodes: Users ($U$) and items ($I$), and a set of edges that connect the user and item if they have interacted with each other.\\\\
-\textbf{GCNs and higher-order connectivity}
+\textbf{Higher-order connectivity and implementation input for GCNs}
 \\
 GCNs are variants of CNNs used on graph-based data \cite{KOrderConnectivity}.
 GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
@@ -82,10 +82,10 @@ Representations are updated in each graph convolution layer through three steps:
 Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors features.
 The next step is using a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with some weight.
 Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model.
-\\\\
-\textbf{Input for GCNs}
 \\
 A graph such as the one seen in \Cref{fig:bipartite-graph} can be represented in an adjacency matrix. 
-The adjacency matrix is useful for implementation of a graph convolutional layer as it allows for graph convolution through matrix multiplication between the adjacency matrix and the representation vectors of users and items. 
+The adjacency matrix is useful for implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the representation vectors of the graph nodes.
+This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.
+Finally, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the representations by the number of neighbors.
 This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the the central node\cite{SimplifyingGCN, KOrderConnectivity}.
 If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution so that information can be passed from these nodes as well.
