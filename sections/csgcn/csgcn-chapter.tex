@@ -298,7 +298,7 @@ For the top-$k$ recommendation task, we utilize negative sampling and Bayesian P
     Loss = \sum_{(u,i,j,c) \in D_T} \sigma(-(\hat{y}_{(u,i,c)} - \hat{y}_{(u,j,c)})) + \lambda_\Theta ||\Theta||^2
 \end{equation}
 where $\Theta$ denotes the trainable model parameters, which in this case are the 0th layer embeddings for items ($e_{i}^{(0)}$) and users ($e_{u}^{(0)}$), as well as the embeddings for side-information ($e_{us}$ and $e_{is}$) and item-context embeddings ($e_{ic}$).
-$\lambda$ denotes the regularization coefficient which is a hyperparameter and $\sigma(\cdot)$ denotes the non-linear activation function, in this case the softplus function.\\ \todo{gentjek activation til sidst fær aflevering}
+$\lambda$ denotes the regularization coefficient which is a hyperparameter and $\sigma(\cdot)$ denotes the non-linear activation function, in this case, the softplus function.\\
 $D_T = \{(u,i,j,c) | i \in I_{(u,c)} \wedge  j \in I \setminus I_{(u,c)}\}$ denotes the dataset of training tuples, where $I_{(u,c)}$ is the set of observed items that user $u$ has interacted with in context $c$.
 $\hat{y}$ is a score prediction for respectively a positive interaction $(u,i,c)$ between a user $u$ and an item $i$ in context $c$, and a negative interaction $(u,j,c)$ for the same user in the same context, where $j$ is an item the user has not interacted with.
 The positive interaction is an observed interaction between a user and an item, which can be found in the training set.
