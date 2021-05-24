@@ -18,9 +18,16 @@ At the same time, we find a negative sample for the same user and context and de
 With this intuition, we will now detail how this is implemented in the CSGCN model.
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
-While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by a lack of ablation studies on the model.
-In fact, removing the linear transformation and nonlinear activation typically does not degrade performance of the models while improving speed significantly \cite{SimplifyingGCN}.
-Based on these considerations, CSGCN-IS is based on the popular LightGCN model \cite{LightGCN}, which has applied these considerations to their model and proven that it outperforms their previous work with NGCF, which used a traditional GCN model with all three components \cite{LightGCN}.
+While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
+Wu et al. presents the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs.
+Instead, they were proposed in the recent years of neural networks where deep learning has gained high popularity, and as such it was build directly on top of a complex model.
+To investigate whether this was useful, they present SGCN, a simplified version of GCNs that could have been preceeded GCNs if the traditional path had been taken.
+This lead them to remove the linear transformation and nonlinear activation, to reach a simplified linear model.
+Interestingly, they proved that not only does this not degrade performance of the models, it generally matches or improves both in terms of performance and speed \cite{SimplifyingGCN}.\\
+This signifies that the expressive power of GCNs originates primarily from the propagations done in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
+Based on these considerations, CSGCN-IS is based on these observations made in the SGCN \cite{SimplifyingGCN} and LightGCN models \cite{LightGCN}, which has applied these considerations to their model and proven that it outperforms regular GCNs, which used a traditional GCN model with all three components \cite{LightGCN}.
+
+
 
 %\begin{figure}[hbt!]
 	%\hspace*{-0.1cm}
