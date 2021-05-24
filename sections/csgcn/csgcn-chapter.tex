@@ -406,7 +406,66 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| + |C|) \times (|U| + |I| + |US| + |IS|+ |C|)$ degree matrix. 
 We see that for this model, we only normalize on a row-level by multiplying by $D^{\frac{1}{2}}$ on the left side of the adjacency matrix.
-We found that for this version of the model, it gave slightly better performance compared to multiplying by $D^{\frac{1}{2}}$ on both sides of the adjacency matrix.
+This approach is inspired by a combination of the random walk Laplacian $D^{-1}$ and the symmetrical normalized Laplacian $D^{-\frac{1}{2}}AD^{-\frac{1}{2}}$ used in CSGCN-IS.
+We found that for this version of the model, it gave slightly better performance compared to these regular normalization methods, as evidenced by the results seen on \Cref{fig:normalization_graph}.
+
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Epoch,
+            ylabel=NDCG@20,
+            height=8cm,
+            width=7cm,
+            grid=major,
+            legend style={at={(0.5,-0.20)},
+        anchor=north,legend columns=2}]
+
+        \addplot plot coordinates{
+            (20,0.05145)
+            (40,0.0642)
+            (60,0.06552)
+            (80,0.06201)
+            (100,0.06508)
+            (120,0.07168)
+            (140,0.07256)
+            (160,0.073)
+            (180,0.06992)
+            (200,0.07344)
+        };
+
+		\addplot plot coordinates{
+            (20,9.0629e-3)
+            (40,8.9258e-3)
+            (60,9.0337e-3)
+            (80,8.3179e-3)
+            (100,7.771e-3)
+            (120,7.8698e-3)
+            (140,8.4826e-3)
+            (160,9.2474e-3)
+            (180,9.5092e-3)
+            (200,0.0106)
+        };
+
+		\addplot plot coordinates{
+            (20,8.7e-3)
+            (40,8.8121e-3)
+            (60,8.9353e-3)
+            (80,8.6377e-3)
+            (100,8.065e-3)
+            (120,7.7449e-3)
+            (140,7.9213e-3)
+            (160,8.1782e-3)
+            (180,8.9256e-3)
+            (200,8.9743e-3)
+        };
+
+        \legend{Mixed,Random Walk,Symmetric}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Effect of various normalizations on the YelpNC dataset for HR@20.}
+    \label{fig:normalization_graph}
+\end{figure}
+
 The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
 \\\\
 Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.
