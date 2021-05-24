@@ -347,12 +347,14 @@ Additionally, Adam is reliable for calculating gradients in sparse situations, w
 This section describes the second proposed model, CSGCN with Context in Adjacency Matrix (CSGCN-ADJ).
 
 \subsection{Model intuition}\label{subsec:csgcn_adj_intuition}
-With the second proposed model, context is included in the convolution by adding context nodes to the graph, which will be used to represent interactions between users and items in a given context as a tuple $(u,i,C)$, implying that a user $u$ has interacted with item $i$ in context $C$.
+With the second proposed model, context is included in the convolution by adding context nodes to the graph, which will be used to represent interactions between users and items in a given context as a tuple $(u,i,C')$, implying that a user $u$ has interacted with item $i$ in context $C'$.
 The adjacency matrix will now include interactions, what context the users have interacted in, and the context in which items have been interacted with.
-This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context feature has a single vector representation, instead of having a vector representation for each context feature and item pair.
+This approach is unable to capture which specific contexts the different interactions occurred in.
+It only captures whether or not the user or item has had an interaction in the given context.
+This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single vector representation instead of having a vector representation for each context value and item pair.
 The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution.
-By including nodes for the contexts in the convolution, their representations are updated with aggregated neighbor information,being items and users that have interacted in that context.
-This means that with higher-order connectivity, items and users are updated with information about other users and items that have interacted in the same contexts.
+By including nodes for the context values in the convolution, their representations are updated with aggregated neighbor information, being items and users that have interacted in that context.
+This means that with higher-order connectivity, items and users are updated with information about other users and items that have interacted in the same context.
 
 \subsection{Model architecture}\label{subsec:csgcn_adj_architecture}
 \todo{do model arfchitecture for csgcnadj}
