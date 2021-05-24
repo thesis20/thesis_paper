@@ -73,11 +73,36 @@ However, it contains contextual information about the time of the transaction:
 It also contains information about the weather at the time of the transaction.
 
 \subsection{Feature selection}
-Since some of the datasets include information which may degrade performance of the algorithms, it is important to choose which side-information and context variables to consider.
-Since all datasets except for Frappe provide a timestamp, we use this as our contextual information and extract some additional information from it.
-To decide which context combination performs the best, we perform an evaluation of all possible combinations, and pick the one that performs the best.\\
-\todo[color=red]{x - Describe final choices}
-\todo[color=red]{x - Show graph for various choices}
+Since most of the datasets mainly include a timestamp as contextual information, we discretize these into the following features:
+\begin{itemize}
+	\item Month
+	\item Day of week
+	\item Hour
+	\item Time of day
+\end{itemize}
+Time of day is a further discretization of the hour feature, split into 5 intervals:
+\begin{itemize}
+	\item Night (0 to 4)
+	\item Morning (4 to 8)
+	\item Before midday (8 to 12)
+	\item After midday (12 to 16)
+	\item Afternoon (16 to 20)
+	\item Late night (20 to 24)
+\end{itemize}
+For the Frappe dataset, we instead make use of the three default contextual values available (weekday, time of day, weekend or not).
+\\\\
+For the side-information, we use all the available side-information for both users and items with some discretization.
+The Yelp datasets provide a "yelping since" feature, which is a timestamp for the creation of the user.
+This is discretized to include the year that the user has been created.
+\\
+Additionally, the feature "fans" is discretized into four groups:
+\begin{itemize}
+	\item $< 50$ fans
+	\item $50 - 100$ fans
+	\item $100-500$ fans
+	\item $> 500$ fans
+\end{itemize}
+
 
 \subsection{Parameter settings}
 To fairly compare the performance of the models, we train all of them by optimizing the BPR loss with Adam.
@@ -281,13 +306,136 @@ What we see is that taking the mean provides the best results, followed by the m
 In the bottom we have the simple solution of simply taking the lowest or highest score across the contexts.\\
 This supports our previous assumption that while a single item might score high or low in one context, it does not necessarily mean that it is a good recommendation overall, which is better captured through the mean and median aggregations.\\
 While the results are only shown for NDCG@20 for this dataset, they have proven consistent across all the metrics.
+\\\\
+To test whether context and side-information actually increase the performance of our model in a non-context specific setting, we run one of our proposed methods, CSGCN-ADJ, using different inputs for the datasets YelpNC and ML1M and measure the performances with NDCG@20.
+First of all, our method is run with both side-information and context. 
+Then we remove side-information, followed by removing context and finally we remove both context and side-information.
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Epoch,
+            ylabel=NDCG@20,
+            height=8cm,
+            width=7cm,
+            grid=major,
+            legend style={at={(0.5,-0.20)},
+        anchor=north,legend columns=2}]
+            
+        \addplot plot coordinates{
+            (20,8.120e-02)
+            (40,9.177e-02)
+            (60,9.735e-02)
+            (80,9.875e-02)
+            (100,1.002e-01)
+            (120,1.018e-01)
+            (140,1.018e-01)
+            (160,1.016e-01)
+        };
 
+        \addplot plot coordinates {
+            (20,8.696e-02)
+            (40,9.651e-02)
+            (60,1.006e-01)
+            (80,1.025e-01)
+            (100,1.038e-01)
+            (120,1.029e-01)
+            (140,1.012e-01)
+            (160,9.98e-02)
+        };
 
-% For the YelpNC dataset in \Cref{tab:yelpnc-aggregated}, we see that CSGCN outperfoms the other methods in every metric, where the second best performing method on all metrics is the LightGCN method.
-% We see that CSGCN only gains small improvements ranging between 2-6\%, compared to the second best performing method.
-\todo[color=red]{Comparison of various aggregation methods}
+        \addplot plot coordinates {
+            (20,8.358e-02)
+            (40,9.471e-02)
+            (60,9.871e-02)
+            (80,1.007e-01)
+            (100,1.006e-01)
+            (120,1.017e-01)
+            (140,1.0031e-01)
+            (160,1.019e-01)
+        };
+
+        \addplot plot coordinates {
+            (20,9.053e-02)
+            (40,9.955e-02)
+            (60,1.017e-01)
+            (80,1.029e-01)
+            (100,1.027e-01)
+            (120,1.018e-01)
+            (140,9.953e-02)
+            (160,9.809e-02)
+
+        };
+        \legend{Sideinfo + context,Sideinfo,Context,Nothing}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{The performance on NDCG@20 of our model on the YelpNC dataset with different types of input.}
+    \label{fig:ablation_study_1}
+\end{figure}
+On \Cref{fig:ablation_study_1} we see the performance on NDCG@20 of CSGCN-ADJ with different input.
+We see that the more input the model receives, the longer it takes to converge to its best performance.
+Overall, the performance does not change drastically with the different types of input.
+Having only side-information as input achieves the best performance, but it is only marginally better than not having side-information and context at all.
+Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input also does not give much better results.
+To conclude from the study on the YelpNC dataset, the usage of context is not able to provide better recommendations in a non-context specific setting for the NDCG metric.
+Side-information, however, performs the best on this metric on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
+
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Epoch,
+            ylabel=NDCG@20,
+            height=8cm,
+            width=7cm,
+            grid=major,
+            legend style={at={(0.5,-0.20)},
+        anchor=north,legend columns=2}]
+            
+        \addplot plot coordinates{
+            (20,0.3749)
+            (40,0.3850)
+            (60,0.3854)
+            (80,0.3862)
+            (100,0.3836)
+            (120,0.3856)
+        };
+
+        \addplot plot coordinates {
+            (20,0.3798)
+            (40,0.3881)
+            (60,0.3900)
+            (80,0.3899)
+            (100,0.3862)
+            (120,0.3884)
+        };
+
+        \addplot plot coordinates {
+            (20,0.3748)
+            (40,0.3836)
+            (60,0.3816)
+            (80,0.3894)
+            (100,0.3841)
+            (120,0.3933)
+        };
+
+        \addplot plot coordinates {
+            (20,0.3749)
+            (40,0.3836)
+            (60,0.3893)
+            (80,0.3970)
+            (100,0.3912)
+            (120,0.3901)
+        };
+        \legend{Sideinfo + context,Sideinfo,Context,Nothing}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{The performance on NDCG@20 of our model on the ML1M dataset with different types of input}
+    \label{fig:ablation_study_2}
+\end{figure}
+On \Cref{fig:ablation_study_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
+For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
+Side-information and context is not able to improve the performance of the model on ML1M in a non-context specific setting.
+Since both \Cref{fig:ablation_study_1,fig:ablation_study_2} show that the model is worse with context included, we can conclude that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
+Side-information, however, should be able to increase performance of the model in a non-context specific setting, but in this case the side-information does not provide any additional collaborative signal.
 
 \subsection{Performance Comparison (RQ3)}
 To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study with multiple ways of considering the side-information.
-First of all, we ran the method as usual as a baseline with all context included.
-Then, we ran it again with the same settings, but only considering respectively user side-information, item side-information and finally no side-information at all.
