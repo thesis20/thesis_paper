@@ -291,8 +291,12 @@ $D_T = \{(u,i,j,c) | i \in I_{(u,c)} \wedge  j \in I \setminus I_{(u,c)}\}$ deno
 $\hat{y}$ is a score prediction for respectively a positive interaction $(u,i,c)$ between a user $u$ and an item $i$ in context $c$, and a negative interaction $(u,j,c)$ for the same user in the same context, but with a sampled non-interaction $j$.
 \\
 The positive interaction is an observed interaction between a user and an item, which can be found in the training set.
-We then randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\
-While using sampling for calculating BPR is biased \cite{nonsampling}, it is usually necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data.
+We then randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\ 
+Using negative sampling for calculating loss is biased \cite{nonsampling, NegativeSampling}, and sensitive to the number of negative samples \cite{NCF}.
+Fluctuations in the sampled negative item can cause difficulties in converging, and even sampling more negative items can increase performance.
+Chen et al. \cite{nonsampling} propose to learn FM models without negative sampling to improve ranking performance for context-aware recommendation, and increase stability due to considering all samples in each parameter update.
+However, using negative sampling can be necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data point.
+Because of this consideration, CSGCN uses negative sampling for training, and due to employing BPR loss, only one negative sample is used.
 \\\\
 The model parameters are updated by optimizing the BPR objective function in \Cref{eq:loss-func}.
 For a specific model parameter, this is done by calculating the gradient of the objective function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate. 

@@ -399,3 +399,30 @@ series = {WWW '20}
   biburl    = {https://dblp.org/rec/journals/corr/abs-1910-05446.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
+
+@misc{NCF,
+      title={Neural Collaborative Filtering}, 
+      author={Xiangnan He and Lizi Liao and Hanwang Zhang and Liqiang Nie and Xia Hu and Tat-Seng Chua},
+      year={2017},
+      eprint={1708.05031},
+      archivePrefix={arXiv},
+      primaryClass={cs.IR}
+}
+
+@inproceedings{NegativeSampling,
+author = {Chen, Chong and Zhang, Min and Wang, Chenyang and Ma, Weizhi and Li, Minming and Liu, Yiqun and Ma, Shaoping},
+title = {An Efficient Adaptive Transfer Neural Network for Social-Aware Recommendation},
+year = {2019},
+isbn = {9781450361729},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3331184.3331192},
+doi = {10.1145/3331184.3331192},
+abstract = {Many previous studies attempt to utilize information from other domains to achieve better performance of recommendation. Recently, social information has been shown effective in improving recommendation results with transfer learning frameworks, and the transfer part helps to learn users' preferences from both item domain and social domain. However, two vital issues have not been well-considered in existing methods: 1) Usually, a static transfer scheme is adopted to share a user's common preference between item and social domains, which is not robust in real life where the degrees of sharing and information richness are varied for different users. Hence a non-personalized transfer scheme may be insufficient and unsuccessful. 2) Most previous neural recommendation methods rely on negative sampling in training to increase computational efficiency, which makes them highly sensitive to sampling strategies and hence difficult to achieve optimal results in practical applications.To address the above problems, we propose an Efficient Adaptive Transfer Neural Network (EATNN). By introducing attention mechanisms, the proposed model automatically assign a personalized transfer scheme for each user. Moreover, we devise an efficient optimization method to learn from the whole training set without negative sampling, and further extend it to support multi-task learning. Extensive experiments on three real-world public datasets indicate that our EATNN method consistently outperforms the state-of-the-art methods on Top-K recommendation task, especially for cold-start users who have few item interactions. Remarkably, EATNN shows significant advantages in training efficiency, which makes it more practical to be applied in real E-commerce scenarios. The code is available at (https://github.com/chenchongthu/EATNN).},
+booktitle = {Proceedings of the 42nd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+pages = {225–234},
+numpages = {10},
+keywords = {social connections, adaptive transfer learning, recommender systems, implicit feedback, whole-data based learning},
+location = {Paris, France},
+series = {SIGIR'19}
+}
