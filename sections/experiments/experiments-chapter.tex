@@ -73,11 +73,36 @@ However, it contains contextual information about the time of the transaction:
 It also contains information about the weather at the time of the transaction.
 
 \subsection{Feature selection}
-Since some of the datasets include information which may degrade performance of the algorithms, it is important to choose which side-information and context variables to consider.
-Since all datasets except for Frappe provide a timestamp, we use this as our contextual information and extract some additional information from it.
-To decide which context combination performs the best, we perform an evaluation of all possible combinations, and pick the one that performs the best.\\
-\todo[color=red]{x - Describe final choices}
-\todo[color=red]{x - Show graph for various choices}
+Since most of the datasets mainly include a timestamp as contextual information, we discretize these into the following features:
+\begin{itemize}
+	\item Month
+	\item Day of week
+	\item Hour
+	\item Time of day
+\end{itemize}
+Time of day is a further discretization of the hour feature, split into 5 intervals:
+\begin{itemize}
+	\item Night (0 to 4)
+	\item Morning (4 to 8)
+	\item Before midday (8 to 12)
+	\item After midday (12 to 16)
+	\item Afternoon (16 to 20)
+	\item Late night (20 to 24)
+\end{itemize}
+For the Frappe dataset, we instead make use of the three default contextual values available (weekday, time of day, weekend or not).
+\\\\
+For the side-information, we use all the available side-information for both users and items with some discretization.
+The Yelp datasets provide a "yelping since" feature, which is a timestamp for the creation of the user.
+This is discretized to include the year that the user has been created.
+\\
+Additionally, the feature "fans" is discretized into four groups:
+\begin{itemize}
+	\item $< 50$ fans
+	\item $50 - 100$ fans
+	\item $100-500$ fans
+	\item $> 500$ fans
+\end{itemize}
+
 
 \subsection{Parameter settings}
 To fairly compare the performance of the models, we train all of them by optimizing the BPR loss with Adam.
