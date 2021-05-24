@@ -41,7 +41,7 @@ The model itself is very similar to LightGCN.
 It is, however, important to note that the neighboring nodes for users now include side-information for users and not only items, which can be seen in each of the layers now receiving a normalized sum of both items and user side-information, rather than just the normalized sum of items.
 The same goes for the neighbors of items.
 \\
-There are a number of graph convolution layers where for each central node, information about neighbor nodes is being propagated.
+There are a number of graph convolution layers where, for each central node, information about neighbor nodes is being propagated.
 The representation at layer $l+1$ is calculated by taking the normalized sum of the representations of neighbor nodes at layer $l$. 
 As mentioned, neighbor nodes for user are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes, which can be seen on \Cref{fig:quadripartite-graph}.
 For each additional layer, information is passed from nodes that are further away from a central node, illustrated on \Cref{fig:aggregation-for-layers}
