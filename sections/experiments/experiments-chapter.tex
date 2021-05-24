@@ -291,14 +291,62 @@ Even more interesting in the Frappe dataset is the performance of TopPop, which 
 This is most likely caused by the dataset including some very popular items.
 The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
 All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the YelpON dataset across various aggregators of context on CSGCN-IS.
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Epoch,
+            ylabel=NDCG@20,
+            height=8cm,
+            width=7cm,
+            grid=major,
+            legend style={at={(0.5,-0.20)},
+        anchor=north,legend columns=2}]
+            
+        \addplot plot coordinates{
+        	(0,0.05035)
+            (20,0.07624)
+            (40,0.08588)
+            (60,0.09124)
+            (80,0.09665)
+            (100,0.09915)
+            (120,0.09977)
+        };
 
-\begin{figure}[hbt!]
-	%\hspace*{-0.1cm}
-	\centering
-	\small	
-	\includegraphics[width=0.48\textwidth]{figures/aggregation_effect.png}\vspace{-5pt}
-	\caption{Effect of aggregation functions for CSGCN-IS on the YelpNC dataset for NDCG@20.}\vspace{-10pt}
-	\label{fig:aggregation_effect}
+		\addplot plot coordinates{
+        	(0,0.05072)
+            (20,0.07066)
+            (40,0.07272)
+            (60,0.07547)
+            (80,0.07841)
+            (100,0.07715)
+            (120,0.07813)
+        };
+
+        \addplot plot coordinates{
+        	(0,0.05051)
+            (20,0.07429)
+            (40,0.08143)
+            (60,0.08697)
+            (80,0.09012)
+            (100,0.09007)
+            (120,0.08953)
+        };
+        
+        \addplot plot coordinates{
+        	(0,0.051)
+            (20,0.07671)
+            (40,0.08538)
+            (60,0.09109)
+            (80,0.09496)
+            (100,0.09758)
+            (120,0.0976)
+        };
+
+        \legend{Mean,Max,Min,Median}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Effect of aggregation functions for CSGCN-IS on the YelpNC dataset for NDCG@20.}
+    \label{fig:aggregation_effect}
 \end{figure}
 In \Cref{fig:aggregation_effect} we see the graph over how the choice of aggregation affects the CSGCN-IS model.
 What we see is that taking the mean provides the best results, followed by the median.
