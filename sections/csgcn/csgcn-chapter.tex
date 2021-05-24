@@ -364,7 +364,6 @@ $e_{c}$ is the embedding representation of the context value $c$, $e_i$ is the e
 In this predictor function, we calculate the pairwise interaction between each of the embeddings.
 The self-interactions are not calculated since they do not contribute to the score prediction.
 The embeddings used for items and users are the ones output by the convolution layer while the context embeddings are the initial values before convolution, since they are only propagated with information about themselves.
-\todo{ref til hvor vi beskriver det?}
 
 \subsection{Adjacency matrix and training}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
