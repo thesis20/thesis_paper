@@ -333,7 +333,7 @@ With the second proposed model, context is included in the convolution by adding
 The adjacency matrix will now include interactions, what context the users have interacted in, and the context in which items have been interacted with.
 This approach is unable to capture which specific contexts the different interactions occured in.
 It only captures whether or not the user or item has had an interaction in the given context.
-This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single vector representation, instead of having a vector representation for each context value and item pair.
+This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single vector representation instead of having a vector representation for each context value and item pair.
 The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution.
 By including nodes for the context values in the convolution, their representations are updated with aggregated neighbor information, being items and users that have interacted in that context.
 This means that with higher-order connectivity, items and users are updated with information about other users and items that have interacted in the same context.
