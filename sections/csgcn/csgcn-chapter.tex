@@ -406,7 +406,7 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| + |C|) \times (|U| + |I| + |US| + |IS|+ |C|)$ degree matrix. 
 We see that for this model, we only normalize on a row-level by multiplying by $D^{\frac{1}{2}}$ on the left side of the adjacency matrix.
-This approach is inspired by a combination of the random walk Laplacian $D^{-1}$ and the symmetrical normalized Laplacian $D^{-\frac{1}{2}}AD^{-\frac{1}{2}}$ used in CSGCN-IS.
+This approach is inspired by a combination of the random walk Laplacian $D^{-1}A$ and the symmetrical normalized Laplacian $D^{-\frac{1}{2}}AD^{-\frac{1}{2}}$ used in CSGCN-IS.
 We found that for this version of the model, it gave slightly better performance compared to these regular normalization methods, as evidenced by the results seen on \Cref{fig:normalization_graph}.
 
 \begin{figure}
