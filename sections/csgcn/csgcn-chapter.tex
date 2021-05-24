@@ -18,9 +18,16 @@ At the same time, we find a negative sample for the same user and context and de
 With this intuition, we will now detail how this is implemented in the CSGCN model.
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
-While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by a lack of ablation studies on the model.
-In fact, removing the linear transformation and nonlinear activation typically does not degrade performance of the models while improving speed significantly \cite{SimplifyingGCN}.
-Based on these considerations, CSGCN-IS is based on the popular LightGCN model \cite{LightGCN}, which has applied these considerations to their model and proven that it outperforms their previous work with NGCF, which used a traditional GCN model with all three components \cite{LightGCN}.
+While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
+Wu et al. presents the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs.
+Instead, they were proposed in the recent years of neural networks where deep learning had gained high popularity, and as such GCNs were built directly on top of a complex model.
+To investigate whether this was useful, they present SGCN, a simplified version of GCNs that could have preceeded GCNs if the traditional path had been taken.
+This led them to remove the linear transformation and nonlinear activation, to reach a simplified linear model.
+Interestingly, they proved that not only does this not degrade performance of the models, it generally matches or improves both in terms of performance and speed \cite{SimplifyingGCN}.\\
+This signifies that the expressive power of GCNs originates primarily from the propagations done in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
+Based on these considerations, the CSGCN models are based on these observations made in the SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN}, which has applied these considerations and proven that it outperforms regular GCNs that employ a traditional GCN model with all three components \cite{LightGCN}.
+
+
 
 %\begin{figure}[hbt!]
 	%\hspace*{-0.1cm}
@@ -218,6 +225,7 @@ $A$ consists of the rating matrix $R$ and its transpose $R^T$, as well as sub-ma
 Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $$|U|\times|U|$$ where $|U|$ is the amount of users in the dataset.
 This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between entities (users and items) and their side-information in the graph, allowing it to be used for higher-order connectivity in the convolution layers.
+It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
 \\\\
 The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, with the exception of the adjacency matrix being modified as described above.
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS|) \times K}$, where $K$ is the embeddings size, then the embedding matrix for the next layer $l+1$ can be obtained by:
@@ -252,12 +260,14 @@ The inputs to layers are the users and items as well as side-information about u
 \begin{equation}\label{eq:csgcn_is_gc_layer_user}
      e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{\sqrt{|\mathcal{N}_{un}|} \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
 \end{equation}
-In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the GCN layer operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighboring nodes for user $u$, including both items and user side-information, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$. 
-A neighbor-node is denoted as $un$ or $in$ for respectively user neighbors and item neighbors, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
+In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the GCN layer operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, including both items and user side-information, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$. 
+A neighbor-node is denoted as $un$ for user neighbors $\mathcal{N}_{u}$, and $in$ item neighbors $\mathcal{N}_{i}$, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
+$N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_{in}$ denotes the set of neighbors for the neighbor $in$ of node $i$.
+This means that when neigbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its reprentation propagated.
 \\\\
-The convolution layer updates user and item nodes' representations by summing the normalized representations of the neighbor nodes.
-Only the item and user nodes are updated as shown, as these embeddings are the only ones used beyond the convolution layer in the prediction function, further described in \Cref{subsec:csgcn_is_score_prediction}.
-The side-info nodes' representations are also updated in the layer but are not being output from the layer since their representations are integrated into the item and user node representations.
+The convolution layer propagates user and item nodes' representations by summing the normalized representations of the neighbor nodes.
+Only the item and user nodes' propagations are shown, as these embeddings are the only ones used beyond the convolution layer in the prediction function, further described in \Cref{subsec:csgcn_is_score_prediction}.
+The side-info nodes' representations are also being propagated with information about their neighbors in the layer, but are not being output from the layer since their representations are integrated into the item and user node representations, and therefore they are not used in the score prediction.
 % \todo{move laplacian stuff up before concrete}
 % We use the laplacian symmetric normalization of the adjacency matrix \cite{chung1997spectral} to help scale the embeddings with convolution operations.
 % This normalization is defined in \Cref{eq:laplaciannormalization}, where $x$ and $y$ are nodes in the graph, and we let $|\mathcal{N}_{x}|$ denote the degree of node $x$.
@@ -292,17 +302,24 @@ $D_T = \{(u,i,j,c) | i \in I_{(u,c)} \wedge  j \in I \setminus I_{(u,c)}\}$ deno
 $\hat{y}$ is a score prediction for respectively a positive interaction $(u,i,c)$ between a user $u$ and an item $i$ in context $c$, and a negative interaction $(u,j,c)$ for the same user in the same context, but with a sampled non-interaction $j$.
 \\
 The positive interaction is an observed interaction between a user and an item, which can be found in the training set.
-We then randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\
-While using sampling for calculating BPR is biased \cite{nonsampling}, it is usually necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data.
+We then randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\ 
+Using negative sampling for calculating loss is biased \cite{nonsampling, NegativeSampling}, and sensitive to the number of negative samples \cite{NCF}.
+Fluctuations in the sampled negative item can cause difficulties in converging, and even sampling more negative items can increase performance.
+Chen et al. \cite{nonsampling} propose to learn FM models without negative sampling to improve ranking performance for context-aware recommendation, and increase stability due to considering all samples in each parameter update.
+However, using negative sampling can be necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data point.
+Because of this consideration, CSGCN uses negative sampling for training, and due to employing BPR loss, only one negative sample is used.
 \\\\
-The model parameters are updated by optimizing the BPR objective function in \Cref{eq:loss-func}.
-For a specific model parameter, this is done by calculating the gradient of the objective function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate. 
-In our implementation, the objective function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}.
-Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the cost function.
-The optimizer chosen determines the training speed and final performance of the model.
+The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
+For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient by a step size defined through the learning rate.
+The gradient is a vector of partial derivates, which defines the slope of the function, where a partial derivative of a function with multiple variables is the derivate with respect to a single variable with the remaining variables held constant.
+The derivate defines how the output of the function changes based on changes in the input.
+The model parameters can then be updated in the negative direction of the slope of the function, the gradient, based on the learning rate, in order to approach a local minima. 
+In our implementation, the loss function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}, based on empirical testing.
+Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the loss function.
+The chosen optimizer can impact the training speed and final performance of the model.
 However, there is no theory that explains how to make the decision of which optimizer to use \cite{EmpiricalOptimizers}.
-Unlike simpler optimizers that maintain a single learning rate throughout training,  such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and uncentered variance of the gradient \cite{AdamOptimizer}.
-Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for recommender systems, since they often deal with sparse data.
+Unlike simpler optimizers that maintain a single learning rate throughout training, such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and the variance of the gradient and the squared gradient \cite{AdamOptimizer}.
+Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for RS and CARS, since they often deal with sparse data.
 
 % \subsection{Implementation details}
 % For the implementation of the model, an adjacency matrix $A$ is created to facilitate the convolution layers.
@@ -368,7 +385,9 @@ The embeddings used for items and users are the ones output by the convolution l
 \subsection{Adjacency matrix and training}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
 The graph is similar to the one in \Cref{fig:quadripartite-graph}, but context nodes are inserted between the sets of item and user nodes, and edges connect the nodes that have interacted in the context.
-Additionally, we add the identity matrix $I$ to the last quadrant, such that the context embeddings are not updated through the convolution layers.
+For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave slightly better performance compared to also propagating information about neighbors to the context embeddings.
+Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacancy matrix.
+Instead, we add the identity matrix $I$ to the last quadrant such that the context embeddings are only propagated with information about themselves in each convolution.
 The matrix is seen in \Cref{csgcn_adj_adj_mat}.
 \begin{equation}\label{csgcn_adj_adj_mat}
     \begin{bmatrix}
@@ -385,7 +404,7 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| + |C|) \times (|U| + |I| + |US| + |IS|+ |C|)$ degree matrix. 
 We see that for this model, we only normalize on a row-level by multiplying by $D^{\frac{1}{2}}$ on the left side of the adjacency matrix.
-This is again to ensure that the context embeddings are not updated though convolution, using the identity matrix in the adjacency matrix.
-The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS.
+We found that for this version of the model, it gave slightly better performance compared to multiplying by $D^{\frac{1}{2}}$ on both sides of the adjacency matrix.
+The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
 \\\\
 Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.
