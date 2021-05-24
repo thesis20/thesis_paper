@@ -278,7 +278,7 @@ To include context in the score prediction, we propose to model each pair of ite
 The use of $e_{ic}$ is heavily inspired by Ricci and Baltrunas' item splitting approach \cite{baltrunasitemsplitting}, where a context weight for each item in each context is calculated.
 This means that for the set of items $I$ and the set of possible context values $C$, there are $|I| \times |C|$ embeddings of item and context value combinations $e_{ic}$.
 The objective is to calculate a score between a user and an item in a given context $C'$, where $C' \subseteq C$
-The different $e_{ic}$'s of a given item $i$ and context $C'$ are added to the item to signify its popularity in the given context. \todo{Does that actually what the addition does tho?}
+The different $e_{ic}$'s of a given item $i$ and context $C'$ are added to the item to signify its popularity in the given context.
 After the addition of the $e_{ic}$'s to the item embedding $e_i$, the cosine similarity scores of the user embedding $e_u$ and the item-context additions are calculated and summed together to produce a score: 
 $$\hat{y}_{uic} = \sum_{c \in C'} e_u^T(e_i+e_{ic})$$
 
