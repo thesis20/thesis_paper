@@ -78,7 +78,7 @@ This graph consists of two distinct sets of nodes: Users ($U$) and items ($I$), 
 \\
 GCNs are variants of CNNs used on graph-based data \cite{KOrderConnectivity}.
 GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
-Representations are updated in each graph convolution layer through three steps: feature propagation, linear transformation and nonlinear activation.
+Representations are being propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation and nonlinear activation.
 Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors features.
 The next step is using a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with some weight.
 Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model.
