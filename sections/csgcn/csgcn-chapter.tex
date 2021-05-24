@@ -291,7 +291,7 @@ The objective is to calculate a score between a user and an item in a given cont
 The different $e_{ic}$'s of a given item $i$ and context $C'$ are added to the item to signify its popularity in the given context.
 After the addition of the $e_{ic}$'s to the item embedding $e_i$, the cosine similarity scores of the user embedding $e_u$ and the item-context additions are calculated and summed together to produce a score: 
 $$\hat{y}_{uic} = \sum_{c \in C'} e_u^T(e_i+e_{ic})$$
-As shown, the context embeddings are not a part of the convolution layer, but are only used in the score prediciton, meaning that they are learned directly through their appearence in the score prediction function.
+As shown, the context embeddings are not a part of the convolution layer but are only used in the score prediction, meaning that they are learned directly through their appearance in the score prediction function.
 This is further described in \Cref{subsec:csgcn_is_training}.
 
 \subsection{Training}\label{subsec:csgcn_is_training}
