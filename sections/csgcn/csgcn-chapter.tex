@@ -295,7 +295,7 @@ We then randomly select an item that the same user has not interacted with in th
 While using sampling for calculating BPR is biased \cite{nonsampling}, it is usually necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data.
 \\\\
 The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
-For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate.
+For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient by a step size defined through the learning rate.
 The gradient is a vector of partial derivates, which defines the slope of the function, where a partial derivative of a function with multiple variables is the derivate with respect to a single variable with the remaining variables held constant.
 The derivate defines how the output of the function changes based on changes in the input.
 The model parameters can then be updated in the negative direction of the slope of the function, the gradient, based on the learning rate, in order to approach a local minima. 
