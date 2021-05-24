@@ -225,6 +225,7 @@ $A$ consists of the rating matrix $R$ and its transpose $R^T$, as well as sub-ma
 Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $$|U|\times|U|$$ where $|U|$ is the amount of users in the dataset.
 This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between entities (users and items) and their side-information in the graph, allowing it to be used for higher-order connectivity in the convolution layers.
+It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
 \\\\
 The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, with the exception of the adjacency matrix being modified as described above.
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS|) \times K}$, where $K$ is the embeddings size, then the embedding matrix for the next layer $l+1$ can be obtained by:
@@ -307,14 +308,17 @@ Chen et al. \cite{nonsampling} propose to learn FM models without negative sampl
 However, using negative sampling can be necessary since using non-sampling not only requires the method to look at each possible interaction from the dataset, but also to consider each non-observed interaction as a negative data point.
 Because of this consideration, CSGCN uses negative sampling for training, and due to employing BPR loss, only one negative sample is used.
 \\\\
-The model parameters are updated by optimizing the BPR objective function in \Cref{eq:loss-func}.
-For a specific model parameter, this is done by calculating the gradient of the objective function at each iteration with respect to the model parameter, and then updating it according to the gradient using a learning rate. 
-In our implementation, the objective function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}.
-Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the cost function.
-The optimizer chosen determines the training speed and final performance of the model.
+The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
+For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient by a step size defined through the learning rate.
+The gradient is a vector of partial derivates, which defines the slope of the function, where a partial derivative of a function with multiple variables is the derivate with respect to a single variable with the remaining variables held constant.
+The derivate defines how the output of the function changes based on changes in the input.
+The model parameters can then be updated in the negative direction of the slope of the function, the gradient, based on the learning rate, in order to approach a local minima. 
+In our implementation, the loss function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}, based on empirical testing.
+Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the loss function.
+The chosen optimizer can impact the training speed and final performance of the model.
 However, there is no theory that explains how to make the decision of which optimizer to use \cite{EmpiricalOptimizers}.
-Unlike simpler optimizers that maintain a single learning rate throughout training,  such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and uncentered variance of the gradient \cite{AdamOptimizer}.
-Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for recommender systems, since they often deal with sparse data.
+Unlike simpler optimizers that maintain a single learning rate throughout training, such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and the variance of the gradient and the squared gradient \cite{AdamOptimizer}.
+Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for RS and CARS, since they often deal with sparse data.
 
 % \subsection{Implementation details}
 % For the implementation of the model, an adjacency matrix $A$ is created to facilitate the convolution layers.
@@ -378,7 +382,9 @@ In this predictor function, we calculate the pairwise interaction between each o
 \subsection{Adjacency matrix and training}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
 The graph is similar to the one in \Cref{fig:quadripartite-graph}, but context nodes are inserted between the sets of item and user nodes, and edges connect the nodes that have interacted in the context.
-Additionally, we add the identity matrix $I$ to the last quadrant, such that the context embeddings are not updated through the convolution layers.
+For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave slightly better performance compared to also propagating information about neighbors to the context embeddings.
+Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacancy matrix.
+Instead, we add the identity matrix $I$ to the last quadrant such that the context embeddings are only propagated with information about themselves in each convolution.
 The matrix is seen in \Cref{csgcn_adj_adj_mat}.
 \begin{equation}\label{csgcn_adj_adj_mat}
     \begin{bmatrix}
@@ -395,7 +401,7 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| + |C|) \times (|U| + |I| + |US| + |IS|+ |C|)$ degree matrix. 
 We see that for this model, we only normalize on a row-level by multiplying by $D^{\frac{1}{2}}$ on the left side of the adjacency matrix.
-This is again to ensure that the context embeddings are not updated though convolution, using the identity matrix in the adjacency matrix.
-The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS.
+We found that for this version of the model, it gave slightly better performance compared to multiplying by $D^{\frac{1}{2}}$ on both sides of the adjacency matrix.
+The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
 \\\\
 Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.
