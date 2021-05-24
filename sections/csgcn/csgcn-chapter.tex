@@ -266,8 +266,8 @@ $N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_
 This means that when neigbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its reprentation propagated.
 \\\\
 The convolution layer propagates information to user and item nodes' representations by summing the normalized representations of the neighbor nodes.
-All types of nodes are being propagated with information about their neighbors, but since only the user and item nodes' represenations are being used in the prediciton function for our model, their representations are the only ones that are returned from the convolution layer.
-The argument for not also returning side-information nodes and using these in the prediction function, is that through the convolution, the information from these nodes are integrated into the representation of user and item nodes.
+All types of nodes are being propagated with information about their neighbors, but since only the user and item nodes' representations are being used in the prediction function for our model, their representations are the only ones that are returned from the convolution layer.
+The argument for not also returning side-information nodes and using these in the prediction function is that through the convolution, the information from these nodes is integrated into the representation of user and item nodes.
 % \todo{move laplacian stuff up before concrete}
 % We use the laplacian symmetric normalization of the adjacency matrix \cite{chung1997spectral} to help scale the embeddings with convolution operations.
 % This normalization is defined in \Cref{eq:laplaciannormalization}, where $x$ and $y$ are nodes in the graph, and we let $|\mathcal{N}_{x}|$ denote the degree of node $x$.
