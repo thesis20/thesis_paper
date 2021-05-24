@@ -32,7 +32,7 @@ For items, it is meta-information about the item such as the genre of a movie, w
 In this paper, we present a GCN-based context-aware model, which takes side-information into account in order to alleviate the sparsity problem often found in CARS.
 Sparsity issues are often encountered in CARS due to the addition of multi-dimensional contextual conditions that users only interact with a few of\cite{SparsityCARS}, leading to learning difficulties.
 The use of side-information can help alleviate problems with collaborative filtering in a sparse situation where the users and items do not have many interactions \cite{KGAT}. 
-A common approach to integrating side-information into a recommendation model is to model it as feature vectors alongside the user and item feature vectors.
+A common approach to integrating side-information into a recommendation model is to model a vectors representation for it alongside the user and item vector representations.
 
 \subsection{Data representation}
 In graph-based collaborative filtering RSs, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
@@ -77,9 +77,9 @@ This graph consists of two distinct sets of nodes: Users ($U$) and items ($I$), 
 \textbf{Higher-order connectivity and implementation input for GCNs}
 \\
 GCNs are variants of CNNs used on graph-based data \cite{KOrderConnectivity}.
-GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
+GCNs stack learned first-order layers and apply a nonlinear activation function to learn vector representations of each node over multiple layers \cite{KOrderConnectivity}.
 Representations are updated in each graph convolution layer through three steps: feature propagation, linear transformation and nonlinear activation.
-Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors features.
+Feature propagation averages representations in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors features.
 The next step is using a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with some weight.
 Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model.
 \\

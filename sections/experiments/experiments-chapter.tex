@@ -52,14 +52,14 @@ Side-information for items is \textit{genre}, which specifies that an item has z
 For contextual information, the MovieLens datasets provide a timestamp for when the interaction took place, which is split into a month, day of week, hour and time of day (morning, evening, night, etc.).\\\\
 
 The two Yelp datasets (\textbf{Yelp-NC} and \textbf{Yelp-ON}) are subsets of the public Yelp datasets, where we take the subset of items located in respectively North Carolina (NC) and Ontario (ON).
-Both Yelp datasets have been pruned such that only users with at least 10 interactions, such that we can generate a stratified datasplit and avoid cold-start situations.\\
+Both Yelp datasets have been pruned such that only users with at least 10 interactions, such that we can generate a stratified data split and avoid cold-start situations.\\
 They both have the following side-information about users:
 \begin{itemize}
     \item Yelping since (Year)
     \item Number of fans
     \item Average stars 
 \end{itemize}
-As with the MovieLens dataset, the side-information about items a feature specifying the categories that an item belongs to.
+As with the MovieLens dataset, the side-information about items contains a dimension specifying the categories that an item belongs to.
 For the YelpNC dataset, this is zero or more of 80 different categories, and 75 categories for YelpON.\\
 The contextual information is a timestamp, which is split into four types as with the MovieLens dataset.\\
 Finally, the \textbf{Frappe} dataset contains information about how users have interacted with applications on their smartphones.
@@ -72,15 +72,15 @@ However, it contains contextual information about the time of the transaction:
 \end{itemize}
 It also contains information about the weather at the time of the transaction.
 
-\subsection{Feature selection}
-Since most of the datasets mainly include a timestamp as contextual information, we discretize these into the following features:
+\subsection{Context dimension selection}
+Since most of the datasets mainly include a timestamp as contextual information, we discretize these into the following context dimensions:
 \begin{itemize}
 	\item Month
 	\item Day of week
 	\item Hour
 	\item Time of day
 \end{itemize}
-Time of day is a further discretization of the hour feature, split into 5 intervals:
+Time of day is a further discretization of the hour dimension, split into 5 intervals:
 \begin{itemize}
 	\item Night (0 to 4)
 	\item Morning (4 to 8)
@@ -92,10 +92,10 @@ Time of day is a further discretization of the hour feature, split into 5 interv
 For the Frappe dataset, we instead make use of the three default contextual values available (weekday, time of day, weekend or not).
 \\\\
 For the side-information, we use all the available side-information for both users and items with some discretization.
-The Yelp datasets provide a "yelping since" feature, which is a timestamp for the creation of the user.
+The Yelp datasets provide a "yelping since" dimension, which is a timestamp for the creation of the user.
 This is discretized to include the year that the user has been created.
 \\
-Additionally, the feature "fans" is discretized into four groups:
+Additionally, the dimension "fans" is discretized into four groups:
 \begin{itemize}
 	\item $< 50$ fans
 	\item $50 - 100$ fans
