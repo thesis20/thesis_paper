@@ -218,7 +218,7 @@ $A$ consists of the rating matrix $R$ and its transpose $R^T$, as well as sub-ma
 Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $$|U|\times|U|$$ where $|U|$ is the amount of users in the dataset.
 This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between entities (users and items) and their side-information in the graph, allowing it to be used for higher-order connectivity in the convolution layers.
-It is worth noting that unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer.
+It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
 \\\\
 The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, with the exception of the adjacency matrix being modified as described above.
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS|) \times K}$, where $K$ is the embeddings size, then the embedding matrix for the next layer $l+1$ can be obtained by:
