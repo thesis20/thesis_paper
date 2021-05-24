@@ -290,8 +290,7 @@ Frappe has a density of 18.9\%, compared to the others that range between 1.1\% 
 Even more interesting in the Frappe dataset is the performance of TopPop, which outperforms all other methods on all metrics.
 This is most likely caused by the dataset including some very popular items.
 The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
-All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the YelpON dataset across various aggregators of context.
-
+All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the YelpON dataset across various aggregators of context on CSGCN-IS.
 \begin{figure}
     \begin{tikzpicture}
         \begin{axis}[
@@ -346,19 +345,17 @@ All of these results are based on using the mean aggregator, but for the sake of
         \legend{Mean,Max,Min,Median}
         \end{axis}
     \end{tikzpicture}
-    \caption{Effect of aggregation functions on the YelpNC dataset for NDCG@20.}
+    \caption{Effect of aggregation functions for CSGCN-IS on the YelpNC dataset for NDCG@20.}
     \label{fig:aggregation_effect}
 \end{figure}
-
-
 In \Cref{fig:aggregation_effect} we see the graph over how the choice of aggregation affects the CSGCN-IS model.
 What we see is that taking the mean provides the best results, followed by the median.
 In the bottom we have the simple solution of simply taking the lowest or highest score across the contexts.\\
 This supports our previous assumption that while a single item might score high or low in one context, it does not necessarily mean that it is a good recommendation overall, which is better captured through the mean and median aggregations.\\
 While the results are only shown for NDCG@20 for this dataset, they have proven consistent across all the metrics.
 \\\\
-To test whether context and side-information actually increase the performance of our model in a non-context specific setting, we run one of our proposed methods, CSGCN-ADJ, using different inputs for the datasets YelpNC and ML1M and measure the performances with NDCG@20.
-First of all, our method is run with both side-information and context. 
+To test whether context and side-information actually increase performance in a non-context specific setting, we run one of our proposed models, CSGCN-ADJ, using different inputs for the datasets YelpNC and ML1M and measure the performances with NDCG@20.
+First of all, CSGCN-ADJ is run with both side-information and context. 
 Then we remove side-information, followed by removing context and finally we remove both context and side-information.
 \begin{figure}
     \begin{tikzpicture}
@@ -418,7 +415,7 @@ Then we remove side-information, followed by removing context and finally we rem
         \legend{Sideinfo + context,Sideinfo,Context,Nothing}
         \end{axis}
     \end{tikzpicture}
-    \caption{The performance on NDCG@20 of our model on the YelpNC dataset with different types of input.}
+    \caption{The performance on NDCG@20 of CSGCN-ADJ on the YelpNC dataset with different types of input.}
     \label{fig:ablation_study_1}
 \end{figure}
 On \Cref{fig:ablation_study_1} we see the performance on NDCG@20 of CSGCN-ADJ with different input.
