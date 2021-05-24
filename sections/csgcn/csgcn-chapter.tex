@@ -10,7 +10,7 @@ However, since most RS datasets are sparse, we want to see if we can alleviate t
 To do this, we utilize the fact that most datasets include some amount of additional information about users and items.
 This additional information can be used to further connect users and items by adding it as nodes in the graph.\\
 Besides side-information, we need to reason about how to express context in the model.
-After experimenting with various ways to express this, we came to the realization that context can be simplified to be a modifier to an item, which signifies whether the items are popular in a given context or not.
+After experimenting with various ways to express this, we came to the realization that context can be simplified to be an embedding used as a modifier to an item, which signifies whether the items are popular in a given context or not.
 For example, we may learn that indoor activities are generally more popular on a rainy day.
 This can be learned by the model through sampling user interactions in various contexts from ground truth.
 For the user and context sampled, we see that they interacted with a given item, which should lead to an increase in the context score for this item-context combination.
@@ -20,7 +20,7 @@ With this intuition, we will now detail how this is implemented in the CSGCN mod
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
 While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by a lack of ablation studies on the model.
 In fact, removing the linear transformation and nonlinear activation typically does not degrade performance of the models while improving speed significantly \cite{SimplifyingGCN}.
-Based on these considerations, CSGCN-IS is based on the popular LightGCN model \cite{LightGCN}, which has applied these considerations to their model and proven that it outperforms their previous work with NGCF, which used a traditional GCN model with all three components \cite{LightGCN}.
+Based on these considerations, CSGCN-IS is based on the popular LightGCN model \cite{LightGCN}, which has applied these considerations to their model and proven that it outperforms their previous work \cite{NGCF}, which used a traditional GCN model with all three components \cite{LightGCN}.
 
 %\begin{figure}[hbt!]
 	%\hspace*{-0.1cm}
@@ -36,9 +36,9 @@ The same goes for the neighbors of items.
 \\
 There are a number of graph convolution layers that update the representation of each central node with information about their neighbor nodes.
 The representation at layer $l+1$ is calculated by taking the normalized sum of the representations of neighbor nodes at layer $l$. 
-As mentioned, neighbor nodes for user are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes, which can be seen on \Cref{fig:quadripartite-graph}.
+As mentioned, neighbor nodes for users are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes, which can be seen on \Cref{fig:quadripartite-graph}.
 For each additional layer, information is passed from nodes that are further away from a central node, illustrated on \Cref{fig:aggregation-for-layers}
-After $n$ layers the representations at each of the layers are aggregated into a final representation.
+The representations at each of the layers are aggregated into a final representation after $n$ layers.
 From these final representations, a score prediction can be calculated between an item, user and a context which is further described in \Cref{subsec:csgcn_is_score_prediction}.
 
 
@@ -130,7 +130,7 @@ From these final representations, a score prediction can be calculated between a
 
 \subsection{Adjacency matrix}\label{subsec:csgcn_is_adj_mat}
 As described in \Cref{sec:problemdef}, GCNs used for CF recommendation typically employ a bipartite graph structure to represent the user-item interactions.
-In CSGCN this is extended to be a quadripartite graph, this is done by extending the distinct sets of user nodes $U$ and item nodes $I$ with a set of user side-information nodes $US$ and a set of item side-information nodes $IS$.
+In CSGCN this is extended to be a quadripartite graph, done by extending the distinct sets of user nodes $U$ and item nodes $I$ with a set of user side-information nodes $US$ and a set of item side-information nodes $IS$.
 This allows for the incorporation of the side-information in the model, whereas context is later included in the prediction function defined in \autoref{subsec:csgcn_is_score_prediction}.
 This graph extension can be seen on \Cref{fig:quadripartite-graph}.
 It should be noted that the distinct sets cannot be self-connected, and edges can only exist between adjacent sets.
@@ -233,7 +233,7 @@ The final embedding matrix after $l$ layers is defined as:
 
 \subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
 The main part of the model is the GCN layer where the user and item embeddings are updated by aggregating information about their neighbors for these interactions.
-The inputs to layers are the users and items as well as side-information about users and items, in the form of an adjacency matrix.
+The inputs to layers are the users and items as well as side-information about users and items in the form of an adjacency matrix.
 
 % \begin{equation}
 %     e_{i}^{(0)}= e_{i}^{(0)} + \frac{1}{\sqrt{|\mathcal{N}_{is}}|}\sum_{{is}\in \mathcal{N}_{is}}e_{is}
@@ -255,7 +255,7 @@ The inputs to layers are the users and items as well as side-information about u
 In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the GCN layer operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, including both items and user side-information, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$. 
 A neighbor-node is denoted as $un$ for user neighbors $\mathcal{N}_{u}$, and $in$ item neighbors $\mathcal{N}_{i}$, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
 $N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_{in}$ denotes the set of neighbors for the neighbor $in$ of node $i$.
-This means that when neigbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its reprentation propagated.
+This means that when neighbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its representation propagated.
 \\\\
 The convolution layer propagates user and item nodes' representations by summing the normalized representations of the neighbor nodes.
 Only the item and user nodes' propagations are shown, as these embeddings are the only ones used beyond the convolution layer in the prediction function, further described in \Cref{subsec:csgcn_is_score_prediction}.
@@ -277,23 +277,24 @@ The side-info nodes' representations are also being propagated with information 
 
 \subsection{Score prediction}\label{subsec:csgcn_is_score_prediction}
 To include context in the score prediction, we propose to use context as a learnable embedding, $e_{ic}$, that is added to items to signify that they are popular in a given context.
-After addition of the context embedding the cosine similarity score of the user and item is calculated in regards to the context to produce a score: 
-$$\hat{y}_{uic} = e_u^T(e_i+e_{ic})$$
+After addition of the context embedding the cosine similarity score of the user and item is calculated in regards to the context to produce a score:
+\begin{equation}
+  \hat{y}_{uic} = e_u^T(e_i+e_{ic})
+\end{equation}
 The use of $e_{ic}$ is heavily inspired by Ricci and Baltrunas' item splitting approach \cite{baltrunasitemsplitting}, where a context weight for each item in each context is calculated.
-This means that for the set of items $I$ there is $|I| \times |C|$ embeddings, where $C$ is the set of possible contexts.
-This context embedding is updated through sampling in the score prediction function using negative sampling, further described in \Cref{subsec:csgcn_is_training}.
+This means that for the set of items $I$ there is $|I| \times |C|$ item-context embeddings, where $C$ is the set of possible contexts.
 
 \subsection{Training}\label{subsec:csgcn_is_training}
 For the top-$k$ recommendation task, we utilize negative sampling and Bayesian Pairwise Ranking (BPR) loss \cite{BPR} as the training function, shown in \autoref{eq:loss-func}.
 \begin{equation}\label{eq:loss-func}
     Loss = \sum_{(u,i,j,c) \in D_T} \sigma(-(\hat{y}_{(u,i,c)} - \hat{y}_{(u,j,c)})) + \lambda_\Theta ||\Theta||^2
 \end{equation}
-where $\Theta$ denotes the trainable model parameters, which in this case are the 0th layer embeddings for items ($e_{i}^{(0)}$) and users ($e_{u}^{(0)}$), as well as the embeddings for side-information ($e_{us}$ and $e_{is}$) and item-context embeddings ($e_{ic}$). $\lambda$ denotes the regularization coefficient which is a hyperparameter and $\sigma(\cdot)$ denotes the non-linear activation function, in this case the softplus function.\\ \todo{gentjek activation til sidst fær aflevering}
+where $\Theta$ denotes the trainable model parameters, which in this case are the 0th layer embeddings for items ($e_{i}^{(0)}$) and users ($e_{u}^{(0)}$), as well as the embeddings for side-information ($e_{us}$ and $e_{is}$) and item-context embeddings ($e_{ic}$).
+$\lambda$ denotes the regularization coefficient which is a hyperparameter and $\sigma(\cdot)$ denotes the non-linear activation function, in this case the softplus function.\\ \todo{gentjek activation til sidst fær aflevering}
 $D_T = \{(u,i,j,c) | i \in I_{(u,c)} \wedge  j \in I \setminus I_{(u,c)}\}$ denotes the dataset of training tuples, where $I_{(u,c)}$ is the set of observed items that user $u$ has interacted with in context $c$.
-$\hat{y}$ is a score prediction for respectively a positive interaction $(u,i,c)$ between a user $u$ and an item $i$ in context $c$, and a negative interaction $(u,j,c)$ for the same user in the same context, but with a sampled non-interaction $j$.
-\\
+$\hat{y}$ is a score prediction for respectively a positive interaction $(u,i,c)$ between a user $u$ and an item $i$ in context $c$, and a negative interaction $(u,j,c)$ for the same user in the same context, where $j$ is an item the user has not interacted with.
 The positive interaction is an observed interaction between a user and an item, which can be found in the training set.
-We then randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\ 
+We randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data. 
 Using negative sampling for calculating loss is biased \cite{nonsampling, NegativeSampling}, and sensitive to the number of negative samples \cite{NCF}.
 Fluctuations in the sampled negative item can cause difficulties in converging, and even sampling more negative items can increase performance.
 Chen et al. \cite{nonsampling} propose to learn FM models without negative sampling to improve ranking performance for context-aware recommendation, and increase stability due to considering all samples in each parameter update.
