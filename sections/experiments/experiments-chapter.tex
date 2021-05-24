@@ -78,10 +78,9 @@ Since most of the datasets mainly includes a timestamp as contextual variables, 
 	\item Month
 	\item Day of week
 	\item Hour
-	\time Time of Day
+	\item Time of Day
 \end{itemize}
-
-Where time of day is a further discretization of the hour feature, split into 5 intervals for respectively:
+Time of day is a further discretization of the hour feature, split into 5 intervals:
 \begin{itemize}
 	\item Night (0 to 4)
 	\item Morning (4 to 8)
@@ -90,10 +89,9 @@ Where time of day is a further discretization of the hour feature, split into 5 
 	\item Afternoon (16 to 20)
 	\item Late night (20 to 24)
 \end{itemize}
-
 For the Frappe dataset, we instead make use of the three default contextual values available (weekday, time of day, weekend or not).
 \\\\
-For the side-information, we use all the available side-info for both users and items with some discretization.
+For the side-information, we use all the available side-information for both users and items with some discretization.
 The Yelp datasets provide a "yelping since" feature, which is a timestamp for the creation of the user.
 This is discretized to include the year that the user has been created.
 \\
