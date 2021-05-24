@@ -127,3 +127,25 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+master-blx.bib
+
+master.aux
+
+master.bbl
+
+master.blg
+
+master.fdb_latexmk
+
+master.fls
+
+master.out
+
+master.pdf
+
+master.run.xml
+
+master.synctex.gz
+
+master.tdo
