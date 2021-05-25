@@ -322,8 +322,7 @@ The main exception is on the Frappe dataset, where BPR and KGAT perform signific
 We suspect that this is due to the density and small size of the dataset.
 Frappe has a density of 18.9\%, compared to the others that range between 1.1\% and 4.8\%, allowing for simpler methods like BPR to perform better relative to other datasets, whereas complex methods like NGCF struggle to learn properly.
 Even more interesting in the Frappe dataset is the performance of TopPop, which outperforms all other methods on all metrics.
-This is most likely caused by the dataset including some very popular items.
-The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
+This is most likely caused by the dataset including some very popular items as described in \Cref{subsec:rq1}.
 All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the YelpON dataset across various aggregators of context on CSGCN-IS.
 \begin{figure}
     \begin{tikzpicture}
