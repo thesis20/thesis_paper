@@ -40,7 +40,7 @@ Based on these considerations, the CSGCN models are based on these observations 
 %The same goes for the neighbors of items.
 
 \subsection{Adjacency matrix}\label{subsec:csgcn_is_adj_mat}
-As described in \Cref{sec:problemdef}, GCNs used for CF recommendation typically employ a bipartite graph structure to represent the user-item interactions.
+As described in \Cref{sec:preliminaries}, GCNs used for CF recommendation typically employ a bipartite graph structure to represent the user-item interactions.
 In CSGCN this is extended to be a quadripartite graph, done by extending the distinct sets of user nodes $U$ and item nodes $I$ with a set of user side-information nodes $US$ and a set of item side-information nodes $IS$.
 This allows for the incorporation of the side-information in the model, whereas context is later included in the prediction function defined in \autoref{subsec:csgcn_is_score_prediction}.
 This graph extension can be seen on \Cref{fig:quadripartite-graph}.
