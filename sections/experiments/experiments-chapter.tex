@@ -191,11 +191,36 @@ In the experiments, CSGCN is compared against the following methods for the firs
 CFM uses a combination of a convolutional neural network (CNN) and a factorization machine, which is similar to our method in that it is capable of producing a context-aware top-$k$ recommendation list.
 It is included since it is an alternative way to handle contextual information in CNNs.
 Other than CFM, other FM-based methods are included in the context-specific setting, such as the original FM as well as NFM which uses an multi-layer perceptron (MLP) on top of the factorization machine to learn higher-order interaction signals.
-Finally, we once again include Top Pop as a simple baseline, \todo{Skriv lige her hvordan top pop til context helt præcist virker når vi er done med den}
 
+\begin{table*}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|l|lrrr|rr}
+Dataset & Metric & FM & \multicolumn{1}{l}{NFM} & \multicolumn{1}{l}{CFM} & \multicolumn{1}{l|}{CSGCN-IS} & \multicolumn{1}{l}{CSGCN-ADJ} & \multicolumn{1}{l|}{Impr.} \\ \hline
+\multirow{4}{*}{YelpNC} & HR@20  & 0.0075  & 0.0142  & 0.0070 & 0.0545 & 0.0761  &  \\
+                        & HR@50  & 0.0198  & 0.0240  & 0.0163 & 0.1099 & 0.1464  &  \\
+                        & MRR@20 & 0.0022  & 0.0030  & 0.0037 & 0.0118 & 0.0158  &  \\
+                        & MRR@50 & 0.0025  & 0.0033  & 0.0040 & 0.0136 & 0.0179  &  \\ \hline
+\multirow{4}{*}{Frappe} & HR@20  & 0.6590  & 0.3516  &        & 0.0458 & 0.06044 &  \\
+                        & HR@50  & 0.8004  & 0.4945  &        & 0.1062 & 0.12454 &  \\
+                        & MRR@20 & 0.2895  & 0.1117  &        & 0.0128 & 0.01837 &  \\
+                        & MRR@50 & 0.2942  & 0.1166  &        & 0.0146 & 0.02037 &  \\ \hline
+\multirow{4}{*}{YelpON} & HR@20  & 0.0083  & 0.0085  & 0.0073 & 0.0399 & 0.0534  &  \\
+                        & HR@50  & 0.0133  & 0.0152  & 0.0133 & 0.0714 & 0.0997  &  \\
+                        & MRR@20 & 0.0019  & 0.0021  & 0.0019 & 0.0091 & 0.0123  &  \\
+                        & MRR@50 & 0.00209 & 0.00227 & 0.0021 & 0.0101 & 0.0137  &  \\ \hline
+\multirow{4}{*}{ML1M}   & HR@20  & 0.0874  & 0.0937  &        & 0.1402 & 0.1652  &  \\
+                        & HR@50  & 0.1856  & 0.2005  &        & 0.2603 & 0.2982  &  \\
+                        & MRR@20 & 0.0199  & 0.0209  &        & 0.0336 & 0.0372  &  \\
+                        & MRR@50 & 0.0229  & 0.0242  &        & 0.0373 & 0.0413  & 
+\end{tabular}%
+}
+\caption{Results for context-specific recommendations}
+\label{tab:context-specific-table}
+\end{table*}
 
 \todo[color=red]{x - Answer RQ1}
-\todo[color=red]{x - Scores for methods table}
+\todo{Insert CFM results}
 
 \subsection{Performance Comparison (RQ2)}
 To answer the second research question about aggregated recommendations, we compare against the following methods:
