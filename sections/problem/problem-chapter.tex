@@ -4,12 +4,12 @@ Sparsity issues are often encountered in CARS due to the addition of multi-dimen
 The use of side-information can help alleviate problems with collaborative filtering in a sparse situation where the users and items do not have many interactions \cite{KGAT}. 
 
 \subsection{Defining context and side-information}
-While GCN-based recommenders perform well on simple recommendation tasks that include only user-item interactions \cite{NGCF,LightGCN}, combining them with utilization of context is largely unexplored to the best of our knowledge. However side-information has been used in some GCN-based recommenders such as KGAT through the use of knowledge graphs \cite{KGAT}.\\
+While GCN-based recommenders perform well on simple recommendation tasks that include only user-item interactions \cite{NGCF,LightGCN}, combining them with the utilization of context is largely unexplored to the best of our knowledge. However, side-information has been used in some GCN-based recommenders such as KGAT through the use of knowledge graphs \cite{KGAT}.\\
 A common problem when researching CARS is that context and side-information are vaguely defined or have overlapping definitions in various papers.
 For clarity, the following are the definitions of context and side-information used in this paper:
 \\\\
 \textbf{Context}:
-The context definition is the one defined in \cite{contextDefinition}, where \textit{context is any information that can be used to characterize the situation of an entity. An entity is a person, place or object that is considered relevant to the interaction between a user and an application, including the user and the applications themselves.}
+The context definition is the one defined in \cite{contextDefinition}, where \textit{context is any information that can be used to characterize the situation of an entity. An entity is a person, place, or object that is considered relevant to the interaction between a user and an application, including the user and the applications themselves.}
 An entity in the case of an RS is either a user or an item to be recommended.
 The context would thus be information about the conditions at the time of the transaction between the user and the item, meaning it would be associated with the transaction.
 For example, a Christmas movie may be more likely to be a hit during the winter months, and a bar may be a better recommendation on a Saturday night than a Tuesday morning.
@@ -23,7 +23,7 @@ A single context value, $c$, e.g.
 $$c = winter$$
 \\\\
 \textbf{Side-information}:
-The side-information definition used is based on the description in \cite{SideInfoDefinition}, where different types of side-information include information such as user networks, user profiles and item descriptors.
+The side-information definition used is based on the description in \cite{SideInfoDefinition}, where different types of side-information include information such as user networks, user profiles, and item descriptors.
 For users, this could be information like their age or occupation, which may have an influence on their preferences.
 For items, it is meta-information about the item such as the genre of a movie, which may be helpful when considering higher-order connectivity since it can help capture user preferences, such as a user displaying a preference for action movies.
 % For side-information, the term \textit{field} is used to describe, for example, the category \textit{location}. Each field has a number of values, known as \textit{features}, where a value could be \textit{Denmark} for the field \textit{location}.
@@ -79,14 +79,14 @@ This graph consists of two distinct sets of nodes: Users ($U$) and items ($I$), 
 \\
 GCNs are variants of convolutional neural networks used on graph-based data \cite{KOrderConnectivity}.
 GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
-Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation and nonlinear activation.
-Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors features.
+Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation, and nonlinear activation.
+Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors' features.
 The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with some weight.
 Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model.
 \\
 A graph such as the one seen in \Cref{fig:bipartite-graph} can be represented in an adjacency matrix. 
-The adjacency matrix is useful for implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the representation vectors of the graph nodes.
+The adjacency matrix is useful for the implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the representation vectors of the graph nodes.
 This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.
 Finally, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the representations by the number of neighbors.
-This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the the central node\cite{SimplifyingGCN, KOrderConnectivity}.
+This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the central node\cite{SimplifyingGCN, KOrderConnectivity}.
 If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution so that information can be passed from these nodes as well.
