@@ -178,7 +178,7 @@ If a relevant item for a user appears in the top-$k$ list, the HR for that user 
 Since we utilize additional information in the form of context and side-information, we cannot optimally utilize most of the provided datasets for the methods we compare to.
 Instead, we focus on datasets that include side-information and contextual information, and perform a grid-search of hyperparameters to find the optimal settings for each method to ensure a fair comparison.
 
-\subsection{Performance Comparison (RQ1)}
+\subsection{Performance Comparison (RQ1)}\label{subsec:rq1}
 For context-aware comparisons the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a score is predicted based on the context that this interaction took place in.
 In the experiments, CSGCN is compared against the following methods for the first research question regarding context-specific recommendations:
 \begin{itemize}
@@ -191,11 +191,45 @@ In the experiments, CSGCN is compared against the following methods for the firs
 CFM uses a combination of a convolutional neural network (CNN) and a factorization machine, which is similar to our method in that it is capable of producing a context-aware top-$k$ recommendation list.
 It is included since it is an alternative way to handle contextual information in CNNs.
 Other than CFM, other FM-based methods are included in the context-specific setting, such as the original FM as well as NFM which uses an multi-layer perceptron (MLP) on top of the factorization machine to learn higher-order interaction signals.
-Finally, we once again include Top Pop as a simple baseline, \todo{Skriv lige her hvordan top pop til context helt præcist virker når vi er done med den}
 
+\begin{table*}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|l|lrrr|rr}
+Dataset & Metric & FM & \multicolumn{1}{l}{NFM} & \multicolumn{1}{l}{CFM} & \multicolumn{1}{l|}{CSGCN-IS} & \multicolumn{1}{l}{CSGCN-ADJ} & \multicolumn{1}{l|}{Impr.} \\ \hline
+\multirow{4}{*}{YelpNC} & HR@20  & 0.0075  & 0.0142  & 0.0070 & 0.0545 & 0.0761  &  \\
+                        & HR@50  & 0.0198  & 0.0240  & 0.0163 & 0.1099 & 0.1464  &  \\
+                        & MRR@20 & 0.0022  & 0.0030  & 0.0037 & 0.0118 & 0.0158  &  \\
+                        & MRR@50 & 0.0025  & 0.0033  & 0.0040 & 0.0136 & 0.0179  &  \\ \hline
+\multirow{4}{*}{Frappe} & HR@20  & 0.6590  & 0.3516  &        & 0.0458 & 0.0604  &  \\
+                        & HR@50  & 0.8004  & 0.4945  &        & 0.1062 & 0.1245  &  \\
+                        & MRR@20 & 0.2895  & 0.1117  &        & 0.0128 & 0.0184  &  \\
+                        & MRR@50 & 0.2942  & 0.1166  &        & 0.0146 & 0.0204  &  \\ \hline
+\multirow{4}{*}{YelpON} & HR@20  & 0.0083  & 0.0085  & 0.0073 & 0.0399 & 0.0534  &  \\
+                        & HR@50  & 0.0133  & 0.0152  & 0.0133 & 0.0714 & 0.0997  &  \\
+                        & MRR@20 & 0.0019  & 0.0021  & 0.0019 & 0.0091 & 0.0123  &  \\
+                        & MRR@50 & 0.0020  & 0.0023  & 0.0021 & 0.0101 & 0.0137  &  \\ \hline
+\multirow{4}{*}{ML1M}   & HR@20  & 0.0874  & 0.0937  &        & 0.1402 & 0.1652  &  \\
+                        & HR@50  & 0.1856  & 0.2005  &        & 0.2603 & 0.2982  &  \\
+                        & MRR@20 & 0.0199  & 0.0209  &        & 0.0336 & 0.0372  &  \\
+                        & MRR@50 & 0.0229  & 0.0242  &        & 0.0373 & 0.0413  & 
+\end{tabular}%
+}
+\caption{Results for context-specific recommendations}
+\label{tab:context-specific-table}
+\end{table*}
+The results for this experiment can be seen on \Cref{tab:context-specific-table}.
+It is easily seen that both CSGCN-IS and CSGCN-ADJ outperform the various factorization machines on most datasets.
+The exception is Frappe, a dataset which is fairly unbalanced in terms of which items have been interacted with. 
+The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
+From this, we can assume that the CSGCN-IS and CSGCN-ADJ methods work best on fairly balanced datasets, whereas factorization machines seem to have an advantage on datasets with highly popular items.\\\\
+Another interesting observation from the data is that even though CFM is run on pretrained FM data as described in their paper, it generally performs worse than the pure FM.
+Additionally, the runtime of CFM is significantly higher than any of the other methods.
+Running 300 epochs on an NVIDIA DGX-2 cloud takes several days, while CSGCN-ADJ can perform the same amount of epochs in just a matter of hours.
+Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has simply been run once with the settings presented in the original paper.\\
+When comparing to the results presented in the CFM paper, we are not able to compare with the results they present, since they perform a different split of the data to perform their leave-one-out evaluation.
+According to their paper, they take the latest transaction of each users - but looking at the actual dataset they provide, their test dataset is significantly larger than the amount of users, meaning that their evaluation must be different to ours.
 
-\todo[color=red]{x - Answer RQ1}
-\todo[color=red]{x - Scores for methods table}
 
 \subsection{Performance Comparison (RQ2)}
 To answer the second research question about aggregated recommendations, we compare against the following methods:
@@ -288,8 +322,7 @@ The main exception is on the Frappe dataset, where BPR and KGAT perform signific
 We suspect that this is due to the density and small size of the dataset.
 Frappe has a density of 18.9\%, compared to the others that range between 1.1\% and 4.8\%, allowing for simpler methods like BPR to perform better relative to other datasets, whereas complex methods like NGCF struggle to learn properly.
 Even more interesting in the Frappe dataset is the performance of TopPop, which outperforms all other methods on all metrics.
-This is most likely caused by the dataset including some very popular items.
-The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
+This is most likely caused by the dataset including some very popular items as described in \Cref{subsec:rq1}.
 All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the YelpON dataset across various aggregators of context on CSGCN-IS.
 \begin{figure}
     \begin{tikzpicture}
