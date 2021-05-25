@@ -226,8 +226,9 @@ From this, we can assume that the CSGCN-IS and CSGCN-ADJ methods work best on fa
 Another interesting observation from the data is that even though CFM is run on pretrained FM data as described in their paper, it generally performs worse than the pure FM.
 Additionally, the runtime of CFM is significantly higher than any of the other methods.
 Running 300 epochs on an NVIDIA DGX-2 cloud takes several days, while CSGCN-ADJ can perform the same amount of epochs in just a matter of hours.
-Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has simply been run once with the settings presented in the original paper.
-
+Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has simply been run once with the settings presented in the original paper.\\
+When comparing to the results presented in the CFM paper, we are not able to compare with the results they present, since they perform a different split of the data to perform their leave-one-out evaluation.
+According to their paper, they take the latest transaction of each users - but looking at the actual dataset they provide, their test dataset is significantly larger than the amount of users, meaning that their evaluation must be different to ours.
 
 
 \subsection{Performance Comparison (RQ2)}
