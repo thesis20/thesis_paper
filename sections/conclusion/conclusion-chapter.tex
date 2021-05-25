@@ -1,8 +1,13 @@
 \section{Conclusion}\label{sec:conclusion}
 In this paper, we have shown two ways to include context and side-information in graph convolution neural networks.
-While there are not many competing methods available for comparison in context specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across datasets.
+While there are not many competing methods available for comparison in context specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across most datasets.
 Likewise, we have shown how the context can be aggregated and used in a general recommendation scenario with competitive results to state-of-the-art methods.
-
+\\\\
+There are, however, some limitations to the methods.
+We have observed that on the Frappe dataset, the CSGCN methods are being consistently outperformed by simple methods such traditional factorization machines and TopPop.
+This is likely due to the fact that this dataset is not only small in size, but also highly unbalanced in terms of item interactions.
+Some items are so popular that almost every 13th interaction in the dataset is with these items.
+While this is a perfect scenario for TopPop, it has proven to be a big challenge for more advanced methods such as the CSGCN methods.
 % Skriv noget om at future work kunne være info på edges? Evt hvordan vi har prøvet at implementere det
 % Double training objective
 %\todo[color=red]{x - Conclude upon the fun times}
@@ -15,4 +20,8 @@ However, this quickly proved infeasible since the amount of embeddings explode w
 \\
 Additionally, we have seen that not all context is equal in terms of importance.
 Due to this, it could be beneficial to include an attention mechanism that is able to learn the importance of each context or context combination for the convolution layer.
-
+\\
+Finally, both CSGCN methods are based on the simplified models of GCNs which are gaining popularity.
+For this paper, we have done limited experimentations with extending this with various components from traditional GCNs, such as re-adding linear transformation and non-linear activation, without success.
+In the recent months, several new papers on GCNs have been published, which present new extensions to GCNs.
+These extensions include new layer aggregation functions and various implementations of knowledge graphs, which may be of interest to improve performance of the context-aware models presented in this paper.
