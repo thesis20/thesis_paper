@@ -218,16 +218,15 @@ Dataset & Metric & FM & \multicolumn{1}{l}{NFM} & \multicolumn{1}{l}{CFM} & \mul
 \caption{Results for context-specific recommendations}
 \label{tab:context-specific-table}
 \end{table*}
-
 The results for this experiment can be seen on \Cref{tab:context-specific-table}.
 It is easily seen that both CSGCN-IS and CSGCN-ADJ outperform the various factorization machines on most datasets.
 The exception is Frappe, a dataset which is fairly unbalanced in terms of which items have been interacted with. 
 The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
-From this, we can assume that the CSGCN-IS and CSGCN-ADJ methods work best on fairly balanced datasets, whereas factorization machines seem to have an advantage on datasets with highly popular items.\\\\1
+From this, we can assume that the CSGCN-IS and CSGCN-ADJ methods work best on fairly balanced datasets, whereas factorization machines seem to have an advantage on datasets with highly popular items.\\\\
 Another interesting observation from the data is that even though CFM is run on pretrained FM data as described in their paper, it generally performs worse than the pure FM.
 Additionally, the runtime of CFM is significantly higher than any of the other methods.
 Running 300 epochs on an NVIDIA DGX-2 cloud takes several days, while CSGCN-ADJ can perform the same amount of epochs in just a matter of hours.
-Due to the sheer amount of time required to fine-tune the hyperparameters, it has simply been run once with the settings presented in the original paper.
+Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has simply been run once with the settings presented in the original paper.
 
 
 
