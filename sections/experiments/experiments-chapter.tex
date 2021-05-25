@@ -178,7 +178,7 @@ If a relevant item for a user appears in the top-$k$ list, the HR for that user 
 Since we utilize additional information in the form of context and side-information, we cannot optimally utilize most of the provided datasets for the methods we compare to.
 Instead, we focus on datasets that include side-information and contextual information, and perform a grid-search of hyperparameters to find the optimal settings for each method to ensure a fair comparison.
 
-\subsection{Performance Comparison (RQ1)}
+\subsection{Performance Comparison (RQ1)}\label{subsec:rq1}
 For context-aware comparisons the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a score is predicted based on the context that this interaction took place in.
 In the experiments, CSGCN is compared against the following methods for the first research question regarding context-specific recommendations:
 \begin{itemize}
@@ -219,8 +219,17 @@ Dataset & Metric & FM & \multicolumn{1}{l}{NFM} & \multicolumn{1}{l}{CFM} & \mul
 \label{tab:context-specific-table}
 \end{table*}
 
-\todo[color=red]{x - Answer RQ1}
-\todo{Insert CFM results}
+The results for this experiment can be seen on \Cref{tab:context-specific-table}.
+It is easily seen that both CSGCN-IS and CSGCN-ADJ outperform the various factorization machines on most datasets.
+The exception is Frappe, a dataset which is fairly unbalanced in terms of which items have been interacted with. 
+The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
+From this, we can assume that the CSGCN-IS and CSGCN-ADJ methods work best on fairly balanced datasets, whereas factorization machines seem to have an advantage on datasets with highly popular items.\\\\1
+Another interesting observation from the data is that even though CFM is run on pretrained FM data as described in their paper, it generally performs worse than the pure FM.
+Additionally, the runtime of CFM is significantly higher than any of the other methods.
+Running 300 epochs on an NVIDIA DGX-2 cloud takes several days, while CSGCN-ADJ can perform the same amount of epochs in just a matter of hours.
+Due to the sheer amount of time required to fine-tune the hyperparameters, it has simply been run once with the settings presented in the original paper.
+
+
 
 \subsection{Performance Comparison (RQ2)}
 To answer the second research question about aggregated recommendations, we compare against the following methods:
