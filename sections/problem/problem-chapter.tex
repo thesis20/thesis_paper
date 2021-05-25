@@ -1,4 +1,10 @@
-\section{Problem Definition}\label{sec:problemdef}
+\section{preliminaries}\label{sec:preliminaries}
+In this paper, we present a GCN-based context-aware model, which takes side-information into account in order to alleviate the sparsity problem often found in CARS.
+Sparsity issues are often encountered in CARS due to the addition of multi-dimensional contextual conditions that users only interact with a few of\cite{SparsityCARS}, leading to learning difficulties.
+The use of side-information can help alleviate problems with collaborative filtering in a sparse situation where the users and items do not have many interactions \cite{KGAT}. 
+A common approach to integrating side-information into a recommendation model is to model a vector representation for it alongside the user and item vector representations.
+
+\subsection{Defining context and side-information}
 While GCN-based recommenders perform well on simple recommendation tasks that include only user-item interactions \cite{NGCF,LightGCN}, combining them with utilization of context is largely unexplored to the best of our knowledge. However side-information has been used in some GCN-based recommenders such as KGAT through the use of knowledge graphs \cite{KGAT}.\\
 A common problem when researching CARS is that context and side-information are vaguely defined or have overlapping definitions in various papers.
 For clarity, the following are the definitions of context and side-information used in this paper:
@@ -28,11 +34,7 @@ For items, it is meta-information about the item such as the genre of a movie, w
 %     \label{eq:multi-hot-example}
 % \end{equation}
 % \Cref{eq:multi-hot-example} shows an example of a multi-hot vector representing the field \textit{genre}, showing that it possesses 2 of the 6 possible features (genres).
-\\\\
-In this paper, we present a GCN-based context-aware model, which takes side-information into account in order to alleviate the sparsity problem often found in CARS.
-Sparsity issues are often encountered in CARS due to the addition of multi-dimensional contextual conditions that users only interact with a few of\cite{SparsityCARS}, leading to learning difficulties.
-The use of side-information can help alleviate problems with collaborative filtering in a sparse situation where the users and items do not have many interactions \cite{KGAT}. 
-A common approach to integrating side-information into a recommendation model is to model a vectors representation for it alongside the user and item vector representations.
+
 
 \subsection{Data representation}
 In graph-based collaborative filtering RSs, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
@@ -76,7 +78,7 @@ In graph-based collaborative filtering RSs, we typically represent data in the f
 This graph consists of two distinct sets of nodes: Users ($U$) and items ($I$), and a set of edges that connect the user and item if they have interacted with each other.\\\\
 \textbf{Higher-order connectivity and implementation input for GCNs}
 \\
-GCNs are variants of CNNs used on graph-based data \cite{KOrderConnectivity}.
+GCNs are variants of convolutional neural networks used on graph-based data \cite{KOrderConnectivity}.
 GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
 Representations are being propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation and nonlinear activation.
 Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors features.
