@@ -1,8 +1,7 @@
-\section{preliminaries}\label{sec:preliminaries}
+\section{Preliminaries}\label{sec:preliminaries}
 In this paper, we present a GCN-based context-aware model, which takes side-information into account in order to alleviate the sparsity problem often found in CARS.
 Sparsity issues are often encountered in CARS due to the addition of multi-dimensional contextual conditions that users only interact with a few of\cite{SparsityCARS}, leading to learning difficulties.
 The use of side-information can help alleviate problems with collaborative filtering in a sparse situation where the users and items do not have many interactions \cite{KGAT}. 
-A common approach to integrating side-information into a recommendation model is to model a vector representation for it alongside the user and item vector representations.
 
 \subsection{Defining context and side-information}
 While GCN-based recommenders perform well on simple recommendation tasks that include only user-item interactions \cite{NGCF,LightGCN}, combining them with utilization of context is largely unexplored to the best of our knowledge. However side-information has been used in some GCN-based recommenders such as KGAT through the use of knowledge graphs \cite{KGAT}.\\
