@@ -21,11 +21,11 @@ With this intuition, we will now detail how this is implemented in the CSGCN mod
 While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
 Wu et al. presents the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs.
 Instead, they were proposed in the recent years of neural networks where deep learning had gained high popularity, and as such GCNs were built directly on top of a complex model.
-To investigate whether this was useful, they present SGCN, a simplified version of GCNs that could have preceeded GCNs if the traditional path had been taken.
+To investigate whether this was useful, they present SGCN, a simplified version of GCNs that could have preceded GCNs if the traditional path had been taken.
 This led them to remove the linear transformation and nonlinear activation, to reach a simplified linear model.
 Interestingly, they proved that not only does this not degrade performance of the models, it generally matches or improves both in terms of performance and speed \cite{SimplifyingGCN}.\\
 This signifies that the expressive power of GCNs originates primarily from the propagations done in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
-Based on these considerations, the CSGCN models are based on these observations made in the SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN}, which has applied these considerations and proven that it outperforms regular GCNs that employ a traditional GCN model with all three components \cite{LightGCN}.
+Based on these considerations, the CSGCN models are based on these observations made in SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN}, which has applied these considerations and proven that it outperforms regular GCNs that employ a traditional GCN model with all three components \cite{LightGCN}.
 
 %\begin{figure}[hbt!]
 	%\hspace*{-0.1cm}
@@ -35,103 +35,9 @@ Based on these considerations, the CSGCN models are based on these observations 
 %	\caption{An illustration of CSGCN-IS model architecture. User and item neighbors are illustrated as bright nodes, and side-information as dark nodes. In the layer combination, we sum over the embeddings at each layer to obtain the final representations.}\vspace{-10pt}
 %	\label{fig:csgcn_is_model}
 %\end{figure}
-The model itself is very similar to LightGCN.
-It is, however, important to note that the neighboring nodes for users now include side-information for users and not only items, which can be seen in each of the layers now receiving a normalized sum of both items and user side-information, rather than just the normalized sum of items.
-The same goes for the neighbors of items.
-\\
-There are a number of graph convolution layers where, for each central node, information about neighbor nodes is being propagated.
-The representation at layer $l+1$ is calculated by taking the normalized sum of the representations of neighbor nodes at layer $l$. 
-As mentioned, neighbor nodes for users are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes, which can be seen on \Cref{fig:quadripartite-graph}.
-For each additional layer, information is passed from nodes that are further away from a central node, illustrated on \Cref{fig:aggregation-for-layers}
-The representations at each of the layers are aggregated into a final representation after $n$ layers.
-From these final representations, a score prediction can be calculated between an item, user and a context which is further described in \Cref{subsec:csgcn_is_score_prediction}.
-
-
-
-\begin{figure}[h]
-\centering
-
-
-
-\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-
-\begin{tikzpicture}[x=0.5pt,y=0.5pt,yscale=-1,xscale=1]
-%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
-
-%Flowchart: Connector [id:dp27406580802635316] 
-\draw   (290.75,139) .. controls (290.75,126.85) and (300.6,117) .. (312.75,117) .. controls (324.9,117) and (334.75,126.85) .. (334.75,139) .. controls (334.75,151.15) and (324.9,161) .. (312.75,161) .. controls (300.6,161) and (290.75,151.15) .. (290.75,139) -- cycle ;
-%Flowchart: Connector [id:dp597318920352127] 
-\draw   (289,81) .. controls (289,68.85) and (298.85,59) .. (311,59) .. controls (323.15,59) and (333,68.85) .. (333,81) .. controls (333,93.15) and (323.15,103) .. (311,103) .. controls (298.85,103) and (289,93.15) .. (289,81) -- cycle ;
-%Flowchart: Connector [id:dp057928841134587516] 
-\draw   (350,143) .. controls (350,130.85) and (359.85,121) .. (372,121) .. controls (384.15,121) and (394,130.85) .. (394,143) .. controls (394,155.15) and (384.15,165) .. (372,165) .. controls (359.85,165) and (350,155.15) .. (350,143) -- cycle ;
-%Flowchart: Connector [id:dp11200641374570286] 
-\draw   (289,197) .. controls (289,184.85) and (298.85,175) .. (311,175) .. controls (323.15,175) and (333,184.85) .. (333,197) .. controls (333,209.15) and (323.15,219) .. (311,219) .. controls (298.85,219) and (289,209.15) .. (289,197) -- cycle ;
-%Flowchart: Connector [id:dp5153973147602738] 
-\draw   (231,137) .. controls (231,124.85) and (240.85,115) .. (253,115) .. controls (265.15,115) and (275,124.85) .. (275,137) .. controls (275,149.15) and (265.15,159) .. (253,159) .. controls (240.85,159) and (231,149.15) .. (231,137) -- cycle ;
-%Flowchart: Connector [id:dp6230129861696904] 
-\draw   (197,59) .. controls (197,46.85) and (206.85,37) .. (219,37) .. controls (231.15,37) and (241,46.85) .. (241,59) .. controls (241,71.15) and (231.15,81) .. (219,81) .. controls (206.85,81) and (197,71.15) .. (197,59) -- cycle ;
-%Flowchart: Connector [id:dp11627558541491778] 
-\draw   (181,213) .. controls (181,200.85) and (190.85,191) .. (203,191) .. controls (215.15,191) and (225,200.85) .. (225,213) .. controls (225,225.15) and (215.15,235) .. (203,235) .. controls (190.85,235) and (181,225.15) .. (181,213) -- cycle ;
-%Flowchart: Connector [id:dp012014051199046416] 
-\draw   (374,61) .. controls (374,48.85) and (383.85,39) .. (396,39) .. controls (408.15,39) and (418,48.85) .. (418,61) .. controls (418,73.15) and (408.15,83) .. (396,83) .. controls (383.85,83) and (374,73.15) .. (374,61) -- cycle ;
-%Flowchart: Connector [id:dp025105219979997373] 
-\draw   (375,220) .. controls (375,207.85) and (384.85,198) .. (397,198) .. controls (409.15,198) and (419,207.85) .. (419,220) .. controls (419,232.15) and (409.15,242) .. (397,242) .. controls (384.85,242) and (375,232.15) .. (375,220) -- cycle ;
-%Flowchart: Connector [id:dp28306483017107376] 
-\draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (282,139) .. controls (282,121.88) and (295.77,108) .. (312.75,108) .. controls (329.73,108) and (343.5,121.88) .. (343.5,139) .. controls (343.5,156.12) and (329.73,170) .. (312.75,170) .. controls (295.77,170) and (282,156.12) .. (282,139) -- cycle ;
-%Flowchart: Connector [id:dp22791557868185153] 
-\draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (223.75,139) .. controls (223.75,90) and (263.15,50.28) .. (311.75,50.28) .. controls (360.35,50.28) and (399.75,90) .. (399.75,139) .. controls (399.75,188) and (360.35,227.72) .. (311.75,227.72) .. controls (263.15,227.72) and (223.75,188) .. (223.75,139) -- cycle ;
-%Flowchart: Connector [id:dp946514520124221] 
-\draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (147.5,142.5) .. controls (147.5,64.9) and (219.13,2) .. (307.5,2) .. controls (395.87,2) and (467.5,64.9) .. (467.5,142.5) .. controls (467.5,220.1) and (395.87,283) .. (307.5,283) .. controls (219.13,283) and (147.5,220.1) .. (147.5,142.5) -- cycle ;
-%Straight Lines [id:da566741285857424] 
-\draw    (235.5,72) -- (288.5,74) ;
-%Straight Lines [id:da31194843739323463] 
-\draw    (228.5,78) -- (238.5,121) ;
-%Straight Lines [id:da32353885946741523] 
-\draw    (240.5,156) -- (212.5,193) ;
-%Straight Lines [id:da5053069271391968] 
-\draw    (311,103) -- (312.75,117) ;
-%Straight Lines [id:da723620476456976] 
-\draw    (290.75,139) -- (275,137) ;
-%Straight Lines [id:da14267027138513144] 
-\draw    (312.75,161) -- (311,175) ;
-%Straight Lines [id:da6090096595211273] 
-\draw    (334.75,139) -- (350,143) ;
-%Straight Lines [id:da11771537978983193] 
-\draw    (396,83) -- (372,121) ;
-%Straight Lines [id:da45445879447578685] 
-\draw    (332.5,206) -- (375,220) ;
-
-% Text Node
-\draw (305,129) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
-% Text Node
-\draw (298,70) node [anchor=north west][inner sep=0.75pt]   [align=left] {US};
-% Text Node
-\draw (364,132) node [anchor=north west][inner sep=0.75pt]   [align=left] {I};
-% Text Node
-\draw (305,186) node [anchor=north west][inner sep=0.75pt]   [align=left] {I};
-% Text Node
-\draw (240,126) node [anchor=north west][inner sep=0.75pt]   [align=left] {US};
-% Text Node
-\draw (211,48) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
-% Text Node
-\draw (195,202) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
-% Text Node
-\draw (387,50) node [anchor=north west][inner sep=0.75pt]   [align=left] {IS};
-% Text Node
-\draw (389,209) node [anchor=north west][inner sep=0.75pt]   [align=left] {IS};
-% Text Node
-\draw (332,97) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=0};
-% Text Node
-\draw (396,94) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=1};
-% Text Node
-\draw (463,89) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=2};
-
-
-\end{tikzpicture}
-
-\caption{Information aggregated through layers.}
-\label{fig:aggregation-for-layers}
-\end{figure}
+%The model itself is very similar to LightGCN.
+%It is, however, important to note that the neighboring nodes for users now include side-information for users and not only items, which can be seen in each of the layers now receiving a normalized sum of both items and user side-information, rather than just the normalized sum of items.
+%The same goes for the neighbors of items.
 
 \subsection{Adjacency matrix}\label{subsec:csgcn_is_adj_mat}
 As described in \Cref{sec:problemdef}, GCNs used for CF recommendation typically employ a bipartite graph structure to represent the user-item interactions.
@@ -239,6 +145,94 @@ The final embedding matrix after $l$ layers is defined as:
 
 \subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
 The main part of the model is the GCN layer where the user and item embeddings are being propagated with information about their neighbor nodes' representations by using an aggregation function, which in this case is a normalized sum.
+Neighbor nodes for users are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes, which can be seen on \Cref{fig:quadripartite-graph}.
+For each additional layer, information is passed from nodes that are further away from a central node, illustrated on \Cref{fig:aggregation-for-layers}.
+\begin{figure}[h]
+    \centering
+    
+    
+    
+    \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+    
+    \begin{tikzpicture}[x=0.5pt,y=0.5pt,yscale=-1,xscale=1]
+    %uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+    
+    %Flowchart: Connector [id:dp27406580802635316] 
+    \draw   (290.75,139) .. controls (290.75,126.85) and (300.6,117) .. (312.75,117) .. controls (324.9,117) and (334.75,126.85) .. (334.75,139) .. controls (334.75,151.15) and (324.9,161) .. (312.75,161) .. controls (300.6,161) and (290.75,151.15) .. (290.75,139) -- cycle ;
+    %Flowchart: Connector [id:dp597318920352127] 
+    \draw   (289,81) .. controls (289,68.85) and (298.85,59) .. (311,59) .. controls (323.15,59) and (333,68.85) .. (333,81) .. controls (333,93.15) and (323.15,103) .. (311,103) .. controls (298.85,103) and (289,93.15) .. (289,81) -- cycle ;
+    %Flowchart: Connector [id:dp057928841134587516] 
+    \draw   (350,143) .. controls (350,130.85) and (359.85,121) .. (372,121) .. controls (384.15,121) and (394,130.85) .. (394,143) .. controls (394,155.15) and (384.15,165) .. (372,165) .. controls (359.85,165) and (350,155.15) .. (350,143) -- cycle ;
+    %Flowchart: Connector [id:dp11200641374570286] 
+    \draw   (289,197) .. controls (289,184.85) and (298.85,175) .. (311,175) .. controls (323.15,175) and (333,184.85) .. (333,197) .. controls (333,209.15) and (323.15,219) .. (311,219) .. controls (298.85,219) and (289,209.15) .. (289,197) -- cycle ;
+    %Flowchart: Connector [id:dp5153973147602738] 
+    \draw   (231,137) .. controls (231,124.85) and (240.85,115) .. (253,115) .. controls (265.15,115) and (275,124.85) .. (275,137) .. controls (275,149.15) and (265.15,159) .. (253,159) .. controls (240.85,159) and (231,149.15) .. (231,137) -- cycle ;
+    %Flowchart: Connector [id:dp6230129861696904] 
+    \draw   (197,59) .. controls (197,46.85) and (206.85,37) .. (219,37) .. controls (231.15,37) and (241,46.85) .. (241,59) .. controls (241,71.15) and (231.15,81) .. (219,81) .. controls (206.85,81) and (197,71.15) .. (197,59) -- cycle ;
+    %Flowchart: Connector [id:dp11627558541491778] 
+    \draw   (181,213) .. controls (181,200.85) and (190.85,191) .. (203,191) .. controls (215.15,191) and (225,200.85) .. (225,213) .. controls (225,225.15) and (215.15,235) .. (203,235) .. controls (190.85,235) and (181,225.15) .. (181,213) -- cycle ;
+    %Flowchart: Connector [id:dp012014051199046416] 
+    \draw   (374,61) .. controls (374,48.85) and (383.85,39) .. (396,39) .. controls (408.15,39) and (418,48.85) .. (418,61) .. controls (418,73.15) and (408.15,83) .. (396,83) .. controls (383.85,83) and (374,73.15) .. (374,61) -- cycle ;
+    %Flowchart: Connector [id:dp025105219979997373] 
+    \draw   (375,220) .. controls (375,207.85) and (384.85,198) .. (397,198) .. controls (409.15,198) and (419,207.85) .. (419,220) .. controls (419,232.15) and (409.15,242) .. (397,242) .. controls (384.85,242) and (375,232.15) .. (375,220) -- cycle ;
+    %Flowchart: Connector [id:dp28306483017107376] 
+    \draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (282,139) .. controls (282,121.88) and (295.77,108) .. (312.75,108) .. controls (329.73,108) and (343.5,121.88) .. (343.5,139) .. controls (343.5,156.12) and (329.73,170) .. (312.75,170) .. controls (295.77,170) and (282,156.12) .. (282,139) -- cycle ;
+    %Flowchart: Connector [id:dp22791557868185153] 
+    \draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (223.75,139) .. controls (223.75,90) and (263.15,50.28) .. (311.75,50.28) .. controls (360.35,50.28) and (399.75,90) .. (399.75,139) .. controls (399.75,188) and (360.35,227.72) .. (311.75,227.72) .. controls (263.15,227.72) and (223.75,188) .. (223.75,139) -- cycle ;
+    %Flowchart: Connector [id:dp946514520124221] 
+    \draw  [color={rgb, 255:red, 255; green, 0; blue, 0 }  ,draw opacity=1 ][dash pattern={on 4.5pt off 4.5pt}] (147.5,142.5) .. controls (147.5,64.9) and (219.13,2) .. (307.5,2) .. controls (395.87,2) and (467.5,64.9) .. (467.5,142.5) .. controls (467.5,220.1) and (395.87,283) .. (307.5,283) .. controls (219.13,283) and (147.5,220.1) .. (147.5,142.5) -- cycle ;
+    %Straight Lines [id:da566741285857424] 
+    \draw    (235.5,72) -- (288.5,74) ;
+    %Straight Lines [id:da31194843739323463] 
+    \draw    (228.5,78) -- (238.5,121) ;
+    %Straight Lines [id:da32353885946741523] 
+    \draw    (240.5,156) -- (212.5,193) ;
+    %Straight Lines [id:da5053069271391968] 
+    \draw    (311,103) -- (312.75,117) ;
+    %Straight Lines [id:da723620476456976] 
+    \draw    (290.75,139) -- (275,137) ;
+    %Straight Lines [id:da14267027138513144] 
+    \draw    (312.75,161) -- (311,175) ;
+    %Straight Lines [id:da6090096595211273] 
+    \draw    (334.75,139) -- (350,143) ;
+    %Straight Lines [id:da11771537978983193] 
+    \draw    (396,83) -- (372,121) ;
+    %Straight Lines [id:da45445879447578685] 
+    \draw    (332.5,206) -- (375,220) ;
+    
+    % Text Node
+    \draw (305,129) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
+    % Text Node
+    \draw (298,70) node [anchor=north west][inner sep=0.75pt]   [align=left] {US};
+    % Text Node
+    \draw (364,132) node [anchor=north west][inner sep=0.75pt]   [align=left] {I};
+    % Text Node
+    \draw (305,186) node [anchor=north west][inner sep=0.75pt]   [align=left] {I};
+    % Text Node
+    \draw (240,126) node [anchor=north west][inner sep=0.75pt]   [align=left] {US};
+    % Text Node
+    \draw (211,48) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
+    % Text Node
+    \draw (195,202) node [anchor=north west][inner sep=0.75pt]   [align=left] {U};
+    % Text Node
+    \draw (387,50) node [anchor=north west][inner sep=0.75pt]   [align=left] {IS};
+    % Text Node
+    \draw (389,209) node [anchor=north west][inner sep=0.75pt]   [align=left] {IS};
+    % Text Node
+    \draw (332,97) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=0};
+    % Text Node
+    \draw (396,94) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=1};
+    % Text Node
+    \draw (463,89) node [anchor=north west][inner sep=0.75pt]   [align=left] {n=2};
+    
+    
+    \end{tikzpicture}
+    
+    \caption{Information aggregated through layers.}
+    \label{fig:aggregation-for-layers}
+    \end{figure}
+The representations at each of the layers are aggregated into a final representation after $l$ layers.
+From these final representations, a score prediction can be calculated between an item, user and a context which is further described in \Cref{subsec:csgcn_is_score_prediction}.
 The inputs to the layer are the users and items as well as side-information about users and items in the form of an adjacency matrix.
 
 % \begin{equation}
@@ -362,36 +356,11 @@ This means that with higher-order connectivity, items and users are propagated w
 \subsection{Model architecture}\label{subsec:csgcn_adj_architecture}
 \todo{do model arfchitecture for csgcnadj}
 
-\subsection{Convolution layers}\label{subsec:csgcn_adj_conv_layer}
-For the graph convolution layer of CSGCN-ADJ, the context is incorporated into the aggregation of neighbors seen in \Cref{eq:csgcn_adj_gc_layer_item,eq:csgcn_adj_gc_layer_user}
-\begin{equation}\label{eq:csgcn_adj_gc_layer_item}
-    e_{i}^{(l+1)}=\sum_{in\in \mathcal{N}_{i}}\frac{1}{\sqrt{|\mathcal{N}_{i}|} }e_{in}^{(l)}
-\end{equation}
-
-\begin{equation}\label{eq:csgcn_adj_gc_layer_user}
-     e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{ \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
-\end{equation}
-With this convolution, we only normalize with the number of neighbors of the node that is being propagated information to, and not with the number of nodes of the neighbor as well, as was done for CSGCN-IS.
-As a result of context being added as nodes in the graph for CSGCN-ADJ, $\mathcal{N}_{u}$ contains the contexts that user $u$ has interacted in and $\mathcal{N}_{i}$ contains the contexts that item $i$ has interacted in.
-Because the identity matrix was added to the adjacency matrix under the context columns, the context embeddings will remain with their initial values throughout the convolution layer.
-
-\subsection{Score prediction}\label{subsec:csgcn_adj_score_pred}
-For the score prediction of CSGCN-ADJ, we draw inspiration from factorization machines and use an FM-like predictor function that considers pair-wise interactions between users, items and context values to provide a recommendation.
-To do this, we use the prediction function defined in \Cref{eq:csgcn_adj_scorepred}:
-\begin{equation}\label{eq:csgcn_adj_scorepred}
-    \hat{y}_{uic} = e_u^Te_i + \sum_{c \in C'}e_u^Te_{c} + \sum_{c \in C'}e_i^Te_{c}
-\end{equation}
-where $C'$ is the current context,$c$ is a context value in $C'$ and $C' \subseteq C$, where $C$ is the set of possible context values.
-$e_{c}$ is the embedding representation of the context value $c$, $e_i$ is the embedding of the item $i$ and $e_u$ is the embedding of the user $u$.
-In this predictor function, we calculate the pairwise interaction between each of the embeddings.
-The self-interactions are not calculated since they do not contribute to the score prediction.
-The embeddings used for items and users are the ones output by the convolution layer while the context embeddings are the initial values before convolution, since they are only propagated with information about themselves.
-
-\subsection{Adjacency matrix and training}\label{subsec:csgcn_adj_adj_mat}
+\subsection{Adjacency matrix}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
 The graph is similar to the one in \Cref{fig:quadripartite-graph}, but context nodes are inserted between the sets of item and user nodes, and edges connect the nodes that have interacted in the context.
 For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave slightly better performance compared to also propagating information about neighbors to the context embeddings.
-Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacancy matrix.
+Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacency matrix.
 Instead, we add the identity matrix $I$ to the last quadrant such that the context embeddings are only propagated with information about themselves in each convolution.
 The matrix is seen in \Cref{csgcn_adj_adj_mat}.
 \begin{equation}\label{csgcn_adj_adj_mat}
@@ -468,7 +437,31 @@ We found that for this version of the model, it gave slightly better performance
     \caption{Effect of various normalizations for CSGCN-ADJ on the YelpNC dataset for HR@20.}
     \label{fig:normalization_graph}
 \end{figure}
-
 The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
-\\\\
+
+\subsection{Convolution layers}\label{subsec:csgcn_adj_conv_layer}
+For the graph convolution layer of CSGCN-ADJ, the context is incorporated into the aggregation of neighbors seen in \Cref{eq:csgcn_adj_gc_layer_item,eq:csgcn_adj_gc_layer_user}
+\begin{equation}\label{eq:csgcn_adj_gc_layer_item}
+    e_{i}^{(l+1)}=\sum_{in\in \mathcal{N}_{i}}\frac{1}{\sqrt{|\mathcal{N}_{i}|} }e_{in}^{(l)}
+\end{equation}
+
+\begin{equation}\label{eq:csgcn_adj_gc_layer_user}
+     e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{ \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
+\end{equation}
+With this convolution, only the number of neighbors of the node that is being propagated information to is used for normalization.
+As a result of context being added as nodes in the graph for CSGCN-ADJ, $\mathcal{N}_{u}$ contains the contexts that user $u$ has interacted in and $\mathcal{N}_{i}$ contains the contexts that item $i$ has interacted in.
+Because the identity matrix was added to the adjacency matrix under the context columns, the context embeddings remain as their initial values throughout the convolution layer.
+
+\subsection{Score prediction and training}\label{subsec:csgcn_adj_score_pred}
+For the score prediction of CSGCN-ADJ, we draw inspiration from factorization machines and use an FM-like predictor function that considers pair-wise interactions between users, items and context values to provide a recommendation.
+To do this, we use the prediction function defined in \Cref{eq:csgcn_adj_scorepred}:
+\begin{equation}\label{eq:csgcn_adj_scorepred}
+    \hat{y}_{uic} = e_u^Te_i + \sum_{c \in C'}e_u^Te_{c} + \sum_{c \in C'}e_i^Te_{c}
+\end{equation}
+where $C'$ is the current context,$c$ is a context value in $C'$ and $C' \subseteq C$, where $C$ is the set of possible context values.
+$e_{c}$ is the embedding representation of the context value $c$, $e_i$ is the embedding of the item $i$ and $e_u$ is the embedding of the user $u$.
+In this predictor function, we calculate the pairwise interaction between each of the embeddings.
+The self-interactions are not calculated since they do not contribute to the score prediction.
+The embeddings used for items and users are the ones output by the convolution layer while the context embeddings are the initial values before convolution, since they are only propagated with information about themselves.
+\\
 Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.
