@@ -4,13 +4,13 @@ This section describes the first of our two proposed models, Context and Side-in
 \subsection{Model intuition}\label{subsec:csgcn_is_intuition}
 Before diving into the details of how CSGCN-IS is modeled, let us examine the intuition behind it.
 The goal is to construct a model that can generate a top-$k$ list of recommendations for a user, both in a context-aware recommendation setting, using the given context that the user is in, and in a regular non-context-aware setting.
-To do this, we start out by expressing the available information in a graph.
+To do this, we start by expressing the available information in a graph.
 This mainly includes interactions between users and items.
 However, since most RS datasets are sparse, we want to see if we can alleviate this problem by further connecting user and item nodes, to improve the collaborative signals in the model.
 To do this, we utilize the fact that most datasets include some amount of additional information about users and items.
 This additional information can be used to further connect users and items by adding it as nodes in the graph.\\
 Besides side-information, we need to reason about how to express context in the model.
-After experimenting with various ways to express this, we came to the realization that context can be simplified to be an embedding used as a modifier to an item, which signifies whether the items are popular in a given context or not.
+After experimenting with various ways to express this, we realized that context can be simplified to be an embedding used as a modifier to an item, which signifies whether the items are popular in a given context or not.
 For example, we may learn that indoor activities are generally more popular on a rainy day.
 This can be learned by the model through sampling user interactions in various contexts from ground truth.
 For the user and context sampled, we see that they interacted with a given item, which should lead to an increase in the context score for this item-context combination.
@@ -28,12 +28,12 @@ This signifies that the expressive power of GCNs originates primarily from the p
 Based on these considerations, the CSGCN models are based on these observations made in SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN}, which has applied these considerations and proven that it outperforms regular GCNs that employ a traditional GCN model with all three components \cite{LightGCN}.
 
 %\begin{figure}[hbt!]
-	%\hspace*{-0.1cm}
-%	\centering
-%	\small	
-%	\includegraphics[width=0.48\textwidth]{figures/CSGCN.pdf}\vspace{-5pt}
-%	\caption{An illustration of CSGCN-IS model architecture. User and item neighbors are illustrated as bright nodes, and side-information as dark nodes. In the layer combination, we sum over the embeddings at each layer to obtain the final representations.}\vspace{-10pt}
-%	\label{fig:csgcn_is_model}
+    %\hspace*{-0.1cm}
+%   \centering
+%   \small  
+%   \includegraphics[width=0.48\textwidth]{figures/CSGCN.pdf}\vspace{-5pt}
+%   \caption{An illustration of CSGCN-IS model architecture. User and item neighbors are illustrated as bright nodes, and side-information as dark nodes. In the layer combination, we sum over the embeddings at each layer to obtain the final representations.}\vspace{-10pt}
+%   \label{fig:csgcn_is_model}
 %\end{figure}
 %The model itself is very similar to LightGCN.
 %It is, however, important to note that the neighboring nodes for users now include side-information for users and not only items, which can be seen in each of the layers now receiving a normalized sum of both items and user side-information, rather than just the normalized sum of items.
@@ -131,7 +131,7 @@ This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between entities (users and items) and their side-information in the graph, allowing it to be used for higher-order connectivity in the convolution layers.
 It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
 \\\\
-The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, with the exception of the adjacency matrix being modified as described above.
+The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, except for the adjacency matrix being modified as described above.
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS|) \times K}$, where $K$ is the embeddings size, then the embedding matrix for the next layer $l+1$ can be obtained by:
 \begin{equation}
     Emb^{(l+1)} = (D^{-\frac{1}{2}}AD^{-\frac{1}{2}})Emb^{(l)}
@@ -310,11 +310,11 @@ The model parameters are updated by optimizing the BPR loss function in \Cref{eq
 For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient by a step size defined through the learning rate.
 The gradient is a vector of partial derivates, which defines the slope of the function, where a partial derivative of a function with multiple variables is the derivate with respect to a single variable with the remaining variables held constant.
 The derivate defines how the output of the function changes based on changes in the input.
-The model parameters can then be updated in the negative direction of the slope of the function, the gradient, based on the learning rate, in order to approach a local minima. 
+The model parameters can then be updated in the negative direction of the slope of the function, the gradient, based on the learning rate, to approach a local minima. 
 In our implementation, the loss function is optimized using the \textit{Adam Optimizer}\cite{AdamOptimizer}, based on empirical testing.
 Optimizer functions are an essential part of machine learning, since they are used to tune the parameters of the neural network to minimize the loss function.
 The chosen optimizer can impact the training speed and final performance of the model.
-However, there is no theory that explains how to make the decision of which optimizer to use \cite{EmpiricalOptimizers}.
+However, there is no theory that explains how to decide which optimizer to use \cite{EmpiricalOptimizers}.
 Unlike simpler optimizers that maintain a single learning rate throughout training, such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and the variance of the gradient and the squared gradient \cite{AdamOptimizer}.
 Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for RS and CARS, since they often deal with sparse data.
 
@@ -405,7 +405,7 @@ We found that for this version of the model, it gave slightly better performance
             (200,0.07344)
         };
 
-		\addplot plot coordinates{
+        \addplot plot coordinates{
             (20,9.0629e-3)
             (40,8.9258e-3)
             (60,9.0337e-3)
@@ -418,7 +418,7 @@ We found that for this version of the model, it gave slightly better performance
             (200,0.0106)
         };
 
-		\addplot plot coordinates{
+        \addplot plot coordinates{
             (20,8.7e-3)
             (40,8.8121e-3)
             (60,8.9353e-3)

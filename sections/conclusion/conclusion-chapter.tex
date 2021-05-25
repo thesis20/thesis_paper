@@ -1,6 +1,6 @@
 \section{Conclusion}\label{sec:conclusion}
 In this paper, we have shown two ways to include context and side-information in graph convolution neural networks.
-While there are not many competing methods available for comparison in context specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across most datasets.
+While there are not many competing methods available for comparison in context-specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across most datasets.
 Likewise, we have shown how the context can be aggregated and used in a general recommendation scenario with competitive results to state-of-the-art methods.
 \\\\
 There are, however, some limitations to the methods.
@@ -16,12 +16,12 @@ While this is a perfect scenario for TopPop, it has proven to be a big challenge
 The most prominent future work is further contemplation on how to express context in a way that is compatible with the GCN models.
 Our proposal is to look into ways to represent context as edge information in a feasible way.
 While writing this paper, we attempted to model it in a way such that there was an embedding for each (user,item,context) tuple.
-However, this quickly proved infeasible since the amount of embeddings explode with just a few contexts available.
+However, this quickly proved infeasible since the number of embeddings explodes with just a few contexts available.
 \\
 Additionally, we have seen that not all context is equal in terms of importance.
 Due to this, it could be beneficial to include an attention mechanism that is able to learn the importance of each context or context combination for the convolution layer.
 \\
 Finally, both CSGCN methods are based on the simplified models of GCNs which are gaining popularity.
 For this paper, we have done limited experimentation on extending this with various components from traditional GCNs, such as re-adding linear transformation and non-linear activation, without success.
-In the recent months, several new papers on GCNs have been published which present new extensions to GCNs.
-These extensions include new layer aggregation functions and various implementations of knowledge graphs, which may be of interest to improve performance of the context-aware models presented in this paper.
+In recent months, several new papers on GCNs have been published which present new extensions to GCNs.
+These extensions include new layer aggregation functions and various implementations of knowledge graphs, which may be of interest to improve the performance of the context-aware models presented in this paper.
