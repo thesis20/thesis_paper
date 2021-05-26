@@ -381,67 +381,127 @@ While the results are only shown for NDCG@20 for this dataset, they have proven 
 To test whether context and side-information actually increase performance in a non-context specific setting, CSGCN-ADJ is run using different inputs for the datasets Yelp-NC and ML1M and the performance is measured with NDCG@20.
 First of all, CSGCN-ADJ is run with both side-information and context. 
 Then side-information is removed, followed by removing context, and finally both context and side-information are removed.
-\begin{figure}
-    \begin{tikzpicture}
-        \begin{axis}[
-            xlabel=Epoch,
-            ylabel=NDCG@20,
-            height=8cm,
-            width=7cm,
-            grid=major,
-            legend style={at={(0.5,-0.20)},
-        anchor=north,legend columns=2}]
-            
-        \addplot plot coordinates{
-            (20,8.120e-02)
-            (40,9.177e-02)
-            (60,9.735e-02)
-            (80,9.875e-02)
-            (100,1.002e-01)
-            (120,1.018e-01)
-            (140,1.018e-01)
-            (160,1.016e-01)
-        };
-
-        \addplot plot coordinates {
-            (20,8.696e-02)
-            (40,9.651e-02)
-            (60,1.006e-01)
-            (80,1.025e-01)
-            (100,1.038e-01)
-            (120,1.029e-01)
-            (140,1.012e-01)
-            (160,9.98e-02)
-        };
-
-        \addplot plot coordinates {
-            (20,8.358e-02)
-            (40,9.471e-02)
-            (60,9.871e-02)
-            (80,1.007e-01)
-            (100,1.006e-01)
-            (120,1.017e-01)
-            (140,1.0031e-01)
-            (160,1.019e-01)
-        };
-
-        \addplot plot coordinates {
-            (20,9.053e-02)
-            (40,9.955e-02)
-            (60,1.017e-01)
-            (80,1.029e-01)
-            (100,1.027e-01)
-            (120,1.018e-01)
-            (140,9.953e-02)
-            (160,9.809e-02)
-
-        };
-        \legend{Sideinfo + context,Sideinfo,Context,Nothing}
-        \end{axis}
-    \end{tikzpicture}
-    \caption{The performance on NDCG@20 of CSGCN-ADJ on the Yelp-NC dataset with different types of input.}
-    \label{fig:ablation_study_1}
-\end{figure}
+\begin{figure*}[t!]
+    \captionsetup{justification=centering}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \captionsetup{justification=centering,margin={0cm,2.1cm}}
+        \begin{tikzpicture}
+            \begin{axis}[
+                xlabel=Epoch,
+                ylabel=NDCG@20,
+                height=8cm,
+                width=7cm,
+                grid=major,
+                legend style={at={(0.5,-0.20)},
+            anchor=north,legend columns=2}]
+                
+            \addplot plot coordinates{
+                (20,8.120e-02)
+                (40,9.177e-02)
+                (60,9.735e-02)
+                (80,9.875e-02)
+                (100,1.002e-01)
+                (120,1.018e-01)
+                (140,1.018e-01)
+                (160,1.016e-01)
+            };
+    
+            \addplot plot coordinates {
+                (20,8.696e-02)
+                (40,9.651e-02)
+                (60,1.006e-01)
+                (80,1.025e-01)
+                (100,1.038e-01)
+                (120,1.029e-01)
+                (140,1.012e-01)
+                (160,9.98e-02)
+            };
+    
+            \addplot plot coordinates {
+                (20,8.358e-02)
+                (40,9.471e-02)
+                (60,9.871e-02)
+                (80,1.007e-01)
+                (100,1.006e-01)
+                (120,1.017e-01)
+                (140,1.0031e-01)
+                (160,1.019e-01)
+            };
+    
+            \addplot plot coordinates {
+                (20,9.053e-02)
+                (40,9.955e-02)
+                (60,1.017e-01)
+                (80,1.029e-01)
+                (100,1.027e-01)
+                (120,1.018e-01)
+                (140,9.953e-02)
+                (160,9.809e-02)
+    
+            };
+            \legend{Sideinfo + context,Sideinfo,Context,Nothing}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{The performance on NDCG@20 of CSGCN-ADJ on the Yelp-NC dataset with different types of input.}
+        \label{fig:ablation_study_1}
+    \end{subfigure}
+    \hspace{0.1\textwidth}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \captionsetup{justification=centering,margin={0cm,1cm}}
+        \begin{tikzpicture}
+            \begin{axis}[
+                xlabel=Epoch,
+                ylabel=NDCG@20,
+                height=8cm,
+                width=7cm,
+                grid=major,
+                legend style={at={(0.5,-0.20)},
+            anchor=north,legend columns=2}]
+                
+            \addplot plot coordinates{
+                (20,0.3749)
+                (40,0.3850)
+                (60,0.3854)
+                (80,0.3862)
+                (100,0.3836)
+                (120,0.3856)
+            };
+    
+            \addplot plot coordinates {
+                (20,0.3798)
+                (40,0.3881)
+                (60,0.3900)
+                (80,0.3899)
+                (100,0.3862)
+                (120,0.3884)
+            };
+    
+            \addplot plot coordinates {
+                (20,0.3748)
+                (40,0.3836)
+                (60,0.3816)
+                (80,0.3894)
+                (100,0.3841)
+                (120,0.3933)
+            };
+    
+            \addplot plot coordinates {
+                (20,0.3749)
+                (40,0.3836)
+                (60,0.3893)
+                (80,0.3970)
+                (100,0.3912)
+                (120,0.3901)
+            };
+            \legend{Sideinfo + context,Sideinfo,Context,Nothing}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{The performance on NDCG@20 of CSGCN-ADJ on the ML1M dataset with different types of input.}
+        \label{fig:ablation_study_2}
+    \end{subfigure}
+    \caption{Ablation study for the input of CSGCN-ADJ on Yelp-NC and ML1M.}
+    \label{fig:inputablation}
+\end{figure*}
 \Cref{fig:ablation_study_1} shows the performance on NDCG@20 of CSGCN-ADJ with different input.
 It shows that the more input the model receives, the longer it takes to converge to its best performance.
 Overall, the performance does not change drastically with the different types of input.
@@ -449,59 +509,7 @@ Having only side-information as input achieves the best performance, but it is o
 Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input improves performance slightly.
 To conclude from the study on the Yelp-NC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting.
 Side-information, however, performs the best on this metric on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
-
-\begin{figure}
-    \begin{tikzpicture}
-        \begin{axis}[
-            xlabel=Epoch,
-            ylabel=NDCG@20,
-            height=8cm,
-            width=7cm,
-            grid=major,
-            legend style={at={(0.5,-0.20)},
-        anchor=north,legend columns=2}]
-            
-        \addplot plot coordinates{
-            (20,0.3749)
-            (40,0.3850)
-            (60,0.3854)
-            (80,0.3862)
-            (100,0.3836)
-            (120,0.3856)
-        };
-
-        \addplot plot coordinates {
-            (20,0.3798)
-            (40,0.3881)
-            (60,0.3900)
-            (80,0.3899)
-            (100,0.3862)
-            (120,0.3884)
-        };
-
-        \addplot plot coordinates {
-            (20,0.3748)
-            (40,0.3836)
-            (60,0.3816)
-            (80,0.3894)
-            (100,0.3841)
-            (120,0.3933)
-        };
-
-        \addplot plot coordinates {
-            (20,0.3749)
-            (40,0.3836)
-            (60,0.3893)
-            (80,0.3970)
-            (100,0.3912)
-            (120,0.3901)
-        };
-        \legend{Sideinfo + context,Sideinfo,Context,Nothing}
-        \end{axis}
-    \end{tikzpicture}
-    \caption{The performance on NDCG@20 of CSGCN-ADJ on the ML1M dataset with different types of input.}
-    \label{fig:ablation_study_2}
-\end{figure}
+\\
 On \Cref{fig:ablation_study_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
 Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
