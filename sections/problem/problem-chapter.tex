@@ -47,6 +47,7 @@ This signifies that the expressive power of GCNs originates primarily from the p
 
 \subsubsection*{Data representation}
 In graph-based CF RS, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
+The bipartite graph consists of two distinct sets of nodes: Users ($U$) and items ($I$), and a set of undirected edges ($E$) that connect the user and item if they have interacted with each other.
 \begin{figure}[h]
 \begin{tikzpicture}[thick,
     every node/.style={draw,circle},
@@ -84,7 +85,11 @@ In graph-based CF RS, we typically represent data in the form of a bipartite gra
 \caption{Example of a bipartite graph.}
 \label{fig:bipartite-graph}
 \end{figure}
-\cref{fig:bipartite-graph} consists of two distinct sets of nodes: Users ($U$) and items ($I$), and a set of edges ($E$) that connect the user and item if they have interacted with each other.
+
+This bipartite graph structure can also be presented in the form of an adjacency matrix containing the user-item interaction matrix $R \in \mathbb{R}^{|U| \times |I|}$, where $|U|$ and $|I|$ denote the amount of users and items respectively, and each entry $R_{ui}$ is 1 if user $u$ has interacted with item $i$, otherwise 0.\\
+With this R, we define the adjacency matrix $A$ as
+$$A = \begin{bmatrix} 0 & R\\ R^T & 0 \end{bmatrix}$$
+The transpose of R is included in the adjacency matrix to denote that the edges are undirected.
 
 \subsubsection*{Higher-order connectivity and implementation input for GCNs}
 GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
