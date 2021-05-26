@@ -26,7 +26,7 @@ Yelp-ON &5,185 &5,566 &332,291 &1 &3 \\\midrule
 \end{adjustwidth}
 
 \subsubsection*{MovieLens 1M (ML1M)}
-ML1M is a dataset with 1 million interactions between 6,040 users and 3,377 movies.\\
+ML1M is a dataset \cite{ml1m} with 1 million interactions between 6,040 users and 3,377 movies.\\
 We use the following side-information for users:
 \begin{itemize}
     \item Age
@@ -37,7 +37,7 @@ Side-information for items is \textit{genre}, which specifies that an item has o
 For contextual information, the MovieLens dataset provides a timestamp for when the interaction took place.
 
 \subsubsection*{Frappe}
-The Frappe dataset contains information about how users have interacted with applications on their smartphones.
+The Frappe dataset \cite{baltrunasfrappe} contains information about how users have interacted with applications on their smartphones.
 The only available side-information is for items, indicating whether the application is free or not.
 However, it contains the following contexts:
 \begin{itemize}
@@ -50,7 +50,7 @@ However, it contains the following contexts:
 \end{itemize}
 
 \subsubsection*{Yelp-NC and Yelp-ON}
-The two Yelp datasets, Yelp-NC and Yelp-ON, are subsets of the public Yelp dataset, where we take the subset of items located in respectively North Carolina (NC) and Ontario (ON).
+The two Yelp datasets, Yelp-NC and Yelp-ON, are subsets of the public Yelp dataset \cite{yelp}, where we take the subset of items located in respectively North Carolina (NC) and Ontario (ON).
 Both Yelp datasets have been pruned such that it includes only users with at least 10 interactions, to facilitate generating a stratified data split where each user in the test set is also in the training set.\\
 We use the following side-information about users for both datasets:
 \begin{itemize}
