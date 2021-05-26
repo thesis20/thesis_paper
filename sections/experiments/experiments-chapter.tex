@@ -1,99 +1,89 @@
 \section{Experiments}\label{sec:experiments}
 Experiments are conducted in this section in order to answer the following research questions:
 \begin{itemize}
-    \item \textbf{RQ1}: Does CSGCN outperform state-of-the-art methods for the task of context-aware list prediction?
-    \item \textbf{RQ2}: Can CSGCN be used to make non-context specific recommendations through aggregations?
+    \item \textbf{RQ1}: How do the CSGCN models compare to state-of-the-art methods for the task of context-aware list prediction?
+    \item \textbf{RQ2}: Can the CSGCN models be used to make non-context specific recommendations?
     \item \textbf{RQ3}: Does side-information improve results for context-aware recommendations?
 \end{itemize}
-% \begin{itemize}
-%     \item Datasets
-%     \item Metrics
-%     \item Problems with evaluation with context
-%     \item Hyperparameter tuning
-%     \item Other methods
-%     \item Ablation study?
-% \end{itemize}
 
-\subsection{Experimental Settings}
+\subsection{Experimental Settings}\label{subsec:experimental-settings}
+To test the models on datasets with varying sizes and density, the following datasets were chosen:\\
+
 \begin{adjustwidth}{-2.5 cm}{-2.5 cm}\centering
-\begin{threeparttable}[!htb]
-\caption{Statistics of the datasets.}\label{tab:datasetstats}
+\begin{threeparttable}[]
 \scriptsize
-\begin{tabular}{lrrrrrr}\toprule
+\begin{tabular}{lcccccc}\toprule
 \textbf{Dataset} &\textbf{User \#} &\textbf{Item \#} &\textbf{Interaction \#} &\textbf{Context \#} &\textbf{Sideinfo \#} \\\cmidrule{1-6}
-ML1m &6,040 &3,377 &999,416 &4 &4 \\\cmidrule{1-6}
+ML1m &6,040 &3,377 &999,416 &2 &4 \\\cmidrule{1-6}
 %ML100k &943 &1,682 &100,000 &4 &4 \\\cmidrule{1-6}
-Frappe &546 & 821 &85,541 &2 &4 \\\cmidrule{1-6}
-Yelp-NC &2,274 &2,140 &130,627 &4 &4 \\\cmidrule{1-6}
-Yelp-ON &5,185 &5,566 &332,291 &4 &4 \\\midrule
+Frappe &546 & 821 &85,541 &6 &1 \\\cmidrule{1-6}
+Yelp-NC &2,274 &2,140 &130,627 &1 &3 \\\cmidrule{1-6}
+Yelp-ON &5,185 &5,566 &332,291 &1 &3 \\\midrule
 \bottomrule
 \end{tabular}
+\caption{Statistics of the datasets.}\label{tab:datasetstats}
 \end{threeparttable}
 \end{adjustwidth}
-%Ml1M og ML100k side info:  (age, gender, occupation, zipcode, genre)
-%ML1M og ML100k context: (weekday, time of day)
-%Frappe side info: (cost, city)
-%Frappe context: (weekday, time of day, is weekend, weather)
-%Yelp sideinfo: (genre, yelping since, fans, average stars) 
-%Yelp context: (month, day_of_week, hour, timeofday)
-%YelpNC categories: 80
-%YelpOH categories: 75
-To test the model on datasets with varying sizes and density, the following datasets were chosen:\\
-%\textbf{MovieLens 100k (ML100k)} is a relatively small and dense dataset with 100.000 interactions between 943 users and 1,682 items.\\
-\textbf{MovieLens 1M (ML1M)} is a dataset with 1 million interactions between 6,040 users and 3,377 movies.\\
-It has the following side-information for users:
+
+\subsubsection*{MovieLens 1M (ML1M)}
+ML1M is a dataset with 1 million interactions between 6,040 users and 3,377 movies.\\
+We use the following side-information for users:
 \begin{itemize}
     \item Age
     \item Gender
     \item Occupation
-    \item Zipcode
 \end{itemize}
-Side-information for items is \textit{genre}, which specifies that an item has zero or more of the 18 genres available in the dataset.
-For contextual information, the MovieLens datasets provide a timestamp for when the interaction took place, which is split into a month, day of the week, hour, and time of day (morning, evening, night, etc.).\\\\
+Side-information for items is \textit{genre}, which specifies that an item has one or more of the 18 genres available in the dataset.
+For contextual information, the MovieLens dataset provides a timestamp for when the interaction took place.
 
-The two Yelp datasets (\textbf{Yelp-NC} and \textbf{Yelp-ON}) are subsets of the public Yelp datasets, where we take the subset of items located in respectively North Carolina (NC) and Ontario (ON).
-Both Yelp datasets have been pruned such that only users with at least 10 interactions, such that we can generate a stratified data split and avoid cold-start situations.\\
-They both have the following side-information about users:
+\subsubsection*{Frappe}
+The Frappe dataset contains information about how users have interacted with applications on their smartphones.
+The only available side-information is for items, indicating whether the application is free or not.
+However, it contains the following contexts:
 \begin{itemize}
-    \item Yelping since (Year)
-    \item Number of fans
-    \item Average stars 
-\end{itemize}
-As with the MovieLens dataset, the side-information about items contains a dimension specifying the categories that an item belongs to.
-For the YelpNC dataset, this is zero or more of 80 different categories, and 75 categories for YelpON.\\
-The contextual information is a timestamp, which is split into four types as with the MovieLens dataset.\\
-Finally, the \textbf{Frappe} dataset contains information about how users have interacted with applications on their smartphones.
-The only available side-information for users here is their city, and for items whether the application is free or not.
-However, it contains contextual information about the time of the transaction:
-\begin{itemize}
+    \item City
+    \item Country
     \item Weekday
     \item Time of day
     \item Whether it is weekend or not
+    \item Weather
 \end{itemize}
-It also contains information about the weather at the time of the transaction.
+
+\subsubsection*{Yelp-NC and Yelp-ON}
+The two Yelp datasets, Yelp-NC and Yelp-ON, are subsets of the public Yelp dataset, where we take the subset of items located in respectively North Carolina (NC) and Ontario (ON).
+Both Yelp datasets have been pruned such that it includes only users with at least 10 interactions, to facilitate generating a stratified data split where each user in the test set is also in the training set.\\
+We use the following side-information about users for both datasets:
+\begin{itemize}
+    \item Yelping since (Year)
+    \item Number of fans
+    \item Average stars
+\end{itemize}
+The side-information about items is a dimension specifying the categories that an item belongs to.
+For the YelpNC dataset, this is one or more of 80 different categories, and 75 categories for YelpON.\\
+The contextual information is a timestamp.
 
 \subsection{Context dimension selection}
-Since most of the datasets mainly include a timestamp as contextual information, we discretize these into the following context dimensions:
+Since most of the datasets include a timestamp as contextual information, we discretize these into the following context dimensions:
 \begin{itemize}
     \item Month
     \item Day of week
     \item Hour
     \item Time of day
 \end{itemize}
-Time of day is a further discretization of the hour dimension, split into 5 intervals:
+Where time of day is a further discretization of the hour dimension, split into 5 intervals:
 \begin{itemize}
     \item Night (0 to 4)
-    \item Morning (4 to 8)
-    \item Before midday (8 to 12)
-    \item After midday (12 to 16)
+    \item Early morning (4 to 8)
+    \item Late morning (8 to 12)
+    \item Evening (12 to 16)
     \item Afternoon (16 to 20)
     \item Late night (20 to 24)
 \end{itemize}
-For the Frappe dataset, we instead make use of the three default contextual values available (weekday, time of day, weekend or not).
+For the Frappe dataset, we instead make use of the 6 contextual values available in the dataset.
 \\\\
-For the side-information, we use all the available information for both users and items with some discretization.
+For the side-information, we use the dimensions mentioned in \Cref{subsec:experimental-settings} for both users and items with some discretization.
 The Yelp datasets provide a "yelping since" dimension, which is a timestamp for the creation of the user.
-This is discretized to include the year that the user has been created.
+This is discretized to include only the year that the user has been created.
 \\
 Additionally, the dimension "fans" is discretized into four groups:
 \begin{itemize}
@@ -103,108 +93,119 @@ Additionally, the dimension "fans" is discretized into four groups:
     \item $> 500$ fans
 \end{itemize}
 
+\subsection{Compared methods}
+In the experiments, the CSGCN models are compared against the following methods for context-specific recommendations:
+\begin{itemize}
+    \item Factorization Machine (FM)\cite{fmrendle}
+    \item Convolutional Factorization Machine (CFM) \cite{CFM}
+    \item Neural Factorization Machine (NFM) \cite{NeuralFM}
+    % \item Top Pop
+    % \item CAMF \cite{CAMF}
+\end{itemize}
+CFM uses a combination of a CNN and an FM, which is similar to our method in that it is capable of producing a context-aware top-$k$ recommendation list.
+It is included since it is an alternative way to handle contextual information in CNNs.
+We also compare against NFM, which uses a multi-layer perceptron (MLP) on top of the factorization machine to learn higher-order interaction signals.
+\\\\
+To compare the performance of the models in a non-context specific setting, we compare against the following methods:
+\begin{itemize}
+    \item Neural Graph Collaborative Filtering (NGCF) \cite{NGCF}
+    \item Light Graph Convolutional Network (LightGCN) \cite{LightGCN}
+    \item Knowledge Graph Attention Network (KGAT) \cite{KGAT}
+    \item Bayesian Personalized Ranking (BPR) \cite{BPR}
+    \item Top Pop
+    %\item Factorization Machine \cite{fmrendle}
+\end{itemize}
+Both the CSGCN models and LightGCN extend the codebase of NGCF, so they are included in the comparison to show that adding side-information contextual information hopefully improves the accuracy of these methods.\\
+KGAT is a state-of-the-art graph-based method that utilizes side-info in the form of a knowledge graph.
+BPR utilizes implicit feedback to generate a personalized top-$k$ list of items using the proposed BPR-optimizer to train the model, providing a simpler method for comparison.
+Finally, a we include a simple baseline, Top Pop, which simply recommends the $k$ most popular items for all users.
 
 \subsection{Parameter settings}
 To fairly compare the performance of the models, we train all of them by optimizing the BPR loss with Adam.
-The learning rate is searched between $[0.1, 0.01, 0.001, 0.0001]$ for all models.
+The learning rate is either set to the value presented in the respective papers, or searched between $[0.1, 0.01, 0.001, 0.0001]$ if a default is not available.
 The batch size is set as 1024 for all datasets except Frappe, where it is set to 512 due to its size.
-The embedding size is set to 64, and for the models using regularization terms, this is searched between $[0.01, 0.001, 0.0001]$.
-For CFM and NFM we follow the approach presented in the original papers and feed them with a pretrained FM model which has run for 500 epochs with the settings presented in the CFM paper.
-Since we do not utilize multi-hot, the multi-hot attention mechanism of CFM is disabled as described in their paper.
-All methods are run for a max of 1000 epochs with an early stopping mechanism triggered when the HR@20 or Recall@20 has not improved for 5 steps.
+The embedding size is set to 64, and for the models using regularization terms, this is searched between $[0.01, 0.001, 0.0001]$ if a default value is not provided.
+For CFM and NFM we follow the approach presented in the original papers and feed them with weights from a pretrained FM model which has run for 500 epochs with the settings presented in the CFM paper.
+All methods are run for a max of 1000 epochs with an early stopping mechanism triggered when the HR@20 or Recall@20 has not improved for 5 evaluations (100 consecutive steps), except for CFM which is run for 300 epochs based on the default values.
 
 
-\subsection{Evaluation Types \& Metrics}\label{subsec:evalandmetrics}
-The objective of the models in the experiments is to produce a top-$k$ list of items for a user. 
-Different methods for evaluating the performance of the models were considered, specifically the fold-out and leave-one-out methods.
+\subsection{Evaluating the models}\label{subsec:evalandmetrics}
+The objectives of the models in the experiments are to produce top-$k$ lists of items for a user. 
+Different methods for evaluating the performances of the models were considered, specifically the fold-out and leave-one-out methods.
 These methods interact with the context in different ways.
 For the fold-out method, the datasets are split into a training set and a test set, where the model is trained on the training set and evaluated on the test set. 
 This split is generated such that each user in the test set is also found in the training set.
 Using this stratified split method, we decided to use a split of 80\% training and 20\% test split.
 Because of this split, a single user can have multiple ground truth entries across multiple contexts.\\
-A problem to consider with fold-out for content-aware evaluation is that when the context is a part of the input to the model, a score must be calculated for each combination of item and context due to the multiple ground truth contexts, which can be quite computationally expensive.
-A single context cannot be guaranteed for the user, and thus every context needs to be evaluated.
+A problem to consider with fold-out for context-aware evaluation is that when the context is part of the input to the model, a score must be calculated for each combination of item and context due to the multiple ground truth contexts, which can be computationally expensive.
+A single context cannot be guaranteed for the user for all ground truths, and thus every context needs to be evaluated.
 \\\\
-For the leave-one-out method, the newest interaction for each user is removed from the training and used a as test set, as per \cite{CFM, BPR}.
-This means that when a top-$k$ list is produced for a user, only a single item amongst the recommended items can be relevant, and thus there is only one context within which the ground truth was made.
-This approach is largely inspired by sequential recommendation systems, where you leave out the newest interaction from each user and try to predict it based on the sequence of the previous interactions by the user.\\
-This approach limits the number of different metrics that can be used for this type of evaluation method, and it tends to report worse results than the fold-out method.
+For the leave-one-out method, the newest interaction for each user is removed from the training set and used as the test set, as per \cite{CFM, BPR}.
+This means that when a top-$k$ list is produced for a user, only a single item amongst the recommended items can be relevant, and thus there is only one context within which the ground truth had occurred.
+This approach is largely inspired by sequential recommendation systems, where you leave out the newest interaction from each user and try to predict the next item in the sequence based on the sequence of the previous interactions by the user.\\
+This approach limits the number of different metrics that can be used for this type of evaluation method.
 \\\\
-For comparisons, we conduct an experiment using fold-out for models that produce a top-$k$ recommendation list and conduct a separate leave-one-out evaluation for models that produce a context-aware top-$k$ recommendation list. 
-The metrics used for the fold-out evaluation are Precision@N, Recall@N, and NDCG@N, while the leave-one-out experiments report HR@N and MRR@N.
-\\\\
-The top-$k$ recommendation problem is the task of recommending a list $L(u)$ to an active user $u$ containing $k$ items to likely be of interest.
-Evaluating the quality of such a method can be done by splitting the set of items $I$ into a training set $I_{train}$ used to learn $L$ and a test set $I_{test}$ for each user $u$.
+For comparisons we conduct an experiment using fold-out for models that produce a top-$k$ recommendation list and conduct a separate leave-one-out evaluation for models that produce a context-aware top-$k$ recommendation list. 
+The metrics used for the fold-out evaluation are Precision, Recall, and Normalized Discounted Cumulative Gain (NDCG), while the leave-one-out experiments report Hit Rate (HR) and Mean Reciprocal Rank (MRR).
+
+\subsubsection*{Evaluation metrics explained}
+The top-$k$ recommendation problem is the task of recommending a list $L(u)$ to an active user $u$ containing $k$ items.
+Evaluating the quality of a method can be done by splitting the set of items $I$ into a training set $I_{train}$ and a test set $I_{test}$ for each user.
 \\
-Let $T(u) \subset I_u \cap I_{test}$, where $I_u$ is the subset of items that have been interacted with by user $u$, then precision can be calculated according to \Cref{eqn:precision}, and recall according to \Cref{eqn:recall}.
-Precision defines the proportion of relevant instances among the predicted relevant items, while recall is the proportion of true positives that were correctly predicted.
+Let $T(u)$ be the the set of items that the user has interacted with in the test set.
+Precision can be calculated according to \Cref{eqn:precision}, and recall according to \Cref{eqn:recall}.
+Precision defines the proportion of relevant items among the predicted items, while recall is the proportion of items that were correctly predicted according to the ground truth.
 \begin{equation}
     \label{eqn:precision}
-    Precision@N(L) = \frac{1}{|U|} \sum\limits_{u \epsilon U}\frac{|L(u) \cap T(u)|}{|L(u)|}
+    Precision@N(L) = \frac{1}{|U|} \sum\limits_{u \in U}\frac{|L(u) \cap T(u)|}{|L(u)|}
 \end{equation}
 \begin{equation}
     \label{eqn:recall}
-    Recall@N(L) = \frac{1}{|U|} \sum\limits_{u \epsilon U} \frac{|L(u) \cap T(u)|}{|T(u)|}
+    Recall@N(L) = \frac{1}{|U|} \sum\limits_{u \in U} \frac{|L(u) \cap T(u)|}{|T(u)|}
 \end{equation}
-Another metric to be used is NDCG\cite{dcgpaper}.
-Assuming each user $u$ has a gain $g_{ui}$ from being recommended item $i$, then the average DCG for a list of $J$ items is defined in \Cref{eqn:dcg}, where $i_j$ is the item at position $j$ in the list, and the logarithm base is a free parameter, where $2$ is most commonly used to ensure all positions are discounted.
+Another metric to be used is NDCG \cite{dcgpaper}.
+Assuming each user $u$ has a gain $g_{ui}$ from being recommended item $i$, then the average DCG for a list of $J$ items is defined in \Cref{eqn:dcg}, where $i_j$ is the item at position $j$ in the list, and the logarithm base $b$ is $2$ to ensure all positions are discounted.
 This metric rewards lists that frontload relevant items.
 \begin{equation}
     \label{eqn:dcg}
-    DCG@N = \frac{1}{|U|} \sum\limits_{u=1}^{|U|} \sum\limits_{l = 1}^{|L|} \frac{g_{ui_l}}{log_b (l+1)}
+    DCG@N = \frac{1}{|U|} \sum\limits_{u=1}^{|U|} \sum\limits_{j = 1}^{|J|} \frac{g_{ui_j}}{log_b (j+1)}
 \end{equation}
-NDCG is defined in \Cref{eqn:ndcg}, where $DCG*$ is the ideal DCG, which is defined by sorting the DCG vector such that the most relevant items appear in the start of the list, resulting in the biggest possible DCG value.
+NDCG is defined in \Cref{eqn:ndcg}, where $iDCG$ is the ideal DCG, which is defined by sorting the recommended items such that the relevant items appear at the start of the list, resulting in the largest possible DCG value.
 \begin{equation}
     \label{eqn:ndcg}
-    NDCG@N = \frac{DCG}{DCG*}
+    NDCG@N = \frac{DCG}{iDCG}
 \end{equation}
-MRR\cite{MRR} is employed for the leave-one-out evaluation, defined in \Cref{eqn:mrr}.
-For each user in $U$, a top-$k$ recommendation list is produced, and MRR is calculated by finding the rank $r_u$ of the first relevant recommendation for each list, and then taking the mean of these ranks.
+MRR \cite{MRR} is employed for the leave-one-out evaluation, defined in \Cref{eqn:mrr}.
+For each user $u$ in $U$, MRR is calculated by finding the rank $r_u$ of the first relevant recommendation for each list, and then taking the mean of these ranks.
 \begin{equation}
     \label{eqn:mrr}
-    MRR@N = \frac{1}{|U|} \sum\limits_{u \epsilon U}\frac{1}{r_u}
+    MRR@N = \frac{1}{|U|} \sum\limits_{u \in U}\frac{1}{r_u}
 \end{equation}
-The final metric used is hit-rate(HR).
-If a relevant item for a user appears in the top-$k$ list, the HR for that user is 1, and 0 if not. The user specific HRs are then aggregated and the the HR of the system is defined as the number of overall hits $n-hits$ divided by the number of users, seen in \Cref{eqn:hr} 
+The final metric used is HR.
+If a relevant item for a user appears in the top-$k$ list, the $HR(u)$ for that user is $1$, otherwise it is $0$.
+The final HR score is then calculated by taking the mean of all users' individual HR scores, as seen in \Cref{eqn:hr}.
 \begin{equation}
     \label{eqn:hr}
-    HR@N = \frac{n-hits}{|U|}
+    HR@N = \frac{1}{|U|} \sum\limits_{u \in U}HR(u)
 \end{equation}
-\\\\
-%In the evaluation we go through each user in the test set, calculate a score for each item and context combination and then take the highest score for each item.
-%\todo{Describe the metrics}
-
-\subsection{Experimental settings}
-Since we utilize additional information in the form of context and side-information, we cannot optimally utilize most of the provided datasets for the methods we compare to.
-Instead, we focus on datasets that include side-information and contextual information and perform a grid-search of hyperparameters to find the optimal settings for each method to ensure a fair comparison.
 
 \subsection{Performance Comparison (RQ1)}\label{subsec:rq1}
-For context-aware comparisons, the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a score is predicted based on the context that this interaction took place in.
-In the experiments, CSGCN is compared against the following methods for the first research question regarding context-specific recommendations:
-\begin{itemize}
-    \item Factorization Machine (FM)\cite{fmrendle}
-    \item Convolutional Factorization Machine (CFM) \cite{CFM}
-    \item Neural Factorization Machine (NFM) \cite{NeuralFM}
-    \item Top Pop
-    % \item CAMF \cite{CAMF}
-\end{itemize}
-CFM uses a combination of a convolutional neural network (CNN) and a factorization machine, which is similar to our method in that it is capable of producing a context-aware top-$k$ recommendation list.
-It is included since it is an alternative way to handle contextual information in CNNs.
-Other than CFM, other FM-based methods are included in the context-specific setting, such as the original FM as well as NFM which uses a multi-layer perceptron (MLP) on top of the factorization machine to learn higher-order interaction signals.
+For the first research question we want to examine how the CSGCN models compare to state-of-the-art methods within context-aware list prediction.
+To investigate this, the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a list is produced based on the context that this interaction took place in.
 
 \begin{table*}[]
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{l|l|lrrr|rr}
-Dataset & Metric & FM & \multicolumn{1}{l}{NFM} & \multicolumn{1}{l}{CFM} & \multicolumn{1}{l|}{CSGCN-IS} & \multicolumn{1}{l}{CSGCN-ADJ} & \multicolumn{1}{l|}{Impr.} \\ \hline
+\begin{tabular}{c|l|cccc|cc}
+Dataset & Metric & FM & \multicolumn{1}{c}{NFM} & \multicolumn{1}{c}{CFM} & \multicolumn{1}{c|}{CSGCN-IS} & \multicolumn{1}{c}{CSGCN-ADJ} & \multicolumn{1}{c|}{Impr.} \\ \hline
 \multirow{4}{*}{YelpNC} & HR@20  & 0.0075  & 0.0142  & 0.0070 & 0.0545 & 0.0761  &  \\
                         & HR@50  & 0.0198  & 0.0240  & 0.0163 & 0.1099 & 0.1464  &  \\
                         & MRR@20 & 0.0022  & 0.0030  & 0.0037 & 0.0118 & 0.0158  &  \\
                         & MRR@50 & 0.0025  & 0.0033  & 0.0040 & 0.0136 & 0.0179  &  \\ \hline
-\multirow{4}{*}{Frappe} & HR@20  & 0.6590  & 0.3516  &        & 0.0458 & 0.0604  &  \\
-                        & HR@50  & 0.8004  & 0.4945  &        & 0.1062 & 0.1245  &  \\
-                        & MRR@20 & 0.2895  & 0.1117  &        & 0.0128 & 0.0184  &  \\
-                        & MRR@50 & 0.2942  & 0.1166  &        & 0.0146 & 0.0204  &  \\ \hline
+\multirow{4}{*}{Frappe} & HR@20  & 0.6590  & 0.3516  & 0.3242 & 0.0458 & 0.0604  &  \\
+                        & HR@50  & 0.8004  & 0.4945  & 0.4560 & 0.1062 & 0.1245  &  \\
+                        & MRR@20 & 0.2895  & 0.1117  & 0.1032 & 0.0128 & 0.0184  &  \\
+                        & MRR@50 & 0.2942  & 0.1166  & 0.1074 & 0.0146 & 0.0204  &  \\ \hline
 \multirow{4}{*}{YelpON} & HR@20  & 0.0083  & 0.0085  & 0.0073 & 0.0399 & 0.0534  &  \\
                         & HR@50  & 0.0133  & 0.0152  & 0.0133 & 0.0714 & 0.0997  &  \\
                         & MRR@20 & 0.0019  & 0.0021  & 0.0019 & 0.0091 & 0.0123  &  \\
@@ -215,37 +216,39 @@ Dataset & Metric & FM & \multicolumn{1}{l}{NFM} & \multicolumn{1}{l}{CFM} & \mul
                         & MRR@50 & 0.0229  & 0.0242  &        & 0.0373 & 0.0413  & 
 \end{tabular}%
 }
-\caption{Results for context-specific recommendations}
+\caption{Results for context-specific recommendations.}
 \label{tab:context-specific-table}
 \end{table*}
 The results for this experiment can be seen on \Cref{tab:context-specific-table}.
 It is easily seen that both CSGCN-IS and CSGCN-ADJ outperform the various factorization machines on most datasets.
 The exception is Frappe, a dataset that is fairly unbalanced in terms of which items have been interacted with. 
-The twenty most popular items have between 640 and 6634 interactions, which is quite a high number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
+The twenty most popular items have between 640 and 6,634 interactions, which is quite a large number for a dataset only containing 85,541 interactions, meaning that almost every 13th interaction will involve the most popular item, whereas all items have a mean of 104 interactions.\\\\
 From this, we can assume that the CSGCN-IS and CSGCN-ADJ methods work best on fairly balanced datasets, whereas factorization machines seem to have an advantage on datasets with highly popular items.\\\\
 Another interesting observation from the data is that even though CFM is run on pretrained FM data as described in their paper, it generally performs worse than the traditional FM.
 Additionally, the runtime of CFM is significantly higher than any of the other methods.
 Running 300 epochs on an NVIDIA DGX-2 cloud takes several days, while CSGCN-ADJ can perform the same amount of epochs in just a matter of hours.
-Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has simply been run once with the settings presented in the original paper.\\
-When comparing to the results presented in the CFM paper, we are not able to compare with the results they present, since they perform a different split of the data to perform their leave-one-out evaluation.
-According to their paper, they take the latest transaction of each user - but looking at the actual dataset they provide, their test dataset is significantly larger than the number of users, meaning that their evaluation must be different from ours.
+Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has been run only once with the settings presented in the original paper.\\
+We are not able to fairly compare with the results presented in the CFM paper, since they perform a different split of the data to perform their leave-one-out evaluation.
+According to their paper, they take the latest interaction of each user - but looking at the actual datasets they provide, their test datasets are significantly larger than the number of users, meaning that their evaluation must be different from ours.
+\\
+In conclusion, the performance of the CSGCN models depends on the dataset characteristics.
+While the models perform significantly worse than simpler models on the Frappe dataset, we would argue that this dataset is not an accurate representation of a real world scenario.
 
 
 \subsection{Performance Comparison (RQ2)}
-To answer the second research question about aggregated recommendations, we compare against the following methods:
-\begin{itemize}
-    \item Neural Graph Collaborative Filtering (NGCF) \cite{NGCF}
-    \item Light Graph Convolutional Network (LightGCN) \cite{LightGCN}
-    \item Knowledge Graph Attention Network (KGAT) \cite{KGAT}
-    \item Bayesian Personalized Ranking (BPR) \cite{BPR}
-    \item Top Pop
-    %\item Factorization Machine \cite{fmrendle}
-\end{itemize}
-Both CSGCN and LightGCN extend the codebase of NGCF, so they are included in the comparison to show that adding contextual information hopefully improves the accuracy of these methods.\\
-KGAT is a state-of-the-art graph-based method that utilizes side-info in the form of a knowledge graph, providing another comparison point to methods that include more information in recommendation.
-BPR utilizes implicit feedback to generate a personalized top-$k$ list of items using the proposed BPR-optimizer to train the model, providing a simpler method for comparison.
-Finally, a simple baseline is evaluated in Top Pop, which simply recommends the $k$ most popular items for all users.
-\todo[color=red]{x - Answer RQ2}
+Since the CSGCN models use context to generate a top-$k$ list in each context for each user.
+We argue that this context information can be useful even for non-context-specific settings.
+Imagine that your system is recommending businesses to users, and you have a business that is only open on Christmas.
+On Christmas night, millions upon millions of users interact with this item, but it is never interacted with in any other context.
+In a regular RS this would be seen as a popular item, since a lot of users have interacted with it.
+However, looking at the context, we are able to infer that it is only in this exact context it is popular.
+This leads to the item having a high likelihood of being recommended in exactly one context, but a low likelihood in any other.
+With this in mind, we will try to answer RQ2 about whether the models can be used to make non-context specific recommendations through aggregations by investigating various types of aggregations of the scores.
+The simplest solution would be to take the highest score for an item, regardless of the context that it was recommended for.
+However, this may prove problematic, since an item may score highly in a single context but very low in any other context, as in the example before.\\
+Instead, we propose to take an average score across all contexts.
+With this, the item that is only interacted with in exactly one context has its score lowered by a factor of the number of contexts observed.
+
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
 % \usepackage{multirow}
@@ -254,7 +257,7 @@ Finally, a simple baseline is evaluated in Top Pop, which simply recommends the 
 % \useunder{\uline}{\ul}{}
 \begin{table*}[]
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}l|l|rrrrrr|rl@{}}
+\begin{tabular}{@{}l|l|cccccc|cc@{}}
 \multicolumn{1}{l|}{Dataset} &
   Metric &
   \multicolumn{1}{l}{LightGCN} &
@@ -302,20 +305,6 @@ Finally, a simple baseline is evaluated in Top Pop, which simply recommends the 
 \caption{Results for the aggregated results.}
 \label{tab:aggregatedresults}
 \end{table*}
-
-Since the CSGCN models use context to make score predictions, they output a score for each item in each context.
-We argue that this context information can be useful even for non-context-specific settings.
-Imagine that your system is recommending businesses to users, and you have a business that is only open on Christmas.
-On Christmas night, millions upon millions of users interact with this item, but it is never interacted with in any other context.
-In a regular recommender system, this would be seen as a popular item, since a lot of users have interacted with it.
-However, looking at the context, we are able to infer that it is only in this exact context it is popular.
-This leads to a high score in exactly one context, but low in any other.
-With this in mind, we will try to answer RQ2 about whether the models can be used to make non-context specific recommendations through aggregations by investigating various types of aggregations of the scores.
-The simplest solution would be to take the highest score for an item, regardless of the context that it was recommended for.
-However, this may prove problematic, since an item may score highly in a single context but very low in any other context, as in the example before.\\
-Instead, we propose to take an average score across all contexts.
-With this, the item that is only interacted with in exactly one context has its score lowered by a factor of the number of contexts observed.
-\\\\
 The results for the non-context-specific recommendation task can be seen in \Cref{tab:aggregatedresults}.
 Generally, we see that both CSGCN methods are among the best performers across all metrics on the datasets, with CSGCN-ADJ outperforming CSGCN-IS on all metrics.
 The main exception is on the Frappe dataset, where BPR and KGAT perform significantly better.
@@ -324,6 +313,7 @@ Frappe has a density of 18.9\%, compared to the others that range between 1.1\% 
 Even more interesting in the Frappe dataset is the performance of TopPop, which outperforms all other methods on all metrics.
 This is most likely caused by the dataset including some very popular items as described in \Cref{subsec:rq1}.
 All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the YelpON dataset across various aggregators of context on CSGCN-IS.
+
 \begin{figure}
     \begin{tikzpicture}
         \begin{axis}[
@@ -381,15 +371,16 @@ All of these results are based on using the mean aggregator, but for the sake of
     \caption{Effect of aggregation functions for CSGCN-IS on the YelpNC dataset for NDCG@20.}
     \label{fig:aggregation_effect}
 \end{figure}
-In \Cref{fig:aggregation_effect} we see the graph over how the choice of aggregation affects the CSGCN-IS model.
-What we see is that taking the mean provides the best results, followed by the median.
-At the bottom, we have the simple solution of simply taking the lowest or highest score across the contexts.\\
-This supports our previous assumption that while a single item might score high or low in one context, it does not necessarily mean that it is a good recommendation overall, which is better captured through the mean and median aggregations.\\
+\Cref{fig:aggregation_effect} shows how the choice of aggregation affects the CSGCN-IS model.
+This shows that using a mean aggregation function provides the best results, followed by the median.
+The simple solution of taking the lowest or highest score across the contexts is shown at the bottom of the graph.\\
+This supports the previous assumption that while a single item might be more likely to be recommended in one context, it does not necessarily mean that it is a good recommendation overall, which is better captured through the mean or median aggregations.\\
 While the results are only shown for NDCG@20 for this dataset, they have proven consistent across all the metrics.
-\\\\
-To test whether context and side-information actually increase performance in a non-context specific setting, we run one of our proposed models, CSGCN-ADJ, using different inputs for the datasets YelpNC and ML1M and measure the performances with NDCG@20.
+
+\subsubsection*{Ablation study for non-contextual recommendation}
+To test whether context and side-information actually increase performance in a non-context specific setting, CSGCN-ADJ is run using different inputs for the datasets YelpNC and ML1M and the performance is measured with NDCG@20.
 First of all, CSGCN-ADJ is run with both side-information and context. 
-Then we remove side-information, followed by removing context and finally we remove both context and side-information.
+Then side-information is removed, followed by removing context, and finally both context and side-information are removed.
 \begin{figure}
     \begin{tikzpicture}
         \begin{axis}[
@@ -448,15 +439,15 @@ Then we remove side-information, followed by removing context and finally we rem
         \legend{Sideinfo + context,Sideinfo,Context,Nothing}
         \end{axis}
     \end{tikzpicture}
-    \caption{The performance on NDCG@20 of CSGCN-ADJ on the YelpNC dataset with different types of input.}
+    \caption{The performance on NDCG@20 of CSGCN-ADJ on the Yelp-NC dataset with different types of input.}
     \label{fig:ablation_study_1}
 \end{figure}
-On \Cref{fig:ablation_study_1} we see the performance on NDCG@20 of CSGCN-ADJ with different input.
-We see that the more input the model receives, the longer it takes to converge to its best performance.
+\Cref{fig:ablation_study_1} shows the performance on NDCG@20 of CSGCN-ADJ with different input.
+It shows that the more input the model receives, the longer it takes to converge to its best performance.
 Overall, the performance does not change drastically with the different types of input.
 Having only side-information as input achieves the best performance, but it is only marginally better than not having side-information and context at all.
-Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input also does not give much better results.
-To conclude from the study on the YelpNC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting for the NDCG metric.
+Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input improves performance slightly.
+To conclude from the study on the Yelp-NC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting.
 Side-information, however, performs the best on this metric on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
 
 \begin{figure}
@@ -508,14 +499,14 @@ Side-information, however, performs the best on this metric on this dataset, whi
         \legend{Sideinfo + context,Sideinfo,Context,Nothing}
         \end{axis}
     \end{tikzpicture}
-    \caption{The performance on NDCG@20 of our model on the ML1M dataset with different types of input.}
+    \caption{The performance on NDCG@20 of CSGCN-ADJ on the ML1M dataset with different types of input.}
     \label{fig:ablation_study_2}
 \end{figure}
 On \Cref{fig:ablation_study_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
-Side-information and context are not able to improve the performance of the model on ML1M in a non-context-specific setting.
-Since both \Cref{fig:ablation_study_1,fig:ablation_study_2} show that the model is worse with context included, we can conclude that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
-Side-information, however, should be able to increase performance of the model in a non-context specific setting, but in this case the side-information does not provide any additional collaborative signal.
+Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
+Since both \Cref{fig:ablation_study_1,fig:ablation_study_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
+Side-information, however, is able to increase performance of the model in a non-context specific setting, but for this dataset the side-information does not provide any additional collaborative signal.
 
 \subsection{Performance Comparison (RQ3)}
 To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study with multiple ways of considering the side-information.
