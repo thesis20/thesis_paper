@@ -142,7 +142,7 @@ A single context cannot be guaranteed for the user for all ground truths, and th
 \\\\
 For the leave-one-out method, the newest interaction for each user is removed from the training set and used as the test set, as per \cite{CFM, BPR}.
 This means that when a top-$k$ list is produced for a user, only a single item amongst the recommended items can be relevant, and thus there is only one context within which the ground truth had occurred.
-This approach is largely inspired by sequential recommendation systems, where you leave out the newest interaction from each user and try to predict the next item in the sequence based on the sequence of the previous interactions by the user.\\
+This approach is largely inspired by sequential recommendation systems, where you leave out the newest interaction from each user and try to predict the next item in the sequence based on the sequence of the previous interactions by the user \cite{aggarwal2016recommender}.\\
 This approach limits the number of different metrics that can be used for this type of evaluation method.
 \\\\
 For comparisons we conduct an experiment using fold-out for models that produce a top-$k$ recommendation list and conduct a separate leave-one-out evaluation for models that produce a context-aware top-$k$ recommendation list. 
