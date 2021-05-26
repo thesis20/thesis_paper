@@ -442,7 +442,7 @@ Then side-information is removed, followed by removing context, and finally both
             \end{axis}
         \end{tikzpicture}
         \caption{The performance on NDCG@20 of CSGCN-ADJ on the Yelp-NC dataset with different types of input.}
-        \label{fig:ablation_study_1}
+        \label{fig:ablation_study_non_context_1}
     \end{subfigure}
     \hspace{0.1\textwidth}
     \begin{subfigure}[t]{0.4\textwidth}
@@ -496,12 +496,12 @@ Then side-information is removed, followed by removing context, and finally both
             \end{axis}
         \end{tikzpicture}
         \caption{The performance on NDCG@20 of CSGCN-ADJ on the ML1M dataset with different types of input.}
-        \label{fig:ablation_study_2}
+        \label{fig:ablation_study_non_context_2}
     \end{subfigure}
     \caption{Ablation study for the input of CSGCN-ADJ on Yelp-NC and ML1M.}
     \label{fig:inputablation}
 \end{figure*}
-\Cref{fig:ablation_study_1} shows the performance on NDCG@20 of CSGCN-ADJ with different input.
+\Cref{fig:ablation_study_non_context_1} shows the performance on NDCG@20 of CSGCN-ADJ with different input.
 It shows that the more input the model receives, the longer it takes to converge to its best performance.
 Overall, the performance does not change drastically with the different types of input.
 Having only side-information as input achieves the best performance, but it is only marginally better than not having side-information and context at all.
@@ -509,7 +509,7 @@ Having both context and side-information actually degrades performance slightly,
 To conclude from the study on the Yelp-NC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting.
 Side-information, however, performs the best on this metric on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
 \\
-On \Cref{fig:ablation_study_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
+On \Cref{fig:ablation_study_non_context_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
 Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
 Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
@@ -518,8 +518,11 @@ Side-information, however, is able to increase performance of the model in a non
 \subsection{Performance Comparison (RQ3)}
 To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study on the YelpNC dataset where we ran the CSGCN models with and without side-information to test the effect it has on the performance.
 This was also done for context input to test how it affects the performance in a context-specific setting.
-\begin{figure}
-    \begin{tikzpicture}
+\begin{figure*}[t!]
+    \captionsetup{justification=centering}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \captionsetup{justification=centering,margin={1.4cm,-1.3cm}}
+        \begin{tikzpicture}
         \begin{axis}[
             xlabel=Epoch,
             ylabel=HR@20,
@@ -584,12 +587,13 @@ This was also done for context input to test how it affects the performance in a
         \end{axis}
     \end{tikzpicture}
     \caption{The performance on HR@20 of CSGCN-ADJ on the Yelp-NC dataset with different types of input.}
-    \label{fig:ablation_study_context_specific_1}
-\end{figure}
-asdasdsa
-\begin{figure}
+    \label{subfig:ablation_study_context_specific_1}
+\end{subfigure}
+\hspace{0.1\textwidth}
+\begin{subfigure}[t]{0.4\textwidth}
+    \captionsetup{justification=centering,margin={1.4cm,-1.3cm}}
     \begin{tikzpicture}
-        \begin{axis}[
+    \begin{axis}[
             xlabel=Epoch,
             ylabel=HR@20,
             height=8cm,
@@ -653,16 +657,18 @@ asdasdsa
         \end{axis}
     \end{tikzpicture}
     \caption{The performance on HR@20 of CSGCN-IS on the Yelp-NC dataset with different types of input.}
-    \label{fig:ablation_study_context_specific_2}
-\end{figure}
+    \label{subfig:ablation_study_context_specific_2}
+    \end{subfigure}
+    \caption{Ablation study for the input of CSGCN-ADJ and CSGCN-IS on Yelp-NC.}
+\end{figure*}
 
-\Cref{fig:ablation_study_context_specific_1} shows the HR@20 for CSGCN-ADJ on YelpNC with different input. 
+\Cref{subfig:ablation_study_context_specific_1} shows the HR@20 for CSGCN-ADJ on YelpNC with different input. 
 We see that when side-information is included in the input for CSGCN-ADJ it does not change the performance much.
 Another interesting thing to note is how the model performs worse when context is used in the input, even though we are doing context-specific recommendations.
 This could be because the CSGCN-ADJ model does not actually model context in way that fits the definition of context defined in \Cref{subsec:define_context_sideinfo}.
 In CSGCN-ADJ, context can instead be viewed as a type of side-information, since it is modelled in a somewhat similar way.
 \\\\
-\Cref{fig:ablation_study_context_specific_2} shows HR@20 for CSGCN-IS on YelpNC with different input.
+\Cref{subfig:ablation_study_context_specific_2} shows HR@20 for CSGCN-IS on YelpNC with different input.
 For CSGCN-IS we see a slight increase in performance when side-information is included, compared to not having side-information in the input.
 This shows that CSGCN-IS is able to use the side-information to better connect user and item nodes, increasing the collaborative signal.
 We also see that for this model, including context in the input does make a significant different for the performance in a context-specific setting.
