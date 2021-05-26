@@ -1,20 +1,20 @@
 \section{Preliminaries}\label{sec:preliminaries}
-In this paper, we present two GCN-based context-aware models, which take side-information into account in order to alleviate the sparsity problem often found in CARS.
-Sparsity issues are often encountered in CARS due to the addition of multi-dimensional contextual conditions that users only interact with a few of\cite{SparsityCARS}, leading to learning difficulties.
-The use of side-information can help alleviate problems with collaborative filtering in a sparse situation where the users and items do not have many interactions \cite{KGAT}. 
+%In this paper, we present two GCN-based context-aware models, which take side-information into account in order to alleviate the sparsity problem often found in CARS.
+Sparsity issues are often encountered in CARS due to the addition of contextual dimensions that users only interact with a few of \cite{SparsityCARS}, leading to learning difficulties.
+The use of side-information can help alleviate problems with CF in a sparse situation where the users and items do not have many interactions \cite{KGAT}.
 
 \subsection{Defining context and side-information}
-While GCN-based recommenders perform well on simple recommendation tasks that include only user-item interactions \cite{NGCF,LightGCN}, combining them with the utilization of context is largely unexplored to the best of our knowledge. However, side-information has been used in some GCN-based recommenders such as KGAT through the use of knowledge graphs \cite{KGAT}.\\
+While GCN-based RS perform well on simple recommendation tasks that include only user-item interactions \cite{NGCF,LightGCN}, combining them with the utilization of context is largely unexplored to the best of our knowledge.
+However, side-information has been used in some GCN-based RS such as KGAT through the use of knowledge graphs \cite{KGAT}.\\
 A common problem when researching CARS is that context and side-information are vaguely defined or have overlapping definitions in various papers.
 For clarity, the following are the definitions of context and side-information used in this paper:
 \\\\
 \textbf{Context}:
 The context definition is the one defined in \cite{contextDefinition}, where \textit{context is any information that can be used to characterize the situation of an entity. An entity is a person, place, or object that is considered relevant to the interaction between a user and an application, including the user and the applications themselves.}
 An entity in the case of an RS is either a user or an item to be recommended.
-The context would thus be information about the conditions at the time of the transaction between the user and the item, meaning it would be associated with the transaction.
-For example, a Christmas movie may be more likely to be a hit during the winter months, and a bar may be a better recommendation on a Saturday night than a Tuesday morning.
-While it may be possible to extend the context to include conditions related to the user, we focus solely on how the contextual conditions relate to items to be able to express the examples above.\\
-Throughout this paper, we will refer to context in the three following levels of granularity.\\\\
+The context would thus be information about the conditions at the time of the interaction between the user and the item, meaning it would be associated with the interaction.
+For example, a Christmas movie may be more likely to be a relevant recommendation during the winter months, and a bar may be a better recommendation on a Saturday night than a Tuesday morning.\\
+Throughout this paper, we will refer to context in the three following levels of granularity:\\\\
 All possible context values, $C$, e.g.:
 $$C = \{spring, \cdots, winter\} \cup \{morning, \cdots, midnight\}$$
 Context values for a given interaction, $C'$, e.g.:
@@ -25,7 +25,7 @@ $$c = winter$$
 \textbf{Side-information}:
 The side-information definition used is based on the description in \cite{SideInfoDefinition}, where different types of side-information include information such as user networks, user profiles, and item descriptors.
 For users, this could be information like their age or occupation, which may have an influence on their preferences.
-For items, it is meta-information about the item such as the genre of a movie, which may be helpful when considering higher-order connectivity since it can help capture user preferences, such as a user displaying a preference for action movies.
+For items, it is information about the item such as the genre of a movie, which may be helpful when considering higher-order connectivity since it can help capture user preferences, such as a user displaying a preference for action movies.
 % For side-information, the term \textit{field} is used to describe, for example, the category \textit{location}. Each field has a number of values, known as \textit{features}, where a value could be \textit{Denmark} for the field \textit{location}.
 % Side-information can thus be represented as one-hot or multi-hot feature vectors, depending on whether or not a field can have one or multiple features.
 % \begin{equation}
@@ -35,8 +35,18 @@ For items, it is meta-information about the item such as the genre of a movie, w
 % \Cref{eq:multi-hot-example} shows an example of a multi-hot vector representing the field \textit{genre}, showing that it possesses 2 of the 6 possible features (genres).
 
 
-\subsection{Data representation}
-In graph-based collaborative filtering RSs, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
+\subsection{Foundational knowledge}\label{sec:foundational_knowledge}
+\subsubsection*{The components of a GCN}
+While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
+Wu et al. present the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs \cite{SimplifyingGCN}.
+Instead, they were proposed in the recent years of neural networks where deep learning had gained high popularity, and as such GCNs were built directly on top of a complex model.
+To investigate whether this was useful, they present SGCN, a simplified version of GCNs that could have preceded GCNs if the traditional path had been taken.
+This led them to remove the linear transformation and nonlinear activation, to reach a simplified linear model.
+Interestingly, they proved that not only does this not degrade performance of the models, it generally matches or improves both in terms of performance and speed \cite{SimplifyingGCN}.\\
+This signifies that the expressive power of GCNs originates primarily from the propagations done in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
+
+\subsubsection*{Data representation}
+In graph-based CF RS, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
 \begin{figure}[h]
 \begin{tikzpicture}[thick,
     every node/.style={draw,circle},
@@ -74,19 +84,19 @@ In graph-based collaborative filtering RSs, we typically represent data in the f
 \caption{Example of a bipartite graph.}
 \label{fig:bipartite-graph}
 \end{figure}
-This graph consists of two distinct sets of nodes: Users ($U$) and items ($I$), and a set of edges that connect the user and item if they have interacted with each other.\\\\
-\textbf{Higher-order connectivity and implementation input for GCNs}
-\\
-GCNs are variants of convolutional neural networks used on graph-based data \cite{KOrderConnectivity}.
+\cref{fig:bipartite-graph} consists of two distinct sets of nodes: Users ($U$) and items ($I$), and a set of edges ($E$) that connect the user and item if they have interacted with each other.
+
+\subsubsection*{Higher-order connectivity and implementation input for GCNs}
+GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
 GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
 Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation, and nonlinear activation.
-Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes a sum of its neighbors' features.
+Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes an aggregation of its neighbors' features.
 The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with some weight.
 Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model.
 \\
-A graph such as the one seen in \Cref{fig:bipartite-graph} can be represented in an adjacency matrix. 
+A graph such as the one seen in \Cref{fig:bipartite-graph} can be represented in an adjacency matrix.
 The adjacency matrix is useful for the implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the representation vectors of the graph nodes.
 This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.
-Finally, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the representations by the number of neighbors.
-This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the central node\cite{SimplifyingGCN, KOrderConnectivity}.
-If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution so that information can be passed from these nodes as well.
+Finally, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the representations by the number of neighbors, to avoid exploding or vanishing gradients.
+This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the central node \cite{SimplifyingGCN, KOrderConnectivity}.
+If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution such that information can be passed from these nodes as well.
