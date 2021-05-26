@@ -88,7 +88,7 @@ The bipartite graph consists of two distinct sets of nodes: Users $U$, items $I$
 This bipartite graph structure can also be presented in the form of an adjacency matrix containing the user-item interaction matrix $R \in \mathbb{R}^{|U| \times |I|}$, where $|U|$ and $|I|$ denote the amount of users and items respectively, and each entry $R_{ui}$ is 1 if user $u$ has interacted with item $i$, otherwise 0.\\
 With this $R$, we define the adjacency matrix $A$ as
 $$A = \begin{bmatrix} 0 & R\\ R^T & 0 \end{bmatrix}$$
-The transpose of R is included in the adjacency matrix to denote that the edges are undirected.
+The transpose of $R$, $R^T$, is included in the adjacency matrix to denote that the edges are undirected.
 
 \subsubsection*{Higher-order connectivity and implementation input for GCNs}
 GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
