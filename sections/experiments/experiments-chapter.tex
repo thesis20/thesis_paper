@@ -198,10 +198,10 @@ To investigate this, the leave-one-out method presented in \Cref{subsec:evalandm
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{c|l|cccc|cc}
 Dataset & Metric & FM & \multicolumn{1}{c}{NFM} & \multicolumn{1}{c}{CFM} & \multicolumn{1}{c|}{CSGCN-IS} & \multicolumn{1}{c}{CSGCN-ADJ} & \multicolumn{1}{c|}{Impr.} \\ \hline
-\multirow{4}{*}{YelpNC} & HR@20  & 0.0075  & 0.0142  & 0.0070 & 0.0545 & 0.0761  &  \\
-                        & HR@50  & 0.0198  & 0.0240  & 0.0163 & 0.1099 & 0.1464  &  \\
-                        & MRR@20 & 0.0022  & 0.0030  & 0.0037 & 0.0118 & 0.0158  &  \\
-                        & MRR@50 & 0.0025  & 0.0033  & 0.0040 & 0.0136 & 0.0179  &  \\ \hline
+\multirow{4}{*}{YelpNC} & HR@20  & 0.0075  & 0.0142  & 0.0070 & 0.0625 & 0.0761  &  \\
+                        & HR@50  & 0.0198  & 0.0240  & 0.0163 & 0.1143 & 0.1464  &  \\
+                        & MRR@20 & 0.0022  & 0.0030  & 0.0037 & 0.0127 & 0.0158  &  \\
+                        & MRR@50 & 0.0025  & 0.0033  & 0.0040 & 0.0143 & 0.0179  &  \\ \hline
 \multirow{4}{*}{Frappe} & HR@20  & 0.6590  & 0.3516  & 0.3242 & 0.0458 & 0.0604  &  \\
                         & HR@50  & 0.8004  & 0.4945  & 0.4560 & 0.1062 & 0.1245  &  \\
                         & MRR@20 & 0.2895  & 0.1117  & 0.1032 & 0.0128 & 0.0184  &  \\
@@ -233,7 +233,6 @@ According to their paper, they take the latest interaction of each user - but lo
 \\
 In conclusion, the performance of the CSGCN models depends on the dataset characteristics.
 While the models perform significantly worse than simpler models on the Frappe dataset, we would argue that this dataset is not an accurate representation of a real world scenario.
-
 
 \subsection{Performance Comparison (RQ2)}
 Since the CSGCN models use context to generate a top-$k$ list in each context for each user.
@@ -440,9 +439,9 @@ Then side-information is removed, followed by removing context, and finally both
         \end{axis}
     \end{tikzpicture}
     \caption{The performance on NDCG@20 of CSGCN-ADJ on the Yelp-NC dataset with different types of input.}
-    \label{fig:ablation_study_1}
+    \label{fig:ablation_study_non_context_1}
 \end{figure}
-\Cref{fig:ablation_study_1} shows the performance on NDCG@20 of CSGCN-ADJ with different input.
+\Cref{fig:ablation_study_non_context_1} shows the performance on NDCG@20 of CSGCN-ADJ with different input.
 It shows that the more input the model receives, the longer it takes to converge to its best performance.
 Overall, the performance does not change drastically with the different types of input.
 Having only side-information as input achieves the best performance, but it is only marginally better than not having side-information and context at all.
@@ -500,13 +499,164 @@ Side-information, however, performs the best on this metric on this dataset, whi
         \end{axis}
     \end{tikzpicture}
     \caption{The performance on NDCG@20 of CSGCN-ADJ on the ML1M dataset with different types of input.}
-    \label{fig:ablation_study_2}
+    \label{fig:ablation_study_non_context_2}
 \end{figure}
-On \Cref{fig:ablation_study_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
+On \Cref{fig:ablation_study_non_context_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
 Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
-Since both \Cref{fig:ablation_study_1,fig:ablation_study_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
+Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
 Side-information, however, is able to increase performance of the model in a non-context specific setting, but for this dataset the side-information does not provide any additional collaborative signal.
 
 \subsection{Performance Comparison (RQ3)}
-To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study with multiple ways of considering the side-information.
+To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study on the YelpNC dataset where we ran the CSGCN models with and without side-information to test the effect it has on the performance.
+This was also done for context input to test how it affects the performance in a context-specific setting.
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Epoch,
+            ylabel=HR@20,
+            height=8cm,
+            width=7cm,
+            grid=major,
+            legend style={at={(0.5,-0.20)},
+        anchor=north,legend columns=2}]
+            
+        \addplot plot coordinates{
+            (20,0.04969)
+            (40,0.05585)
+            (60,0.05982)
+            (80,0.06245)
+            (100,0.06245)
+            (120,0.06376)
+            (140,0.06684)
+            (160,0.06684)
+            (180,0.06464)
+            (200,0.06464)
+        };
+
+        \addplot plot coordinates {
+            (20,0.05277)
+            (40,0.05937)
+            (60,0.06201)
+            (80,0.06596)
+            (100,0.06816)
+            (120,0.06948)
+            (140,0.06860)
+            (160,0.07388)
+            (180,0.07300)
+            (200,0.07256)
+        };
+
+        \addplot plot coordinates {
+            (20,0.04881)
+            (40,0.05629)
+            (60,0.06025)
+            (80,0.06376)
+            (100,0.06245)
+            (120,0.06420)
+            (140,0.06464)
+            (160,0.06464)
+            (180,0.06552)
+            (200,0.06992)
+        };
+
+        \addplot plot coordinates {
+            (20,0.05101)
+            (40,0.05629)
+            (60,0.06376)
+            (80,0.06684)
+            (100,0.06860)
+            (120,0.06948)
+            (140,0.06904)
+            (160,0.07344)
+            (180,0.07608)
+            (200,0.07432)
+        };
+        \legend{Sideinfo + context,Sideinfo,Context,Nothing}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{The performance on HR@20 of CSGCN-ADJ on the Yelp-NC dataset with different types of input.}
+    \label{fig:ablation_study_context_specific_1}
+\end{figure}
+asdasdsa
+\begin{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Epoch,
+            ylabel=HR@20,
+            height=8cm,
+            width=7cm,
+            grid=major,
+            legend style={at={(0.5,-0.20)},
+        anchor=north,legend columns=2}]
+            
+        \addplot plot coordinates{
+            (20,0.04881)
+            (40,0.05145)
+            (60,0.05409)
+            (80,0.05409)
+            (100,0.05629)
+            (120,0.05585)
+            (140,0.05805)
+            (160,0.06245)
+            (180,0.06201)
+            (200,0.05937)
+        };
+
+        \addplot plot coordinates {
+            (20,0.04266)
+            (40,0.04749)
+            (60,0.04661)
+            (80,0.04925)
+            (100,0.05145)
+            (120,0.04925)
+            (140,0.05277)
+            (160,0.05453)
+            (180,0.05673)
+            (200,0.05717)
+        };
+
+        \addplot plot coordinates {
+            (20,0.04969)
+            (40,0.04705)
+            (60,0.05145)
+            (80,0.05453)
+            (100,0.05585)
+            (120,0.05453)
+            (140,0.05893)
+            (160,0.06069)
+            (180,0.06157)
+            (200,0.06157)
+        };
+
+        \addplot plot coordinates {
+            (20,0.04749)
+            (40,0.04661)
+            (60,0.04749)
+            (80,0.05101)
+            (100,0.05013)
+            (120,0.05057)
+            (140,0.05365)
+            (160,0.05145)
+            (180,0.05277)
+            (200,0.05497)
+        };
+        \legend{Sideinfo + context,Sideinfo,Context,Nothing}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{The performance on HR@20 of CSGCN-IS on the Yelp-NC dataset with different types of input.}
+    \label{fig:ablation_study_context_specific_2}
+\end{figure}
+
+\Cref{fig:ablation_study_context_specific_1} shows the HR@20 for CSGCN-ADJ on YelpNC with different input. 
+We see that when side-information is included in the input for CSGCN-ADJ it does not change the performance much.
+Another interesting thing to note is how the model performs worse when context is used in the input, even though we are doing context-specific recommendations.
+This could be because the CSGCN-ADJ model does not actually model context in way that fits the definition of context defined in \Cref{subsec:define_context_sideinfo}.
+In CSGCN-ADJ, context can instead be viewed as a type of side-information, since it is modelled in a somewhat similar way.
+\\\\
+\Cref{fig:ablation_study_context_specific_2} shows HR@20 for CSGCN-IS on YelpNC with different input.
+For CSGCN-IS we see a slight increase in performance when side-information is included, compared to not having side-information in the input.
+This shows that CSGCN-IS is able to use the side-information to better connect user and item nodes, increasing the collaborative signal.
+We also see that for this model, including context in the input does make a significant different for the performance in a context-specific setting.
+This is because context is modelled with finer granularity than in CSGCN-ADJ, meaning that each item and context value combination is represented by a vector.
+The result of this, is that context can have different effect on the various items, resulting in more accurate context-specific recommendations.
