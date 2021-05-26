@@ -328,7 +328,7 @@ where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| + |C|) \ti
 We see that for this model, we only normalize on a row-level by multiplying by $D^{-\frac{1}{2}}$ on the left side of the adjacency matrix.
 This approach is inspired by a combination of the random walk Laplacian $D^{-1}A$ and the symmetrical normalized Laplacian $D^{-\frac{1}{2}}AD^{-\frac{1}{2}}$ used in CSGCN-IS.
 We found that for this model, it gave slightly better performance compared to these regular normalization methods, as evidenced by the results seen on \Cref{fig:normalization_graph}.
-While this graph only shows the results for NDCG@20 on the YelpNC dataset, the trend is consistent across datasets and metrics.
+While this graph only shows the results for NDCG@20 on the Yelp-NC dataset, the trend is consistent across datasets and metrics.
 
 \begin{figure}
     \begin{tikzpicture}
@@ -383,7 +383,7 @@ While this graph only shows the results for NDCG@20 on the YelpNC dataset, the t
         \legend{$D^{-\frac{1}{2}}$,$D^{-1}A$,$D^{-\frac{1}{2}}AD^{-\frac{1}{2}}$}
         \end{axis}
     \end{tikzpicture}
-    \caption{Effect of various normalizations for CSGCN-ADJ on the YelpNC dataset for HR@20.}
+    \caption{Effect of various normalizations for CSGCN-ADJ on the Yelp-NC dataset for HR@20.}
     \label{fig:normalization_graph}
 \end{figure}
 The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.

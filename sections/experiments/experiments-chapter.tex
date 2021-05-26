@@ -59,7 +59,7 @@ We use the following side-information about users for both datasets:
     \item Average stars
 \end{itemize}
 The side-information about items is a dimension specifying the categories that an item belongs to.
-For the YelpNC dataset, this is one or more of 80 different categories, and 75 categories for YelpON.\\
+For the Yelp-NC dataset, this is one or more of 80 different categories, and 75 categories for Yelp-ON.\\
 The contextual information is a timestamp.
 
 \subsection{Context dimension selection}
@@ -198,7 +198,7 @@ To investigate this, the leave-one-out method presented in \Cref{subsec:evalandm
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{c|l|cccc|cc}
 Dataset & Metric & FM & \multicolumn{1}{c}{NFM} & \multicolumn{1}{c}{CFM} & \multicolumn{1}{c|}{CSGCN-IS} & \multicolumn{1}{c}{CSGCN-ADJ} & \multicolumn{1}{c|}{Impr.} \\ \hline
-\multirow{4}{*}{YelpNC} & HR@20  & 0.0075  & 0.0142  & 0.0070 & 0.0545 & 0.0761  &  \\
+\multirow{4}{*}{Yelp-NC} & HR@20  & 0.0075  & 0.0142  & 0.0070 & 0.0545 & 0.0761  &  \\
                         & HR@50  & 0.0198  & 0.0240  & 0.0163 & 0.1099 & 0.1464  &  \\
                         & MRR@20 & 0.0022  & 0.0030  & 0.0037 & 0.0118 & 0.0158  &  \\
                         & MRR@50 & 0.0025  & 0.0033  & 0.0040 & 0.0136 & 0.0179  &  \\ \hline
@@ -206,7 +206,7 @@ Dataset & Metric & FM & \multicolumn{1}{c}{NFM} & \multicolumn{1}{c}{CFM} & \mul
                         & HR@50  & 0.8004  & 0.4945  & 0.4560 & 0.1062 & 0.1245  &  \\
                         & MRR@20 & 0.2895  & 0.1117  & 0.1032 & 0.0128 & 0.0184  &  \\
                         & MRR@50 & 0.2942  & 0.1166  & 0.1074 & 0.0146 & 0.0204  &  \\ \hline
-\multirow{4}{*}{YelpON} & HR@20  & 0.0083  & 0.0085  & 0.0073 & 0.0399 & 0.0534  &  \\
+\multirow{4}{*}{Yelp-ON} & HR@20  & 0.0083  & 0.0085  & 0.0073 & 0.0399 & 0.0534  &  \\
                         & HR@50  & 0.0133  & 0.0152  & 0.0133 & 0.0714 & 0.0997  &  \\
                         & MRR@20 & 0.0019  & 0.0021  & 0.0019 & 0.0091 & 0.0123  &  \\
                         & MRR@50 & 0.0020  & 0.0023  & 0.0021 & 0.0101 & 0.0137  &  \\ \hline
@@ -268,7 +268,7 @@ With this, the item that is only interacted with in exactly one context has its 
   \multicolumn{1}{l|}{CSGCN-IS} &
   \multicolumn{1}{l}{CSGCN-ADJ} &
   \multicolumn{1}{l|}{Impr.} \\ \midrule
-\multirow{8}{*}{YelpNC} & Recall@20    & {\ul{0.1069}} & 0.1064       & 0.0971          & 0.0923 & 0.0625          & 0.1115 & \textbf{0.1143} &  \\
+\multirow{8}{*}{Yelp-NC} & Recall@20    & {\ul{0.1069}} & 0.1064       & 0.0971          & 0.0923 & 0.0625          & 0.1115 & \textbf{0.1143} &  \\
                         & Recall@50    & {\ul{0.1959}} & 0.1935       & 0.1802          & 0.1748 & 0.1226          & 0.2020 & \textbf{0.2058} &  \\
                         & Precision@20 & {\ul{0.0540}} & 0.0513       & 0.0482          & 0.0458 & 0.0308          & 0.0547 & \textbf{0.0575} &  \\
                         & Precision@50 & {\ul{0.0402}} & 0.0388       & 0.0362          & 0.0355 & 0.0247          & 0.0410 & \textbf{0.0425} &  \\
@@ -284,7 +284,7 @@ With this, the item that is only interacted with in exactly one context has its 
                         & NDCG@50      & 0.1203       & 0.1085       & {\ul {0.1377}}    & 0.1057 & \textbf{0.3775} & 0.1073 & 0.1245          &  \\
                         & F1@20        & 0.0736       & 0.0714       & {\ul {0.0832}}    & 0.0674 & \textbf{0.2335} & 0.0671 & 0.0763          &  \\
                         & F1@50        & 0.0503       & 0.0495       & {\ul {0.0529}}    & 0.0468 & \textbf{0.1632} & 0.0480 & 0.0501          &  \\ \midrule
-\multirow{8}{*}{YelpON} & Recall@20    & {\ul {0.0748}} & 0.0700       & 0.0658          & 0.0603 & 0.0360          & 0.0751 & \textbf{0.0809} &  \\
+\multirow{8}{*}{Yelp-ON} & Recall@20    & {\ul {0.0748}} & 0.0700       & 0.0658          & 0.0603 & 0.0360          & 0.0751 & \textbf{0.0809} &  \\
                         & Recall@50    & {\ul {0.1354}} & 0.1321       & 0.1227          & 0.1157 & 0.0681          & 0.1378 & \textbf{0.1477} &  \\
                         & Precision@20 & {\ul {0.0425}} & 0.0395       & 0.0380          & 0.0342 & 0.0200          & 0.0432 & \textbf{0.0456} &  \\
                         & Precision@50 & {\ul {0.0311}} & 0.0297       & 0.0285          & 0.0267 & 0.0156          & 0.0316 & \textbf{0.0335} &  \\
@@ -312,7 +312,7 @@ We suspect that this is due to the density and small size of the dataset.
 Frappe has a density of 18.9\%, compared to the others that range between 1.1\% and 4.8\%, allowing for simpler methods like BPR to perform better relative to other datasets, whereas complex methods like NGCF struggle to learn properly.
 Even more interesting in the Frappe dataset is the performance of TopPop, which outperforms all other methods on all metrics.
 This is most likely caused by the dataset including some very popular items as described in \Cref{subsec:rq1}.
-All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the YelpON dataset across various aggregators of context on CSGCN-IS.
+All of these results are based on using the mean aggregator, but for the sake of completeness, let us compare the performance for the Yelp-ON dataset across various aggregators of context on CSGCN-IS.
 
 \begin{figure}
     \begin{tikzpicture}
@@ -368,7 +368,7 @@ All of these results are based on using the mean aggregator, but for the sake of
         \legend{Mean,Max,Min,Median}
         \end{axis}
     \end{tikzpicture}
-    \caption{Effect of aggregation functions for CSGCN-IS on the YelpNC dataset for NDCG@20.}
+    \caption{Effect of aggregation functions for CSGCN-IS on the Yelp-NC dataset for NDCG@20.}
     \label{fig:aggregation_effect}
 \end{figure}
 \Cref{fig:aggregation_effect} shows how the choice of aggregation affects the CSGCN-IS model.
@@ -378,7 +378,7 @@ This supports the previous assumption that while a single item might be more lik
 While the results are only shown for NDCG@20 for this dataset, they have proven consistent across all the metrics.
 
 \subsubsection*{Ablation study for non-contextual recommendation}
-To test whether context and side-information actually increase performance in a non-context specific setting, CSGCN-ADJ is run using different inputs for the datasets YelpNC and ML1M and the performance is measured with NDCG@20.
+To test whether context and side-information actually increase performance in a non-context specific setting, CSGCN-ADJ is run using different inputs for the datasets Yelp-NC and ML1M and the performance is measured with NDCG@20.
 First of all, CSGCN-ADJ is run with both side-information and context. 
 Then side-information is removed, followed by removing context, and finally both context and side-information are removed.
 \begin{figure}
