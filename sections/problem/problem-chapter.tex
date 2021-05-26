@@ -85,7 +85,6 @@ The bipartite graph consists of two distinct sets of nodes: Users $U$, items $I$
 \caption{Example of a bipartite graph.}
 \label{fig:bipartite-graph}
 \end{figure}
-
 This bipartite graph structure can also be presented in the form of an adjacency matrix containing the user-item interaction matrix $R \in \mathbb{R}^{|U| \times |I|}$, where $|U|$ and $|I|$ denote the amount of users and items respectively, and each entry $R_{ui}$ is 1 if user $u$ has interacted with item $i$, otherwise 0.\\
 With this R, we define the adjacency matrix $A$ as
 $$A = \begin{bmatrix} 0 & R\\ R^T & 0 \end{bmatrix}$$
