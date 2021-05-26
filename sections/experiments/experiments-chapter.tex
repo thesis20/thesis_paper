@@ -502,7 +502,6 @@ Then side-information is removed, followed by removing context, and finally both
     \caption{Ablation study for the input of CSGCN-ADJ on Yelp-NC and ML1M.}
     \label{fig:inputablation}
 \end{figure*}
-
 \Cref{fig:ablation_study_1} shows the performance on NDCG@20 of CSGCN-ADJ with different input.
 It shows that the more input the model receives, the longer it takes to converge to its best performance.
 Overall, the performance does not change drastically with the different types of input.
@@ -510,7 +509,7 @@ Having only side-information as input achieves the best performance, but it is o
 Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input improves performance slightly.
 To conclude from the study on the Yelp-NC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting.
 Side-information, however, performs the best on this metric on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
-
+\\
 On \Cref{fig:ablation_study_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
 Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
