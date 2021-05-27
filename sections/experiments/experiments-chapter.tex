@@ -525,7 +525,7 @@ Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context
 Side-information, however, is able to increase performance of the model in a non-context specific setting, but for this dataset the side-information does not provide any additional collaborative signal.
 
 \subsection{Performance Comparison (RQ3)}
-To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study on the YelpNC dataset.
+To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.
 In the study, the CSGCN models were run with and without side-information to test the effect it has on the performance.
 Additionally, the experiment was conducted on the context input to examine how much it affects the performance in a context-specific setting.
 \begin{figure*}[t!]
@@ -671,20 +671,19 @@ Additionally, the experiment was conducted on the context input to examine how m
     \end{subfigure}
     \caption{Ablation study for the input of CSGCN-ADJ and CSGCN-IS on Yelp-NC.}
 \end{figure*}
-
-\Cref{subfig:ablation_study_context_specific_1} shows the HR@20 for CSGCN-ADJ on YelpNC with different combinations of input. 
-We see that when side-information is included in the input for CSGCN-ADJ it does not change the performance much compared to excluding it.
-Another interesting thing to note is how the model performs worse when context is used in the input, even though we are doing context-specific recommendations.
-This could be because the CSGCN-ADJ model does not actually model context in way that fits the definition of context defined in \Cref{subsec:define_context_sideinfo}.
+\Cref{subfig:ablation_study_context_specific_1} shows the HR@20 for CSGCN-ADJ on Yelp-NC with different combinations of input. 
+The results show that when side-information is included in the input for CSGCN-ADJ it does not change the performance much compared to excluding it.
+Another interesting thing to note is how the model performs worse when context is included in the input, even though it is a context-specific setting.
+This could be because the CSGCN-ADJ model does not actually model context in a way that fits the definition of context defined in \Cref{subsec:define_context_sideinfo}.
 In CSGCN-ADJ, context can instead be viewed as a type of side-information, since it is modelled in a somewhat similar way.
 \\\\
-\Cref{subfig:ablation_study_context_specific_2} shows HR@20 for CSGCN-IS on YelpNC with different inputs.
+\Cref{subfig:ablation_study_context_specific_2} shows HR@20 for CSGCN-IS on Yelp-NC with different inputs.
 For CSGCN-IS, there is a slight increase in performance when side-information is included, compared to excluding it.
 This shows that CSGCN-IS is able to use the side-information to better connect user and item nodes, increasing the collaborative signal.
 We also see that for this model, including context in the input does make a significant different for the performance in a context-specific setting.
 This is because context is modelled with finer granularity than in CSGCN-ADJ, meaning that each item and context value combination is represented by a vector.
-The result of this finer granularity, is that context can have different effect on the various items, resulting in more accurate context-specific recommendations.
-In general, we see that side-information can have a slight effect on the results, depending the type of model.
-However, the context seems to have a lot larger effect on the performance of the models, as would be expected for context-aware recommendations.
+The result of this finer granularity is that context can have different effects on the various items, resulting in more accurate context-specific recommendations.
+In general, side-information can have a slight effect on the results depending on the type of model.
+However, the context seems to have a lot larger effect on the performance of the models, as would be expected for context-aware recommendation.
 Additionally, it may be worth noting that the context used for these experiments is mainly based on discretized values based on timestamps, which may or may not be a useful contextual dimension.
 We do not see any overwhelming evidence that side-information is able to improve context-aware recommendations.
