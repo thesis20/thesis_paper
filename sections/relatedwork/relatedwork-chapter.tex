@@ -5,13 +5,17 @@ This section of the paper will briefly present some methods belonging to those c
 \subsection{GCN-based methods}
 Neural Graph Collaborative Filtering (NGCF) \cite{NGCF} employs a graph neural network to learn embeddings of users and items through an integration of a bipartite graph structure.
 This structure captures the collaborative signal through high-order connectivity by stacking multiple embedding propagation layers.
-LightGCN (LGCN) \cite{LightGCN} argues that the reasons for the performance of GCN for recommendation purposes are not well understood, and that previous models such as NGCF incorporate unnecessary complexity.
-LGCN thus proposes to remove feature transformation and nonlinear activation from NGCF, finding that they contribute little to the performance.
-LGCN learns user and item embeddings by linearly propagating them on the bipartite graph structure and uses the weighted sum of the embeddings as the final embedding used for score prediction.
+LightGCN \cite{LightGCN} argues that the reasons for the performance of GCN for recommendation purposes are not well understood, and that previous models such as NGCF incorporate unnecessary complexity.
+LightGCN thus proposes to remove feature transformation and nonlinear activation from NGCF, finding that they contribute little to the performance.
+LightGCN learns user and item embeddings by linearly propagating them on the bipartite graph structure and uses the weighted sum of the embeddings as the final embedding used for score prediction.
 Knowledge Graph Attention Network (KGAT) \cite{KGAT} extends the NGCF model by incorporating side-information through a hybrid graph structure of a knowledge graph containing side-information and a user-item bipartite graph, meaning attributes on items can be propagated as nodes, and be used to refine embeddings.
 
 \subsection{Factorization Machines}
 FMs \cite{fmrendle} model second-order feature interactions by calculating the inner product.
+One of the advantages of using FMs is that computations can be done in linear time, while it can also be applied to a variety of prediction tasks such as regression, binary classification and ranking \cite{fmrendle}.
 Convolutional Factorization Machine (CFM) \cite{CFM} extends FM to the domain of context-aware recommender systems through modeling second-order interactions with an outer product to capture correlations between embeddings, and applying convolution to learn high-order interaction signals.
+Like CFM, Neural Factorization Machine (NFM) \cite{NeuralFM} extends the FM model to combine the linearity of FMs with the non-linearity in neural networks.
+The model extends FMs by adding a number of hidden layers between the bi-interaction layer and the prediction function, such that it should be able to capture both second-order interactions like regular FMs, but also higher-order feature interactions. 
+
 %DeepFM trains a deep neural network and an FM jointly in order to learn low- and high-order feature interactions. Both components share the same feature embedding, ensuring that there is no need for feature engineering of the input.
 % Graph Factorizaion Machines (GFM) extend factorization machines for the purposes of cross-domain recommendation based on graph-structured data. Leveraging data from other domains addresses the data sparsity issue in recommender systems, and the ability of factorization machines to exploit sparse data is used to capture multifactor iteraction information.
