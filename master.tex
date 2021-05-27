@@ -43,7 +43,7 @@
 \noindent Graph-convolutional neural networks are growing increasingly popular, but most of them limit themselves to simply considering user-item interactions, even though additional information is often available in datasets such as context and side-information.
 In this paper, we present two ways to incorporate side-information and contextual information into the prediction model of a graph-convolutional neural network and create the models CSGCN-IS and CSGCN-ADJ.
 Including this additional information allows us to not only improve density of the graph structure, but also to generate recommendations for a specific context that the user is currently in.
-We empirically evaluate the models in both a context-specific setting as well as a non-context-specific on four different datasets.
+We empirically evaluate the models in both a context-specific setting as well as a non-context-specific on four different datasets, comparing with several relevant GCN and FM models.
 The non-context specific evaluation employs an 80-20$\%$ training and test data split, and shows improvements in performance from $0.07\%-10.01\%$, as well as a decrease on certain datasets of up to $5.09\%$.
 The context-specific evaluation shows both significant improvements and decreases.
 An ablation study is also conducted, showing that the inclusion of context and side-information for CSGCN-ADJ does little to improve performance for the non-context specific setting, with a majority of the difference being attributable to side-information.
