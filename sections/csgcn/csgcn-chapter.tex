@@ -19,7 +19,7 @@ With this intuition, we will now detail how this is implemented in the CSGCN-IS 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
 Based on the considerations made in \Cref{sec:foundational_knowledge}, the CSGCN models are based on these observations made in SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
 To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, also called an embedding.
-By doing this, the model can learn the nodes' properties and capture them in the vector representations.
+By doing this, the model can learn the nodes' properties and capture them in the embeddings.
 The model consists of three parts:
 \begin{enumerate}
     \item The convolution layers responsible for aggregating neighborhood information.
@@ -42,7 +42,7 @@ These three parts will be further described throughout this section.
 
 \subsection{Adjacency matrix}\label{subsec:csgcn_is_adj_mat}
 As described in \Cref{sec:preliminaries}, GCNs used for CF recommendation typically employ a bipartite graph structure to represent the user-item interactions.
-In CSGCN-IS this is extended to be a quadripartite graph, done by extending the distinct setet of nodes in the graph $G$ and the edges $E$ with a set of user side-information nodes $US$ and a set of item side-information nodes $IS$.
+In CSGCN-IS the extended graph now contains users, items and edges as well as the set of user side-information nodes $US$ and the set of item side-information nodes $IS$.
 This allows for the incorporation of the side-information in the model, whereas context is later included in the prediction function defined in \autoref{subsec:csgcn_is_score_prediction}.
 This graph extension can be seen on \Cref{fig:quadripartite-graph}.
 It should be noted that the distinct sets cannot be self-connected, and edges can only exist between adjacent sets.
@@ -115,7 +115,7 @@ $$E = E_{US} \cup E_{U} \cup E_{I} \cup E_{IS} $$
 \caption{Example of the quadripartite graph structure used for CSGCN-IS.}
 \label{fig:quadripartite-graph}
 \end{figure}
-This quadripartite graph can be represented as an adjacency matrix $A \in \mathbb{R}^{|U|\times|I|\times|US| \times |IS|}$.
+The quadripartite graph can be represented as an adjacency matrix $A \in \mathbb{R}^{|U|\times|I|\times|US| \times |IS|}$.
 An entry is 1 if the user has interacted with the item, if the item has the given side-information or if a user has the given side-information, and 0 if none of these are true.
 $A$ consists of the rating matrix $R$ and its transpose $R^T$, as well as sub-matrices containing $US$, $IS$, and their transposes, as seen on \Cref{csgcn_is_adj_mat}.
 \begin{equation}\label{csgcn_is_adj_mat}
@@ -137,9 +137,9 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
     Emb^{(l+1)} = (D^{-\frac{1}{2}}AD^{-\frac{1}{2}})Emb^{(l)}
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| \times (|U| + |I| + |US| + |IS|)$ degree matrix. 
-The final embedding matrix after $l$ layers is defined as:
+The final embedding matrix after $L$ layers is defined as:
 \begin{equation}
-    Emb = \frac{1}{0 +1}Emb^{(0)} + \frac{1}{1 +1}Emb^{(1)} + \cdots + \frac{1}{l +1}Emb^{(l)}
+    Emb = \frac{1}{0 +1}Emb^{(0)} + \frac{1}{1 +1}Emb^{(1)} + \cdots + \frac{1}{l +1}Emb^{(L)}
 \end{equation}
 
 \subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
@@ -246,7 +246,7 @@ This means that when neighbor nodes' representations are being propagated, the n
 \\\\
 The convolution layer propagates information to user and item nodes' representations by summing the normalized representations of the neighbor nodes.
 All types of nodes are being propagated with information about their neighbors, but since only the user and item nodes' representations are being used in the prediction function for our model, their representations are the only ones that are output from the convolution layer.
-The argument for not also outputting side-information nodes and using these in the prediction function is that, through the convolution, the information from these nodes is integrated into the representations of user and item nodes.
+% The argument for not also outputting side-information nodes and using these in the prediction function is that, through the convolution, the information from these nodes is integrated into the representations of user and item nodes.
 
 \subsection{Score prediction}\label{subsec:csgcn_is_score_prediction}
 To include context in the score prediction, we propose to model each pair of items and context values as learnable embeddings $e_{ic}$.
@@ -280,7 +280,7 @@ However, using negative sampling can be necessary since using non-sampling not o
 Because of this consideration, CSGCN-IS uses negative sampling for training, and, due to employing BPR loss, only one negative sample is used.
 \\\\
 The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
-For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating it according to the gradient by a step size defined through the learning rate.
+For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating the parameter according to the gradient by a step size defined through the learning rate.
 The gradient is a vector of partial derivatives which defines the slope of the function, where a partial derivative of a function with multiple variables is the derivate with respect to a single variable with the remaining variables held constant.
 The derivative defines how the output of the function changes based on changes in the input.
 The model parameters can then be updated in the negative direction of the slope of the function, the gradient, based on the learning rate in order to approach a local minima. 
@@ -299,7 +299,7 @@ With the second proposed model, context is included in the convolution by adding
 The adjacency matrix will now include interactions, what context the users have interacted in, and the context in which items have been interacted with.
 This approach is unable to capture which specific contexts the different interactions occurred in.
 It only captures whether or not the user or item has had an interaction in the given context.
-This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single vector representation instead of having a vector representation for each context value and item pair.
+This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single embedding instead of having an embedding for each context value and item pair.
 The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution.
 By including nodes for the contexts in the convolution, their representations are propagated with information about their neighbors, this being items and users that have interacted in that context, using a normalized sum aggregation.
 This means that with higher-order connectivity, items and users are propagated with information about other users and items that have interacted in the same contexts.

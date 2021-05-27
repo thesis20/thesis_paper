@@ -39,7 +39,16 @@ For items, it is information about the item such as the genre of a movie, which 
 \subsection{Foundational knowledge}\label{sec:foundational_knowledge}
 The following subsection presents foundational knowledge relating to the models proposed in the paper.
 \subsubsection*{The components of a GCN}
-While traditional GCN models make use of three main ideas: Feature propagation of neighbor nodes, linear transformation and nonlinear activation, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
+GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
+GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
+Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation, and nonlinear activation.
+Feature propagation averages features in the local neighborhood of a node, such that the representation of each node becomes an aggregation of its neighbors' features.
+This is done for each node in the graph.
+The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with a learned weight.
+Doing this allows the network to find the best fitting set of parameters through the linear transformation by training through optimizing a loss function \cite{RecentConvNets}.
+Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model, allowing it to better fit real world datasets.
+\\\\
+While traditional GCN models contain all three components, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
 Wu et al. present the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs \cite{SimplifyingGCN}.
 Instead, they were proposed in the recent years of neural networks where deep learning had gained high popularity, and as such GCNs were built directly on top of a complex model.
 To investigate whether this was useful, they present SGCN, a simplified version of GCNs that could have preceded GCNs if the traditional path had been taken.
@@ -61,7 +70,6 @@ The models presented in this paper are based on implicit data, and produce top-$
 
 \subsubsection*{Data representation}
 In graph-based CF RS, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
-The bipartite graph consists of two distinct sets of nodes: Users $U$, items $I$, and a set of undirected edges ($E$) that connect the user and item if they have interacted with each other.
 \begin{figure}[h]
 \begin{tikzpicture}[thick,
     every node/.style={draw,circle},
@@ -99,22 +107,9 @@ The bipartite graph consists of two distinct sets of nodes: Users $U$, items $I$
 \caption{Example of a bipartite graph.}
 \label{fig:bipartite-graph}
 \end{figure}
-This bipartite graph structure can also be presented in the form of an adjacency matrix, which is useful for implementation since it facilitates the use of various matrix operations.
-The adjacency matrix contains the user-item interaction submatrix $R \in \mathbb{R}^{|U| \times |I|}$, where $|U|$ and $|I|$ denote the amount of users and items respectively, and each entry $R_{ui}$ is 1 if user $u$ has interacted with item $i$, otherwise 0.\\
-With this $R$, we define the adjacency matrix $A$ as
-$$A = \begin{bmatrix} 0 & R\\ R^T & 0 \end{bmatrix}$$
-The transpose of $R$, $R^T$, is included in the adjacency matrix to denote that the edges are undirected.
-
-\subsubsection*{Higher-order connectivity and implementation input for GCNs}
-GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
-GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
-Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation, and nonlinear activation.
-Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes an aggregation of its neighbors' features.
-The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with some weight.
-Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model.
-\\
+\Cref{fig:bipartite-graph} consists of two distinct sets of nodes: Users $U$ and items $I$, and a set of undirected edges $E$ that connect the user and item if they have interacted with each other.
 A graph such as the one seen in \Cref{fig:bipartite-graph} can be represented in an adjacency matrix.
-The adjacency matrix is useful for the implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the representation vectors of the graph nodes.
+The adjacency matrix is useful for the implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the embeddings of the graph nodes.
 This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.
 Finally, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the representations by the number of neighbors, to avoid exploding or vanishing gradients.
 This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the central node \cite{SimplifyingGCN, KOrderConnectivity}.
