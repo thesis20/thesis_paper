@@ -682,7 +682,7 @@ Each user and item node is connected with the context value nodes of the context
 For CSGCN-IS, there is a slight increase in performance when side-information is included, compared to excluding it.
 This shows that CSGCN-IS is able to use the side-information to better connect user and item nodes, increasing the collaborative signal.
 We also see that for this model, including context in the input does make a significant different for the performance in a context-specific setting.
-This is because context is modelled with finer granularity than in CSGCN-ADJ, meaning that each item and context value combination is represented by a vector.
+This is because context is modelled with finer granularity than in CSGCN-ADJ, meaning that each item and context value combination has an embedding.
 The result of this finer granularity is that context can have different effects on the various items, resulting in more accurate context-specific recommendations.
 In general, side-information can have a slight effect on the results depending on the type of model.
 However, the context seems to have a lot larger effect on the performance of the models, as would be expected for context-aware recommendation.
