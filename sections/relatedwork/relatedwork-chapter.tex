@@ -5,9 +5,9 @@ This section of the paper will briefly present some methods belonging to those c
 \subsection{GCN-based methods}
 Neural Graph Collaborative Filtering (NGCF) \cite{NGCF} employs a graph neural network to learn embeddings of users and items through an integration of a bipartite graph structure.
 This structure captures the collaborative signal through high-order connectivity by stacking multiple embedding propagation layers.
-LightGCN (LGCN) \cite{LightGCN} argues that the reasons for the performance of GCN for recommendation purposes are not well understood, and that previous models such as NGCF incorporate unnecessary complexity.
-LGCN thus proposes to remove feature transformation and nonlinear activation from NGCF, finding that they contribute little to the performance.
-LGCN learns user and item embeddings by linearly propagating them on the bipartite graph structure and uses the weighted sum of the embeddings as the final embedding used for score prediction.
+LightGCN \cite{LightGCN} argues that the reasons for the performance of GCN for recommendation purposes are not well understood, and that previous models such as NGCF incorporate unnecessary complexity.
+LightGCN thus proposes to remove feature transformation and nonlinear activation from NGCF, finding that they contribute little to the performance.
+LightGCN learns user and item embeddings by linearly propagating them on the bipartite graph structure and uses the weighted sum of the embeddings as the final embedding used for score prediction.
 Knowledge Graph Attention Network (KGAT) \cite{KGAT} extends the NGCF model by incorporating side-information through a hybrid graph structure of a knowledge graph containing side-information and a user-item bipartite graph, meaning attributes on items can be propagated as nodes, and be used to refine embeddings.
 
 \subsection{Factorization Machines}

@@ -118,7 +118,10 @@ To compare the performance of the models in a non-context specific setting, we c
     \item Top Pop
     %\item Factorization Machine \cite{fmrendle}
 \end{itemize}
-Both the CSGCN models and LightGCN extend the codebase of NGCF, so they are included in the comparison to show that adding side-information contextual information hopefully improves the accuracy of these methods.\\
+NGCF is a model proposed by Wang et al. as a way to utilize the GCN model proposed in \cite{KOrderConnectivity} for recommendation purposes.
+It makes use of all three parts of a GCN described in \Cref{sec:preliminaries}, and utilizes BPR loss with negative sampling to use it for a ranking purpose.
+LightGCN was later proposed by the same authors and is mainly focused on performing an ablation study similar to the one done in \cite{SimplifyingGCN}, where they remove the linear transformation and non-linear activation between layers to provide a simpler model, while still presenting competitive results.
+Both the CSGCN models and LightGCN extend the codebase of NGCF, so they are naturally included in the comparison to show that adding side-information and contextual information hopefully improves the accuracy of these methods.\\
 KGAT is a state-of-the-art graph-based method that utilizes side-info in the form of a knowledge graph.
 BPR utilizes implicit feedback to generate a personalized top-$k$ list of items using the proposed BPR-optimizer to train the model, providing a simpler method for comparison.
 Finally, a we include a simple baseline, Top Pop, which simply recommends the $k$ most popular items for all users.
