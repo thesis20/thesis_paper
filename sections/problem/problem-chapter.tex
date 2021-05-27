@@ -47,6 +47,18 @@ This led them to remove the linear transformation and nonlinear activation, to r
 Interestingly, they proved that not only does this not degrade performance of the models, it generally matches or improves both in terms of performance and speed \cite{SimplifyingGCN}.\\
 This signifies that the expressive power of GCNs originates primarily from the propagations done in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
 
+\subsubsection*{Types of data for RS and recommendation tasks}
+Data used for RS can be classified as either implicit or explicit \cite{oard1998implicit}.
+Explicit data is provided by the user of the RS, such as a user providing a rating of an item.
+Data provided explicitly by users is commonly used for the score prediction task, where, as with traditional matrix factorization (MF) approaches, a score matrix is reconstructed in order to generate missing ratings for users.
+Implicit data, on the other hand, is not explicitly provided by the user, but rather collected through their behavior.
+A user clicking a specific item on a web-shop or deciding to watch a specific movie would be implicit data, defining an interaction between the user and the item.
+Direct user involvement is not necessary for data collection.
+Since explicit data requires user involvement, it is usually more scarce than implicit data.
+A problem with implicit data, however, is that it does not directly encode whether or not the user had a preference for the given item as is possible with explicit data, only that they interacted with it.
+A common prediction task for implicit data is top-$k$ recommendation, where a list of $k$ items is produced for the user.
+The models presented in this paper are based on implicit data, and produce top-$k$ recommendation lists. 
+
 \subsubsection*{Data representation}
 In graph-based CF RS, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
 The bipartite graph consists of two distinct sets of nodes: Users $U$, items $I$, and a set of undirected edges ($E$) that connect the user and item if they have interacted with each other.
