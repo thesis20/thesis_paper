@@ -192,7 +192,7 @@ The final HR score is then calculated by taking the mean of all users' individua
     HR@N = \frac{1}{|U|} \sum\limits_{u \in U}HR(u)
 \end{equation}
 
-\subsection{Performance Comparison (RQ1)}\label{subsec:rq1}
+\subsection{Performance Comparison with Context (RQ1)}\label{subsec:rq1}
 For the first research question we want to examine how the CSGCN models compare to state-of-the-art methods within context-aware list prediction.
 To investigate this, the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a list is produced based on the context that this interaction took place in.
 
@@ -238,7 +238,7 @@ In conclusion, the performance of the CSGCN models depends on the dataset charac
 While the models perform significantly worse than simpler models on the Frappe dataset, we would argue that this dataset is not an accurate representation of a real world scenario.
 
 
-\subsection{Performance Comparison (RQ2)}
+\subsection{Performance Comparison without Context (RQ2)}
 Since the CSGCN models use context to generate a top-$k$ list in each context for each user.
 We argue that this context information can be useful even for non-context-specific settings.
 Imagine that your system is recommending businesses to users, and you have a business that is only open on Christmas.
@@ -519,5 +519,5 @@ Side-information and context are not able to improve the performance of CSGCN-AD
 Since both \Cref{fig:ablation_study_1,fig:ablation_study_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
 Side-information, however, is able to increase performance of the model in a non-context specific setting, but for this dataset the side-information does not provide any additional collaborative signal.
 
-\subsection{Performance Comparison (RQ3)}
+\subsection{Ablation study of model extensions (RQ3)}
 To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study with multiple ways of considering the side-information.
