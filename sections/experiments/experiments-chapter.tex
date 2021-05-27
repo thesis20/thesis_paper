@@ -449,10 +449,18 @@ Then side-information is removed, followed by removing context, and finally both
         \captionsetup{justification=centering,margin={0cm,1cm}}
         \begin{tikzpicture}
             \begin{axis}[
+                ytick={0.370,0.375,0.380,0.385,0.390,0.395,0.40},
                 xlabel=Epoch,
                 ylabel=NDCG@20,
                 height=8cm,
                 width=7cm,
+                y tick label style={
+                    /pgf/number format/.cd,
+                    fixed,
+                    fixed zerofill,
+                    precision=3,
+                    /tikz/.cd
+                },
                 grid=major,
                 legend style={at={(0.5,-0.20)},
             anchor=north,legend columns=2}]
