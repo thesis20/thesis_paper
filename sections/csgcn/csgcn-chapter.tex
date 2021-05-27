@@ -18,7 +18,9 @@ With this intuition, we will now detail how this is implemented in the CSGCN-IS 
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
 Based on the considerations made in \Cref{sec:foundational_knowledge}, the CSGCN models are based on these observations made in SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
-This means that the model consists of three parts:
+To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, also called an embedding.
+By doing this, the model can learn the nodes' properties and capture them in the vector representations.
+The model consists of three parts:
 \begin{enumerate}
     \item The convolution layers responsible for aggregating neighborhood information.
     \item A layer combination operation where we stack the results of each layer on top of the initial embeddings for users and items
