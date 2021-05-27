@@ -137,9 +137,9 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
     Emb^{(l+1)} = (D^{-\frac{1}{2}}AD^{-\frac{1}{2}})Emb^{(l)}
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| \times (|U| + |I| + |US| + |IS|)$ degree matrix. 
-The final embedding matrix after $l$ layers is defined as:
+The final embedding matrix after $L$ layers is defined as:
 \begin{equation}
-    Emb = \frac{1}{0 +1}Emb^{(0)} + \frac{1}{1 +1}Emb^{(1)} + \cdots + \frac{1}{l +1}Emb^{(l)}
+    Emb = \frac{1}{0 +1}Emb^{(0)} + \frac{1}{1 +1}Emb^{(1)} + \cdots + \frac{1}{l +1}Emb^{(L)}
 \end{equation}
 
 \subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
@@ -246,7 +246,7 @@ This means that when neighbor nodes' representations are being propagated, the n
 \\\\
 The convolution layer propagates information to user and item nodes' representations by summing the normalized representations of the neighbor nodes.
 All types of nodes are being propagated with information about their neighbors, but since only the user and item nodes' representations are being used in the prediction function for our model, their representations are the only ones that are output from the convolution layer.
-The argument for not also outputting side-information nodes and using these in the prediction function is that, through the convolution, the information from these nodes is integrated into the representations of user and item nodes.
+% The argument for not also outputting side-information nodes and using these in the prediction function is that, through the convolution, the information from these nodes is integrated into the representations of user and item nodes.
 
 \subsection{Score prediction}\label{subsec:csgcn_is_score_prediction}
 To include context in the score prediction, we propose to model each pair of items and context values as learnable embeddings $e_{ic}$.
