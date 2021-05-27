@@ -18,7 +18,7 @@ With this intuition, we will now detail how this is implemented in the CSGCN-IS 
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
 Based on the considerations made in \Cref{sec:foundational_knowledge}, the CSGCN models are based on these observations made in SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
-To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, or a so called embedding.
+To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, also called an embedding.
 By doing this, the model can learn the nodes' properties and capture them in the vector representations.
 The model consists of three parts:
 \begin{enumerate}
