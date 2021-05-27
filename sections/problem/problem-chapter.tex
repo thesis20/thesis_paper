@@ -40,9 +40,10 @@ For items, it is information about the item such as the genre of a movie, which 
 GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
 GCNs stack learned first-order layers and apply a nonlinear activation function to learn feature representations of each node over multiple layers \cite{KOrderConnectivity}.
 Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation, and nonlinear activation.
-Feature propagation averages features in the neighborhood of a node, such that the representation of each node becomes an aggregation of its neighbors' features.
-The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with some weight.
-Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model.
+Feature propagation averages features in the local neighborhood of a node, such that the representation of each node becomes an aggregation of its neighbors' features.
+This is done for each node in the graph.
+The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding is multiplied with a learned weight.
+Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model, allowing it to better fit real world datasets.
 \\\\
 While traditional GCN models contain all three components, several well-cited papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
 Wu et al. present the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs \cite{SimplifyingGCN}.
