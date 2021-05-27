@@ -96,12 +96,14 @@ Additionally, the dimension "fans" is discretized into four groups:
 \subsection{Compared methods}
 In the experiments, the CSGCN models are compared against the following methods for context-specific recommendations:
 \begin{itemize}
-    \item Factorization Machine (FM)\cite{fmrendle}
+    \item Factorization Machine (FM) \cite{fmrendle}
     \item Convolutional Factorization Machine (CFM) \cite{CFM}
     \item Neural Factorization Machine (NFM) \cite{NeuralFM}
     % \item Top Pop
     % \item CAMF \cite{CAMF}
 \end{itemize}
+FMs are a relatively simple model that models all interactions between variables using factorized parameters.
+It is often used for comparison in context-aware papers, since it is able to predict a score based on information about a given interaction including contextual information.
 CFM uses a combination of a CNN and an FM, which is similar to our method in that it is capable of producing a context-aware top-$k$ recommendation list.
 It is included since it is an alternative way to handle contextual information in CNNs.
 We also compare against NFM, which uses a multi-layer perceptron (MLP) on top of the factorization machine to learn higher-order interaction signals.

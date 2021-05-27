@@ -12,6 +12,7 @@ Knowledge Graph Attention Network (KGAT) \cite{KGAT} extends the NGCF model by i
 
 \subsection{Factorization Machines}
 FMs \cite{fmrendle} model second-order feature interactions by calculating the inner product.
+One of the advantages of using FMs is that computations can be done in linear time, while it can also be applied to a variety of prediction tasks such as regression, binary classification and ranking \cite{fmrendle}.
 Convolutional Factorization Machine (CFM) \cite{CFM} extends FM to the domain of context-aware recommender systems through modeling second-order interactions with an outer product to capture correlations between embeddings, and applying convolution to learn high-order interaction signals.
 %DeepFM trains a deep neural network and an FM jointly in order to learn low- and high-order feature interactions. Both components share the same feature embedding, ensuring that there is no need for feature engineering of the input.
 % Graph Factorizaion Machines (GFM) extend factorization machines for the purposes of cross-domain recommendation based on graph-structured data. Leveraging data from other domains addresses the data sparsity issue in recommender systems, and the ability of factorization machines to exploit sparse data is used to capture multifactor iteraction information.
