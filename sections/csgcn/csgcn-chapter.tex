@@ -302,7 +302,7 @@ The intuition is that since context is now modeled similarly to side-information
 By including nodes for the contexts in the convolution, their representations are propagated with information about their neighbors, this being items and users that have interacted in that context, using a normalized sum aggregation.
 This means that with higher-order connectivity, items and users are propagated with information about other users and items that have interacted in the same contexts.
 Even though the intuition changes, the model architecture is almost the same as defined in \Cref{subsec:csgcn_is_model_architecture}.
-The difference is that the input to the convolution layers now includes the context nodes, which is used for the neighborhood aggregations.
+The difference is that the input graph to the convolution layers now includes context nodes, meaning they are also a part of the neighborhood aggregations.
 
 \subsection{Adjacency matrix}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
