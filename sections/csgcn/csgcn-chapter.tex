@@ -18,8 +18,8 @@ With this intuition, we will now detail how this is implemented in the CSGCN-IS 
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
 Based on the considerations made in \Cref{sec:foundational_knowledge}, the CSGCN models are based on these observations made in SGCN \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
-To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, also called an embedding.
-By doing this, the model can learn the nodes' properties and capture them in the vector representations.
+To facilitate the model architecture, each node in the graph is represented by a low-dimensional also called an embedding.
+By doing this, the model can learn the nodes' properties and capture them in the embeddings.
 The model consists of three parts:
 \begin{enumerate}
     \item The convolution layers responsible for aggregating neighborhood information.
@@ -299,7 +299,7 @@ With the second proposed model, context is included in the convolution by adding
 The adjacency matrix will now include interactions, what context the users have interacted in, and the context in which items have been interacted with.
 This approach is unable to capture which specific contexts the different interactions occurred in.
 It only captures whether or not the user or item has had an interaction in the given context.
-This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single vector representation instead of having a vector representation for each context value and item pair.
+This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single embedding instead of having a embedding for each context value and item pair.
 The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution.
 By including nodes for the contexts in the convolution, their representations are propagated with information about their neighbors, this being items and users that have interacted in that context, using a normalized sum aggregation.
 This means that with higher-order connectivity, items and users are propagated with information about other users and items that have interacted in the same contexts.
