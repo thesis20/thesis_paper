@@ -675,7 +675,8 @@ Additionally, the experiment was conducted on the context input to examine how m
 The results show that when side-information is included in the input for CSGCN-ADJ it does not change the performance much compared to excluding it.
 Another interesting thing to note is how the model performs worse when context is included in the input, even though it is a context-specific setting.
 This could be because the CSGCN-ADJ model does not actually model context in a way that fits the definition of context defined in \Cref{subsec:define_context_sideinfo}.
-In CSGCN-ADJ, context can instead be viewed as a type of side-information, since it is modelled in a somewhat similar way.
+In CSGCN-ADJ, context can instead be viewed as a type of side-information, since it is modelled in a similar way.
+Each user and item node is connected with the context value nodes of the contexts they have interacted in, just as they are connected to the nodes of their side-information values.
 \\\\
 \Cref{subfig:ablation_study_context_specific_2} shows HR@20 for CSGCN-IS on Yelp-NC with different inputs.
 For CSGCN-IS, there is a slight increase in performance when side-information is included, compared to excluding it.
