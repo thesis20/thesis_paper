@@ -27,14 +27,13 @@ The model consists of three parts:
     \item A prediction function
 \end{enumerate}
 First of all, the graph that is used as input to the model is constructed from the dataset.
-The graph can be represented a an adjacency matrix, so the input adjacency matrix is constructed by inserting a 1 for each user, item and side-information that are connected, in their corresponding cell.
-Each unique user, item, side-information are represented by an embedding.
+The graph can be represented by an adjacency matrix, such that the input matrix is constructed by inserting a 1 for each user, item and side-information that are connected, in their corresponding cell.
+Each unique user, item and side-information are represented by an embedding.
 The context, which is not a part of the graph, is modelled by representing each context value and item combination by an embedding, as described in \Cref{subsec:csgcn_is_intuition}.
 The adjacency representation of the input graph facilitates the convolution operation by multiplying the adjacency matrix with the embeddings.
 Each multiplication produces a layer output with embeddings propagated with neighborhood information.
-These layer outputs are then combined together with the initial embeddings to produce a set of final embedding which are used in the prediction function.
+These layer outputs are then combined together with the initial embeddings to produce final embeddings which are used in the prediction function.
 The output of the model is a top-$k$ list of recommendeded items for a user produced through the prediction function.
-\\\\
 The three parts of the model that are briefly presented in this section are further described throughout the next sections.
 
 
