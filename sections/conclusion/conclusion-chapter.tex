@@ -1,13 +1,14 @@
 \section{Conclusion}\label{sec:conclusion}
 In this paper, we have proposed two ways to include context and side-information in graph convolution neural networks.
-While there are not many competing methods available for comparison in context-specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across most datasets.
-Likewise, we have shown how the context can be aggregated and used in a general recommendation scenario with competitive results to state-of-the-art methods.
-\\\\
-There are, however, some limitations to the methods.
-We have observed that on the Frappe dataset, the CSGCN methods are being consistently outperformed by simple methods such as traditional factorization machines and TopPop.
-This is likely due to the fact that this dataset is not only small in size, but also highly unbalanced in terms of item interactions.
-Some items are so popular that almost every 13th interaction in the dataset is with these items.
+While there are not many competing methods available for comparison in context-specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across most datasets, ranging from an improvement of $70.66\%$ to $510\%$.
+On the Frappe dataset the CSGCN models are outperformed by $84.45\%$ to $-1473.37\%$.
+The large fluctuations in improvements and decreases are likely caused by the evaluation methodology where the models attempt to predict a single relevant item amongst every item in the dataset, as well as the small size of the Frappe dataset causing learning difficulties.
+Likewise, we have shown how the context can be aggregated and used in a general recommendation scenario with competitive results compared to state-of-the-art methods.
+The CSGCN models improve performance in a range of $0.07\%$ to $10.01\%$, while being outperformed on Frappe once again and on the precision metric for ML1M, in a range of $0.04\%$ to $72.62\%$.
+The large decrease on Frappe is caused by the data split, which inadvertently facilitated the simple baseline Top Pop.
+Some items in Frappe are so popular that almost every 13th interaction in the dataset is with these items.
 While this is a perfect scenario for TopPop, it has proven to be a big challenge for more advanced methods such as the CSGCN models.
+
 % Skriv noget om at future work kunne være info på edges? Evt hvordan vi har prøvet at implementere det
 % Double training objective
 %\todo[color=red]{x - Conclude upon the fun times}
