@@ -113,4 +113,5 @@ The adjacency matrix is useful for the implementation of a graph convolutional l
 This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.
 Finally, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the representations by the number of neighbors, to avoid exploding or vanishing gradients.
 This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the central node \cite{SimplifyingGCN, KOrderConnectivity}.
+The graph seen in \Cref{fig:bipartite-graph} can be extenden to also include nodes that represent side-information, which would be connected to the user and item nodes.
 If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution such that information can be passed from these nodes as well.

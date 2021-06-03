@@ -12,7 +12,7 @@ Besides side-information, we need to reason about how to express context in the 
 One way of expressing context is by simplifying it to be an embedding used as a modifier to an item, which signifies whether the item is popular in a given context or not.
 For example, we may learn that indoor activities are generally more popular on a rainy day.
 This can be learned by the model through sampling user interactions in various contexts from the ground truth.
-For the user and context sampled, we see that they interacted with a given item, which should make the item more likely to be recommended in the context.
+For the user and context that has of the sampled interaction, we see that they interacted with a given item, which should make the item more likely to be recommended in the context.
 A negative interaction is also sampled for the same user and context, which should make the item less likely to be recommended for the context through training, further detailed in \autoref{subsec:csgcn_is_training}.
 With this intuition, we will now detail how this is implemented in the CSGCN-IS model.
 
@@ -27,7 +27,7 @@ The model consists of three parts:
     \item A prediction function
 \end{enumerate}
 First of all, the graph that is used as input to the model is constructed from the dataset.
-The graph can be represented by an adjacency matrix, such that the input matrix is constructed by inserting a 1 for each user, item and side-information that are connected, in their corresponding cell.
+The graph can be represented by an adjacency matrix, and it is constructed by inserting a 1 for each user, item and side-information that are connected in their corresponding cell, and a 0 in every other cell.
 Each unique user, item and side-information are represented by an embedding.
 The context, which is not a part of the graph, is modelled by representing each context value and item combination by an embedding, as described in \Cref{subsec:csgcn_is_intuition}.
 The adjacency representation of the input graph facilitates the convolution operation by multiplying the adjacency matrix with the embeddings over several layers.
@@ -248,7 +248,7 @@ The inputs to the layer is the adjacency matrix previously described.
      e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{\sqrt{|\mathcal{N}_{un}|} \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
 \end{equation}
 
-In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the convolution operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, including both items and user side-information, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$. 
+In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the convolution operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, including both items and user side-information nodes, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$.
 A neighbor-node is denoted as $un$ for user neighbors in $\mathcal{N}_{u}$, and $in$ for item neighbors in $\mathcal{N}_{i}$, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
 $N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_{in}$ denotes the set of neighbors for the neighbor $in$ of node $i$.
 This means that when neighbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its representation propagated.
@@ -262,8 +262,8 @@ To include context in the score prediction, we propose to model each pair of ite
 The use of $e_{ic}$ is heavily inspired by Ricci and Baltrunas' item splitting approach \cite{baltrunasitemsplitting}, where a context weight for each item in each context is calculated.
 This means that for the set of items $I$ and the set of possible context values $C$, there are $|I| \times |C|$ embeddings of item and context value combinations $e_{ic}$.
 The objective is to calculate a score between a user and an item in a given context $C'$.
-The different $e_{ic}$'s of a given item $i$ and context $C'$ are added to the item to signify its popularity in the given context.
-After the addition of the $e_{ic}$'s to the item embedding $e_i$, the cosine similarity scores of the user embedding $e_u$ and the item-context additions are calculated and summed together to produce a score: 
+The different $e_{ic}$ embeddings of a given item $i$ and context $C'$ are added to the embedding of $i$ to signify its popularity in the given context.
+After the addition of the $e_{ic}$ embeddings to the item embedding $e_i$, the cosine similarity scores of the user embedding $e_u$ and the item-context additions are calculated and summed together to produce a score: 
 \begin{equation}
   \hat{y}_{uic} = \sum_{c \in C'} e_u^T(e_i+e_{ic})
 \end{equation}
@@ -332,7 +332,7 @@ The matrix is seen in \Cref{csgcn_adj_adj_mat}.
     \end{bmatrix}
 \end{equation}
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS| + |C|) \times K}$, where $K$ is the embedding size and $C$ is the set of possible context values.
-The embedding matrix for the next layer after $l$ for CSGCN-ADJ is obtained by:
+The embedding matrix for the next layer after layer $l$ for CSGCN-ADJ is obtained by:
 \begin{equation}
     Emb^{(l+1)} = (D^{-\frac{1}{2}}A)Emb^{(l)}
 \end{equation}

@@ -122,7 +122,7 @@ NGCF is a model proposed by Wang et al. as a way to utilize the GCN model propos
 It makes use of all three parts of a GCN described in \Cref{sec:preliminaries}, and utilizes BPR loss with negative sampling to use it for a ranking purpose.
 LightGCN was later proposed by the same authors and is mainly focused on performing an ablation study similar to the one done in \cite{SimplifyingGCN}, where they remove the linear transformation and non-linear activation between layers to provide a simpler model, while still presenting competitive results.
 Both the CSGCN models and LightGCN extend the codebase of NGCF, so they are naturally included in the comparison to show that adding side-information and contextual information hopefully improves the accuracy of these methods.\\
-KGAT is a state-of-the-art graph-based method that utilizes side-info in the form of a knowledge graph.
+KGAT is a state-of-the-art graph-based method that utilizes side-information in the form of a knowledge graph.
 BPR utilizes implicit feedback to generate a personalized top-$k$ list of items using the proposed BPR-optimizer to train the model, providing a simpler method for comparison.
 Finally, a we include a simple baseline, Top Pop, which simply recommends the $k$ most popular items for all users.
 
@@ -521,7 +521,7 @@ Overall, the performance does not change drastically with the different types of
 Having only side-information as input achieves the best performance, but it is only marginally better than not having side-information and context at all.
 Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input improves performance slightly.
 To conclude from the study on the Yelp-NC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting.
-Side-information, however, performs the best on this metric on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
+Side-information, however, performs the best on NDCG@20 on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
 \\
 On \Cref{fig:ablation_study_non_context_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
