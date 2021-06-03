@@ -59,7 +59,7 @@ We use the following side-information about users for both datasets:
     \item Number of fans
     \item Average stars
 \end{itemize}
-The side-information about items is a dimension specifying the categories that an item belongs to.
+The only side-information about items is the categories that an item belongs to.
 For the Yelp-NC dataset, this is one or more of 80 different categories, and 75 categories for Yelp-ON.\\
 The contextual information is a timestamp.
 
@@ -530,7 +530,7 @@ Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context
 Side-information, however, is able to increase performance of the model in a non-context specific setting, but for this dataset the side-information does not provide any additional collaborative signal.
 
 \subsection{Ablation study of model extensions (RQ3)}
-To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.
+To investigate whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.
 In the study, the CSGCN models were run with and without side-information to test the effect it has on the performance.
 Additionally, the experiment was conducted on the context input to examine how much it affects the performance in a context-specific setting.
 \begin{figure*}[t!]
