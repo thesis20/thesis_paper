@@ -12,7 +12,7 @@ Besides side-information, we need to reason about how to express context in the 
 One way of expressing context is by simplifying it to be an embedding used as a modifier to an item, which signifies whether the item is popular in a given context or not.
 For example, we may learn that indoor activities are generally more popular on a rainy day.
 This can be learned by the model through sampling user interactions in various contexts from the ground truth.
-For the user and context that has of the sampled interaction, we see that they interacted with a given item, which should make the item more likely to be recommended in the context.
+For the user and context of the sampled interaction, we see that they interacted with a given item, which should make the item more likely to be recommended in the context.
 A negative interaction is also sampled for the same user and context, which should make the item less likely to be recommended for the context through training, further detailed in \autoref{subsec:csgcn_is_training}.
 With this intuition, we will now detail how this is implemented in the CSGCN-IS model.
 
