@@ -43,7 +43,7 @@ GCNs are variants of convolutional neural networks (CNN) used on graph-based dat
 GCNs learn the feature representations of each node in a graph through multiple graph convolution layers.
 For the $l$-layer of the graph convolution, the node representations that were output from the previous layer $l-1$ are used as input.
 For each layer, the representations of the nodes in the graph are averaged with the representations of their neighbor nodes.
-A nonlinear activation function is also applied at each layer to introduce non-linearity to the model {KOrderConnectivity}.
+A nonlinear activation function is also applied at each layer to introduce non-linearity to the model \cite{KOrderConnectivity}.
 Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation, and nonlinear activation.
 Feature propagation averages features in the local neighborhood of a node, such that the representation of each node becomes an aggregation of its neighbors' features.
 This is done for each node in the graph.
