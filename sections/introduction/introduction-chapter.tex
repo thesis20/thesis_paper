@@ -12,7 +12,7 @@ There is usually also some contextual information available concerning the inter
 This side-information and contextual information can be beneficial for prediction performance \cite{ContextImportance2}, as well as assist in alleviating certain issues such as data sparsity and cold starts \cite{SideInfoDefinition}.
 Using this context information is a sub-genre of recommender systems called context-aware recommender systems (CARS) \cite{carsprogress}, where the associated context of an interaction is taken into consideration when creating a prediction.
 This means that the data sparsity problem is especially prevalent in CARS since users may not have interacted with a lot of items in a given context, leading to sparsity in the data available for the collaborative filtering process.
-In this paper, we will investigate GCNs can be extended to generate context-aware recommendations while utilizing this additional information.
+In this paper, we will investigate how GCNs can be extended to generate context-aware recommendations while utilizing this additional information.
 On top of this, we will examine whether or not utilizing this context can improve recommendations in a regular context-free situation.
 First of all, we will examine the problem and define some foundational knowledge in \Cref{sec:preliminaries}.\\
 In \Cref{sec:csgcn_is,sec:csgcn_adj} we propose two models, CSGCN-IS and CSGCN-ADJ, as possible solutions to utilizing context and side-information in a GCN-based model.

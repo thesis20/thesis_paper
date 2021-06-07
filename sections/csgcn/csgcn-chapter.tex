@@ -1,5 +1,5 @@
 \section{CSGCN-IS}\label{sec:csgcn_is}
-This section describes the first of our two proposed models, Context and Side-information GCN with Item-Splitting (CSGCN-IS), which is a GCN that incorporates side-information in the graph and considers context as an embedding that is used as an modifier for an item.
+This section describes the first of our two proposed models, Context and Side-information GCN with Item-Splitting (CSGCN-IS), which is a GCN that incorporates side-information in the graph and considers context as an embedding that is used as a modifier for an item.
 
 \subsection{Model intuition}\label{subsec:csgcn_is_intuition}
 Before diving into the details of how CSGCN-IS is modeled, let us examine the intuition behind it.
@@ -262,7 +262,7 @@ To include context in the score prediction, we model each pair of items and cont
 The use of $e_{ic}$ is heavily inspired by Ricci and Baltrunas' item splitting approach \cite{baltrunasitemsplitting}, where a context weight for each item in each context is calculated.
 This means that for the set of items $I$ and the set of possible context values $C$, there are $|I| \times |C|$ embeddings of item and context value combinations $e_{ic}$.
 The objective is to calculate a score between a user and an item in a given context $C'$.
-The different $e_{ic}$ embeddings of a given item $i$ and context $C'$ are added to the embedding of $i$ to signify its popularity in the given context.
+The different embeddings $e_{ic}$ of a given item $i$ and context $C'$ are added to the embedding of $i$ to signify its popularity in the given context.
 After the addition of the $e_{ic}$ embeddings to the item embedding $e_i$, the cosine similarity scores of the user embedding $e_u$ and the item-context additions are calculated and summed together to produce a score: 
 \begin{equation}\label{eq:is-score-pred}
   \hat{y}_{(u,i,C')} = \sum_{c \in C'} e_u^T(e_i+e_{ic})
