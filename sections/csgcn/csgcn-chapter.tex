@@ -248,7 +248,7 @@ The inputs to the layer is the adjacency matrix previously described.
      e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{\sqrt{|\mathcal{N}_{un}|} \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
 \end{equation}
 
-In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the convolution operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, where $\mathcal{N}_{u} \subseteq US \cup I$, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$ where $\mathcal{N}_{i} \subseteq IS \cup U$.\\
+In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the convolution operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, where $\mathcal{N}_{u} \subseteq US \cup I$, and $\mathcal{N}_{i}$ are the neighbor nodes for item $i$ where $\mathcal{N}_{i} \subseteq IS \cup U$.\\
 A user neighbor node is denoted as $un \in \mathcal{N}_{u}$, and for item neighbors as $in \in \mathcal{N}_{i}$.
 $N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_{in}$ denotes the set of neighbors for the neighbor $in$ of node $i$.\\
 This means that when neighbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its representation propagated.
