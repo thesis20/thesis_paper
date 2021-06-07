@@ -64,6 +64,11 @@ For the Yelp-NC dataset, this is one or more of 80 different categories, and 75 
 The contextual information is a timestamp.
 
 \subsection{Context dimension selection}
+When selecting context dimensions to use from the dataset, some of the context information can benefit from being discretized.
+This is the case for context such as a timestamp, as at it can provide too much detail for an interaction for the model to be able to learn anything valueable from.
+This is because there are often not enough interactions for a given context to be able to learn the effect that it has if it is provided in too much detail, since it creates too much sparsity.
+For timestamps, the problem would occur if each second or minute is modelled differently.
+Therefore we discretize context that can have too many different values to avoid sparsity problems.
 Since most of the datasets include a timestamp as contextual information, we discretize these into the following context dimensions:
 \begin{itemize}
     \item Month
