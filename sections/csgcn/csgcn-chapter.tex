@@ -146,10 +146,11 @@ Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + 
     Emb^{(l+1)} = (D^{-\frac{1}{2}}AD^{-\frac{1}{2}})Emb^{(l)}
 \end{equation}
 where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| \times (|U| + |I| + |US| + |IS|)$ degree matrix. 
-The final embedding matrix after $L$ layers is defined as:
-\begin{equation}
+Finally, the embeddings from each layer are combined into the final embeddings that are used in the prediction.
+\begin{equation}\label{eq:layer_comb}
     Emb = \sum_{l=0}^{L} \frac{1}{L} Emb^{(l)}
 \end{equation}
+The combination of the layers is seen on \Cref{eq:layer_comb}, and it shows that the final embeddings are an average of the embeddings from each layer.
 
 \subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
 A major part of the model is the convolution layer where the user and item embeddings are being propagated with information about their neighbor nodes' representations by using an aggregation function, which in this case is a normalized sum.
