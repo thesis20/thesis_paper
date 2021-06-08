@@ -135,7 +135,7 @@ $A$ consists of the rating matrix $R$ and its transpose $R^T$, as well as sub-ma
     0 & IS^T & 0 & 0
     \end{bmatrix}
 \end{equation}
-Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $$|U|\times|U|$$ where $|U|$ is the amount of users in the dataset.
+Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $|U|\times|U|$ where $|U|$ is the amount of users in the dataset.
 This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between users and items and their side-information in the graph, allowing it to be used in order to gain higher-order connectivity in the convolution layers.
 It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
@@ -309,7 +309,7 @@ The adjacency matrix will now include interactions, what context the users have 
 This approach is unable to capture which specific contexts the different interactions occurred in.
 It only captures whether or not the user or item has had an interaction in the given context.
 This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single embedding instead of having an embedding for each context value and item pair.
-The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution.
+The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution, since they will be present as neighboring nodes to items and users in the pentapartite graph.
 By including nodes for the contexts in the convolution, their representations are propagated with information about their neighbors, this being items and users that have interacted in that context, using a normalized sum aggregation.
 This means that with higher-order connectivity, items and users are propagated with information about other users and items that have interacted in the same contexts.
 Even though the intuition changes, the model architecture is almost the same as defined in \Cref{subsec:csgcn_is_model_architecture}.
