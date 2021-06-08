@@ -65,7 +65,7 @@ The contextual information is a timestamp.
 
 \subsection{Context dimension selection}
 When selecting context dimensions to use from the dataset, some of the context information can benefit from being discretized.
-This is the case for context such as a timestamp, as the information about the interaction is too specific for the model to be able to learn anything valuable from it.
+This is the case for contexts such as a timestamp, as the information about the interaction is too specific for the model to be able to learn anything valuable from it.
 This is because there are often not enough interactions for a given context to be able to learn the effect that it has if it is provided in too much detail since it creates too much sparsity. 	 
 For timestamps, the problem would occur since each second or minute is modeled differently, meaning the context would only match for the exact same date and second.
 Therefore, we discretize context that can have too many different values to avoid these sparsity problems.
@@ -137,7 +137,7 @@ The learning rate is either set to the value presented in the respective papers,
 The batch size is set as 1024 for all datasets except Frappe, where it is set to 512 due to its size.
 The embedding size is set to 64, and for the models using regularization terms, this is searched between $[0.01, 0.001, 0.0001]$ if a default value is not provided.
 For CFM and NFM we follow the approach presented in the original papers and feed them with weights from a pretrained FM model which has run for 500 epochs with the settings presented in the CFM paper.
-All methods are run for a max of 1000 epochs with an early stopping mechanism triggered when the HR@20 or Recall@20 has not improved for 5 evaluations (100 consecutive steps), except for CFM which is run for 300 epochs based on the default values.
+All methods are run for a maximum of 1000 epochs with an early stopping mechanism triggered when the HR@20 or Recall@20 has not improved for 5 evaluations (100 consecutive steps), except for CFM which is run for 300 epochs based on the default values.
 
 
 \subsection{Evaluating the models}\label{subsec:evalandmetrics}
@@ -154,7 +154,7 @@ A single context cannot be guaranteed for the user for all ground truths, and th
 For the leave-one-out method, the newest interaction for each user is removed from the training set and used as the test set, as per \cite{CFM, BPR}.
 This means that when a top-$k$ list is produced for a user, only a single item amongst the recommended items can be relevant, and thus there is only one context within which the ground truth had occurred.
 This approach is largely inspired by sequential recommendation systems, where you leave out the newest interaction from each user and try to predict the next item in the sequence based on the sequence of the previous interactions by the user \cite{aggarwal2016recommender}.\\
-This approach limits the number of different metrics that can be used for this type of evaluation method.
+This approach limits the number of different metrics that can be used for this type of evaluation method due to the single interaction available for testing.
 \\\\
 For comparisons we conduct an experiment using fold-out for models that produce a top-$k$ recommendation list and conduct a separate leave-one-out evaluation for models that produce a context-aware top-$k$ recommendation list. 
 The metrics used for the fold-out evaluation are Precision, Recall, and Normalized Discounted Cumulative Gain (NDCG), while the leave-one-out experiments report Hit Rate (HR) and Mean Reciprocal Rank (MRR).
@@ -246,8 +246,7 @@ In conclusion, the performance of the CSGCN models depends on the dataset charac
 While the models perform significantly worse than simpler models on the Frappe dataset, we would argue that this dataset is not an accurate representation of a real world scenario.
 
 \subsection{Performance Comparison without Context (RQ2)}
-Since the CSGCN models use context to generate a top-$k$ list in each context for each user.
-We argue that this context information can be useful even for non-context-specific settings.
+Since the CSGCN models use context to generate a top-$k$ list in each context for each user, we argue that this context information can be useful even for non-context-specific settings.
 Imagine that your system is recommending businesses to users, and you have a business that is only open on Christmas.
 On Christmas night, millions upon millions of users interact with this item, but it is never interacted with in any other context.
 In a regular RS this would be seen as a popular item, since a lot of users have interacted with it.
