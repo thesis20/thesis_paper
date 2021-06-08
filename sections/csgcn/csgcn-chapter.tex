@@ -312,6 +312,11 @@ The difference is that the input graph to the convolution layers now includes co
 \subsection{Adjacency matrix}\label{subsec:csgcn_adj_adj_mat}
 Compared to CSGCN-IS, context is now included in the graph as nodes and therefore also included in the adjacency matrix.
 The graph is similar to the one in \Cref{fig:quadripartite-graph}, but context nodes are inserted between the sets of item and user nodes, and edges connect the nodes that have interacted in the context.
+This results in the sets of edges $E_U$ and $E_I$ being updated to:
+$$E_U \subseteq \{ (x,y) | \: x \in U, \: y \in US \cup I \cup C \}$$
+$$E_I \subseteq \{ (x,y) | \: x \in I, \: y \in U \cup IS \cup C \}$$
+A new set of edges is also introduced for the context value nodes in $C$:
+$$E_C \subseteq \{ (x,y) | \: x \in C, \: y \in U \cup I \}$$
 For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave slightly better performance compared to also propagating information about neighbors to the context embeddings.
 Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacency matrix.
 Instead, we add the identity matrix $I$ to the last quadrant such that the context embeddings are only propagated with information about themselves in each convolution.
