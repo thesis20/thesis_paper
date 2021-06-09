@@ -17,7 +17,7 @@ A negative interaction is also sampled for the same user and context, which shou
 With this intuition, we will now detail how this is implemented in the CSGCN-IS model.
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
-The CSGCN models are based on these observations made in SGC \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
+The CSGCN models are based on the observations made in SGC \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
 To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, also called an embedding.
 By doing this, the model can learn the nodes' properties and capture them in the embeddings.
 The model consists of four parts: Input, graph convolution layers, layer combination, and a prediction function.\\
@@ -279,7 +279,9 @@ Unlike simpler optimizers that maintain a single learning rate throughout traini
 Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for RS, since they often deal with sparse data.
 
 \subsection{Implementing CSGCN-IS}
-The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, except for the adjacency matrix being modified as described above.
+To facilitate the implementation of the GCN layer in CSGCN-IS, the adjacency matrix representation of the graph is utilized.
+The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, except for the adjacency matrix being modified by including side-information as described in \Cref{csgcn_is_adj_mat}.
+An embedding matrix is introduced which contains each of the embeddings of the nodes in the graph.
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS|) \times K}$, where $K$ is the embeddings size, then the embedding matrix for the next layer $l+1$ can be obtained by:
 \begin{equation}
     Emb^{(l+1)} = (D^{-\frac{1}{2}}AD^{-\frac{1}{2}})Emb^{(l)}
