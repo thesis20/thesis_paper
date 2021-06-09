@@ -1,20 +1,22 @@
 \noindent
 \section{Introduction}
 \chapter{Recommender systems (RS)}\label{ch:introduction}
-have become an important part of everyday life on various online platforms \cite{youtuberecommendation, industryperspective}.\\\
+have become an important part of everyday life on various online platforms.
+\\
 With the tremendous amount of information available to users, finding what you need without help can be overwhelming.
 One way RS have attempted to aid users is through collaborative filtering (CF), where the preferences and similarities between users and items are used to generate recommendations. 
-Graph Convolutional Network (GCN)-based models have gained high popularity and also achieved great results \cite{NGCF,LightGCN,KGAT}, due especially to their ability to aggregate information from neighboring nodes.\\
+Graph Convolutional Network (GCN)-based models have gained high popularity and also achieved great results \cite{NGCF,LightGCN,KGAT}, due especially to their ability to aggregate information from neighbor nodes.\\
 However, most of the GCN models focus purely on user-item interactions and do not take into account additional information that will usually be available in both existing datasets and real life.
+\\
 This additional information could be information from a user profile, including their age and location, or information about the items such as user-specified tags for attractions, or the genres of a movie.
 There is usually also some contextual information available concerning the interaction taking place, which may be something as simple as a timestamp, or information about the current emotional state of the user.\\
-This side-information and contextual information can be beneficial for prediction performance in some situations \cite{ContextImportance, ContextImportance2, ContextImportance3}, as well as assist in alleviating certain issues such as data sparsity and cold starts \cite{SideInfoDefinition}.
-Using this context information is a sub-genre of recommender systems called context-aware recommender systems (CARS) \cite{carsprogress}, where the associated context of an interaction is examined when creating a prediction.
+This side-information and contextual information can be beneficial for prediction performance \cite{ContextImportance2,ContextImportance3}, as well as assist in alleviating certain issues such as data sparsity and cold starts \cite{SideInfoDefinition}.
+Using this context information is a sub-genre of recommender systems called context-aware recommender systems (CARS) \cite{carsprogress}, where the associated context of an interaction is taken into consideration when creating a prediction.
 This means that the data sparsity problem is especially prevalent in CARS since users may not have interacted with a lot of items in a given context, leading to sparsity in the data available for the collaborative filtering process.
-In this paper, we will investigate how these popular GCN-based models can be extended to generate context-aware recommendations while utilizing this additional information.
+In this paper, we will investigate how GCNs can be extended to generate context-aware recommendations while utilizing this additional information.
 On top of this, we will examine whether or not utilizing this context can improve recommendations in a regular context-free situation.
 First of all, we will examine the problem and define some foundational knowledge in \Cref{sec:preliminaries}.\\
-In \Cref{sec:csgcn_is} and \Cref{sec:csgcn_adj} we propose two models, CSGCN-IS and CSGCN-ADJ, as possible solutions to utilizing context and side-information in a GCN-based model.
+In \Cref{sec:csgcn_is,sec:csgcn_adj} we propose two models, CSGCN-IS and CSGCN-ADJ, as possible solutions to utilizing context and side-information in a GCN-based model.
 We conduct experiments against a prepared set of research questions in \Cref{sec:experiments}.\\
 Finally, we look at related work and conclude upon the paper in \Cref{sec:relatedwork,sec:conclusion}.
 \\\\
