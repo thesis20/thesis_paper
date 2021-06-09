@@ -29,7 +29,7 @@ The most prominent future work is further contemplation on how to express contex
 Our proposal is to look into ways to represent context as edge information in a feasible way.
 While writing this paper, we attempted to model it in a way such that there was an embedding for each (user,item,context) tuple.
 However, this quickly proved infeasible since the number of embeddings explodes with just a few contexts available.
-\\
+\\\\
 The CSGCN models make use of negative sampling for calculating loss.
 While this is a regular way to handle BPR loss, it is known to be biased \cite{nonsampling,NegativeSampling}, and sensitive to the number of negative samples \cite{NCF}.
 Fluctuations in the sampled negative item can cause difficulties in converging, and even sampling more negative items can increase performance.\\
@@ -37,13 +37,13 @@ Chen et al. \cite{nonsampling} propose to learn FM models without negative sampl
 However, using negative sampling can be necessary since using non-sampling not only requires the method to look at each observed interaction from the dataset, but also to consider each non-observed interaction as a negative data point.
 Because of this consideration, CSGCN-IS uses negative sampling for training, and, due to employing BPR loss, only one negative sample is used.
 For future work on the methods, it may be interesting to look into other ways to calculate the loss that are less reliant on hitting good samples.
-\\
+\\\\
 Additionally, throughout the experiments, it showed that not all contexts are equal in terms of importance.
 Due to this, it could be beneficial to include an attention mechanism that is able to learn the importance of each context or context combination for the convolution layer.
 This kind of attention idea could also be applied to layers.
 As we increase the amount of layers in a GCN, more noise will be introduced to the convolutions.
 To counter this, it may be beneficial to look into more advanced weighting mechanisms for layers, such that nodes further away from the root node are less influential in the layer combination operation.
-\\
+\\\\
 Finally, both CSGCN methods are based on the simplified models of GCNs which are gaining popularity.
 For this paper, we have performed limited experimentation on extending this with various components from traditional GCNs, such as re-adding linear transformation and non-linear activation, without success.
 In recent months, several new papers on GCNs have been published which present new extensions to GCNs.
