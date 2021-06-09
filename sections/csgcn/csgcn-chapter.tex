@@ -347,7 +347,7 @@ Because the identity matrix was added to the adjacency matrix under the context 
 For the score prediction of CSGCN-ADJ, we draw inspiration from factorization machines and use an FM-like predictor function that considers pair-wise interactions between users, items and context values to provide a recommendation.
 To do this, we use the prediction function defined in \Cref{eq:csgcn_adj_scorepred}:
 \begin{equation}\label{eq:csgcn_adj_scorepred}
-    \hat{y}_{uic} = e_u^Te_i + \sum_{c \in C'}e_u^Te_{c} + \sum_{c \in C'}e_i^Te_{c}
+    \hat{y}_{(u,i,C')} = e_u^Te_i + \sum_{c \in C'}e_u^Te_{c} + \sum_{c \in C'}e_i^Te_{c}
 \end{equation}
 Where $e_{c}$ is the embedding representation of the context value $c$, $e_i$ is the embedding of the item $i$ and $e_u$ is the embedding of the user $u$.
 In this predictor function, we calculate the pairwise interaction between each of the embeddings.
@@ -424,4 +424,4 @@ While this graph only shows the results for NDCG@20 on the Yelp-NC dataset, the 
     \caption{Effect of various normalizations for CSGCN-ADJ on the Yelp-NC dataset for HR@20.}
     \label{fig:normalization_graph}
 \end{figure}
-The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
+The final embedding matrix after $L$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
