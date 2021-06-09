@@ -8,7 +8,7 @@ One way RS have attempted to aid users is through collaborative filtering (CF), 
 Graph Convolutional Network (GCN)-based models have gained high popularity and also achieved great results \cite{NGCF,LightGCN,KGAT}, due especially to their ability to aggregate information from neighbor nodes.\\
 However, most of the GCN models focus purely on user-item interactions and do not take into account additional information that will usually be available in both existing datasets and real life.
 \\
-This additional information could be information from a user profile including their age and location, or information about the items such as user-specified tags for attractions or the genres of a movie.
+This additional information could be from a user profile including their age and location, or information about the items such as user-specified tags for attractions or the genres of a movie.
 There is usually also some contextual information available concerning the interaction taking place, which may be something as simple as a timestamp, or information about the current emotional state of the user.\\
 This side-information and contextual information can be beneficial for prediction performance \cite{ContextImportance2,ContextImportance3}, as well as assist in alleviating certain issues such as data sparsity and cold starts \cite{SideInfoDefinition}.
 Using this context information is a sub-genre of RS called context-aware recommender systems (CARS) \cite{carsprogress}, where the associated context of an interaction is taken into consideration when creating a prediction.
