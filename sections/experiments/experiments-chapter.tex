@@ -59,7 +59,7 @@ We use the following side-information about users for both datasets:
     \item Number of fans
     \item Average stars
 \end{itemize}
-The side-information about items is a dimension specifying the categories that an item belongs to.
+The only side-information about items is the categories that an item belongs to.
 For the Yelp-NC dataset, this is one or more of 80 different categories, and 75 categories for Yelp-ON.\\
 The contextual information is a timestamp.
 
@@ -528,7 +528,7 @@ Overall, the performance does not change drastically with the different types of
 Having only side-information as input achieves the best performance, but it is only marginally better than not having side-information and context at all.
 Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input improves performance slightly.
 To conclude from the study on the Yelp-NC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting.
-Side-information, however, performs the best on this metric on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
+Side-information, however, performs the best on NDCG@20 on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
 \\
 On \Cref{fig:ablation_study_non_context_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
@@ -537,7 +537,7 @@ Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context
 Side-information, however, was able to increase performance of the model in a non-context specific setting on YelpNC, but for ML1M, it only makes the results worse compared to having no extra input.
 
 \subsection{Ablation study of model extensions (RQ3)}
-To answer whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.
+To investigate whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.
 In the study, the CSGCN models were run with and without side-information to test the effect it has on the performance.
 Additionally, the experiment was conducted on the context input to examine how much it affects the performance in a context-specific setting.
 \begin{figure*}[t!]
