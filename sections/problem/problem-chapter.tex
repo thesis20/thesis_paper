@@ -22,7 +22,6 @@ Context values for a given interaction, $C'$, e.g.:
 $$C' = \{winter, midnight\}$$
 A single context value, $c$, e.g. 
 $$c = winter$$
-\\\\
 \textbf{Side-information}:
 The side-information definition used is based on the description in \cite{SideInfoDefinition}, where different types of side-information include information such as user networks, user profiles, and item descriptors.
 For users, this could be information like their age or occupation, which may have an influence on their preferences.
@@ -35,10 +34,7 @@ For items, it is information about the item such as the genre of a movie, which 
 % \end{equation}
 % \Cref{eq:multi-hot-example} shows an example of a multi-hot vector representing the field \textit{genre}, showing that it possesses 2 of the 6 possible features (genres).
 
-
-\subsection{Foundational knowledge}\label{sec:foundational_knowledge}
-The following subsection presents foundational knowledge relating to the models proposed in the paper.
-\subsubsection*{The components of a GCN}
+\subsection{The components of a GCN}
 GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
 GCNs learn the feature representations of each node in a graph through multiple graph convolution layers.
 For layer $l$ of the graph convolution, the node representations that were output from the previous layer $l-1$ are used as input.
@@ -59,7 +55,7 @@ This led them to remove the linear transformation and nonlinear activation, to r
 Interestingly, they proved that not only does this not degrade performance of the models, it generally matches or improves both in terms of performance and speed \cite{SimplifyingGCN}.\\
 This signifies that the expressive power of GCNs originates primarily from the propagations done in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
 
-\subsubsection*{Types of data for RS and recommendation tasks}
+\subsection{Types of data for RS}
 Data used for RS can be classified as either implicit or explicit \cite{oard1998implicit}.
 Explicit data is provided by the user of the RS, such as a user providing a rating of an item.
 Data provided explicitly by users is commonly used for the score prediction task, where, as with traditional matrix factorization (MF) approaches, a score matrix is reconstructed in order to generate missing ratings for users.
@@ -69,7 +65,7 @@ Since explicit data requires explicit user involvement, it is usually more scarc
 A problem with implicit data, however, is that it does not directly encode whether or not the user had a preference for the given item as is possible with explicit data, only that they interacted with it.
 A common prediction task for implicit data is top-$k$ recommendation, where a list of $k$ items is produced for the user.
 
-\subsubsection*{Data representation}
+\subsection{Data representation}
 In graph-based CF RS, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
 \begin{figure}[h]
 \begin{tikzpicture}[thick,
