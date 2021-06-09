@@ -38,7 +38,7 @@ Side-information for items is \textit{genre}, which specifies that an item has o
 For contextual information, the MovieLens dataset provides a timestamp for when the interaction took place.
 
 \subsubsection*{Frappe}
-The Frappe dataset \cite{baltrunasfrappe} contains information about how users have interacted with applications on their smartphones.
+The Frappe dataset \cite{Frappe} contains information about how users have interacted with applications on their smartphones.
 The only available side-information is for items, indicating whether the application is free or not.
 However, it contains the following contexts:
 \begin{itemize}
@@ -151,7 +151,7 @@ Because of this split, a single user can have multiple ground truth entries acro
 A problem to consider with fold-out for context-aware evaluation is that when the context is part of the input to the model, a score must be calculated for each combination of item and context due to the multiple ground truth contexts, which can be computationally expensive.
 A single context cannot be guaranteed for the user for all ground truths, and thus every context needs to be evaluated.
 \\\\
-For the leave-one-out method, the newest interaction for each user is removed from the training set and used as the test set, as per \cite{CFM, BPR}.
+For the leave-one-out method, the newest interaction for each user is removed from the training set and used as the test set, as per \cite{CFM,BPR}.
 This means that when a top-$k$ list is produced for a user, only a single item amongst the recommended items can be relevant, and thus there is only one context within which the ground truth had occurred.
 This approach is largely inspired by sequential recommendation systems, where the newest interaction from each user is left out and the next item in the sequence is predicted based on the sequence of the previous interactions by the user \cite{aggarwal2016recommender}.\\
 This approach limits the number of different metrics that can be used for this evaluation method due to the single interaction available for testing.
