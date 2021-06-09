@@ -37,7 +37,7 @@ For items, it is information about the item such as the genre of a movie, which 
 
 \subsection{The components of a GCN}
 GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
-GCNs learn the feature representations of each node in a graph through multiple graph convolution layers.
+GCNs learn a representation of each node in a graph through multiple graph convolution layers.
 For layer $l$ of the graph convolution, the node representations that were output from the previous layer $l-1$ are used as input.
 For each layer, the representations of the nodes in the graph are aggregated with the representations of their neighbor nodes.
 A nonlinear activation function is also traditionally applied at each layer to introduce non-linearity to the model \cite{KOrderConnectivity}.
@@ -112,7 +112,7 @@ This graph can also be represented as an adjacency matrix, which is useful for t
 This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.\\
 This could, however, cause issues in terms of exploding or vanishing gradients, leading to scenarios where the method ends up unable to learn.
 To mitigate this, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the entries in the adjacency matrix by the number of neighbors, to ensure the gradients do not grow too large or small.
-The graph seen in \Cref{fig:bipartite-graph} can be extended to also include nodes that represent side-information, which are connected to the user and item nodes.
+This bipartite graph can be extended to also include nodes that represent side-information, which are connected to the user and item nodes.
 If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution such that information can be passed from these nodes as well.
 Higher-order connectivity can be gained by repeatedly doing convolution operations in multiple layers, meaning information is passed from neighboring nodes further away from the central node \cite{SimplifyingGCN, KOrderConnectivity}, based on the number of layers.
 A two layer GCN would, for example, be able to pass information from nodes two steps from the central node, allowing the collaborative signal to be influenced by nodes that are further from the central node.\\\\
