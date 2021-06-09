@@ -27,7 +27,7 @@ Each convolutional layer is stacked on top of the previous layer, such that each
 Having passed through $L$ convolution layers, we are left with an embedding representation of each node for each layer, which is then passed to the layer combination function, taking a weighted sum of each representation to generate a final representation for each node.\\
 Finally, these combined representations of users and items are passed to a prediction function along with a context embedding to calculate a score for the given user, item, and context combination as described in \Cref{subsec:csgcn_is_intuition}.\\
 These predicted scores are used to generate a top-$k$ list of recommended items for a user in the given context.\\
-In the following sections we will further explain how each of these four parts of the model works.
+In the following sections we will further explain how each of these four parts of the model work.
 
 
 
