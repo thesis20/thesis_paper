@@ -318,7 +318,6 @@ $$E_I \subseteq \{ (x,y) | \: x \in I, \: y \in U \cup IS \cup C \}$$
 A new set of edges is also introduced for the context value nodes in $C$:
 $$E_C \subseteq \{ (x,y) | \: x \in U \cup I, \: y \in C \}$$
 The new set of edges $E_C$ has directed edges from items or users to context values.
-The set also contains self-connections for all the context values.
 \\\\
 For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave slightly better performance compared to also propagating information about neighbors to the context embeddings.
 Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacency matrix.
