@@ -7,18 +7,18 @@ The goal is to construct a model that can generate a top-$k$ list of recommendat
 To do this, we start by expressing the available information in a graph.
 This mainly includes interactions between users and items.
 However, since most RS datasets are sparse, we want to see if we can alleviate this problem by further connecting user and item nodes, to improve the collaborative signals in the model.
-To do this, we utilize the fact that most datasets include some side-information about users and items, which can be used to further connect them by adding it as nodes in the graph.\\
+To do this, we utilize the fact that most datasets include some side-information about users and items, which can be used for further connections by its addition as nodes in the graph.\\
 Besides side-information, we need to reason about how to express context in the model.
 In this model, we express context by simplifying it to be an embedding that is used as a modifier to an item to signify whether the item is popular in a given context or not.
 For example, we may learn that indoor activities are generally more popular on a rainy day.
 This can be learned by the model through sampling user interactions in various contexts from the ground truth.
-For the user and context of the positive sampled interaction, we see that they interacted with a given item, which should make the item more likely to be recommended in the context.
-A negative interaction is also sampled for the same user and context, which should make the item less likely to be recommended for the context through training, further detailed in \Cref{subsec:csgcn_is_training}.
+For the user and context of the positive sampled interaction, we see that they interacted with a given item, which should make the item more likely to be recommended in that context.
+A negative interaction is also sampled for the same user and context, which should make the item less likely to be recommended for that context through training, further detailed in \Cref{subsec:csgcn_is_training}.
 With this intuition, we will now detail how this is implemented in the CSGCN-IS model.
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
 The CSGCN models are based on the observations made in SGC \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
-To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, also called an embedding.
+To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector called an embedding.
 By doing this, the model can learn the nodes' properties and capture them in the embeddings.
 The model consists of four parts: Input, graph convolution layers, layer combination, and a prediction function.\\
 The input is represented as a quadripartite graph consisting of users, items, user side-information, and item side-information.
@@ -27,7 +27,7 @@ Each convolutional layer is stacked on top of the previous layer, such that each
 Having passed through $L$ convolution layers, we are left with an embedding representation of each node for each layer, which is then passed to the layer combination function, taking a weighted sum of each representation to generate a final representation for each node.\\
 Finally, these combined representations of users and items are passed to a prediction function along with a context embedding to calculate a score for the given user, item, and context combination as described in \Cref{subsec:csgcn_is_intuition}.\\
 These predicted scores are used to generate a top-$k$ list of recommended items for a user in the given context.\\
-In this section, we will further explain how each of these four parts of the model works.
+In the following sections we will further explain how each of these four parts of the model work.
 
 
 
@@ -46,7 +46,7 @@ In this section, we will further explain how each of these four parts of the mod
 \subsection{Adjacency matrix}\label{subsec:csgcn_is_adj_mat}
 As described in \Cref{sec:preliminaries}, GCNs used for CF recommendation typically employ a bipartite graph structure to represent the user-item interactions.
 In CSGCN-IS the extended graph now contains users, items and edges as well as the set of user side-information nodes $US$ and the set of item side-information nodes $IS$.
-This allows for the incorporation of the side-information in the model, whereas context is later included in the prediction function defined in \autoref{subsec:csgcn_is_score_prediction}.
+This allows for the incorporation of side-information in the model, whereas context is later included in the prediction function defined in \autoref{subsec:csgcn_is_score_prediction}.
 This graph extension can be seen on \Cref{fig:quadripartite-graph}.
 It should be noted that the distinct sets cannot be self-connected, and edges can only exist between adjacent sets.
 Formally, we let $G$ be a graph consisting of a set of edges $E$, and vertices $V$, where $V = US \cup U \cup I \cup IS$.
@@ -119,7 +119,7 @@ $$E = E_{US} \cup E_{U} \cup E_{I} \cup E_{IS} $$
 \label{fig:quadripartite-graph}
 \end{figure}
 The quadripartite graph can be represented as an adjacency matrix $A \in \mathbb{R}^{|U|\times|I|\times|US| \times |IS|}$.
-An entry is 1 if the user has interacted with the item, if the item has the given side-information or if a user has the given side-information, and 0 if none of these are true.
+An entry is $1$ if the user has interacted with the item, if the item has the given side-information or if a user has the given side-information, and $0$ if none of these are true.
 $A$ consists of the rating sub-matrix $R$ and its transpose $R^T$, as well as sub-matrices containing $US$, $IS$, and their transposes, as seen on \Cref{csgcn_is_adj_mat}.
 \begin{equation}\label{csgcn_is_adj_mat}
     \begin{bmatrix}
@@ -129,13 +129,13 @@ $A$ consists of the rating sub-matrix $R$ and its transpose $R^T$, as well as su
     0 & IS^T & 0 & 0
     \end{bmatrix}
 \end{equation}
-Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $|U|\times|U|$ where $|U|$ is the amount of users in the dataset.
+Since there are no direct interactions between users and other users, the first quadrant is a zero-matrix of size $|U|\times|U|$ where $|U|$ is the amount of users in the dataset.
 This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between users and items and their side-information in the graph, allowing it to be used in order to gain higher-order connectivity in the convolution layers.\\
 It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
 
 \subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
-A major part of the model is the convolution layer where the user and item embeddings are being propagated with information about their neighbor nodes' representations by using an aggregation function, which in this case is a normalized sum.
+A major part of the model is the convolution layer where the user and item embeddings are propagated with information about their neighbor nodes' representations by using an aggregation function, which in this case is a normalized sum.
 Neighbor nodes for users are item nodes and user side-information nodes, and for items the neighbors are user nodes and item side-information nodes, which can be seen on \Cref{fig:quadripartite-graph}.
 For each additional layer, information is passed from nodes that are further away from a central node, illustrated on \Cref{fig:aggregation-for-layers}.
 \begin{figure}[h]
@@ -230,14 +230,13 @@ The inputs to the layer is the adjacency matrix previously described.
 \begin{equation}\label{eq:csgcn_is_gc_layer_user}
      e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{\sqrt{|\mathcal{N}_{un}|} \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
 \end{equation}
-
 In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the convolution operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, where $\mathcal{N}_{u} \subseteq US \cup I$, and $\mathcal{N}_{i}$ are the neighbor nodes for item $i$ where $\mathcal{N}_{i} \subseteq IS \cup U$.\\
 A user neighbor node is denoted as $un \in \mathcal{N}_{u}$, and for item neighbors as $in \in \mathcal{N}_{i}$.
 $N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_{in}$ denotes the set of neighbors for the neighbor $in$ of node $i$.\\
 This means that when neighbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its representation propagated.
 \\\\
 The convolution layer propagates information to user and item nodes' representations by summing the normalized representations of the neighbor nodes.
-All types of nodes are being propagated with information about their neighbors, but since only the user and item nodes' representations are being used in the prediction function for our model, their representations are the only ones that are output from the convolution layer.
+All types of nodes are propagated with information about their neighbors, but since only the user and item nodes' representations are used in the prediction function for our model, their representations are the only ones that are output from the convolution layer.
 % The argument for not also outputting side-information nodes and using these in the prediction function is that, through the convolution, the information from these nodes is integrated into the representations of user and item nodes.
 
 \subsection{Score prediction}\label{subsec:csgcn_is_score_prediction}
@@ -250,7 +249,7 @@ After the addition of the $e_{ic}$ embeddings to the item embedding $e_i$, the c
 \begin{equation}\label{eq:is-score-pred}
   \hat{y}_{(u,i,C')} = \sum_{c \in C'} e_u^T(e_i+e_{ic})
 \end{equation}
-As shown, the context embeddings are not part of the convolution layer but are only used in the score prediction, meaning that they are learned directly through their appearance in the score prediction function.
+As shown in \Cref{eq:is-score-pred}, the context embeddings are not part of the convolution layer but are only used in the score prediction, meaning that they are learned directly through their appearance in the score prediction function.
 
 
 \subsection{Training}\label{subsec:csgcn_is_training}
@@ -259,12 +258,12 @@ For the top-$k$ recommendation task, we utilize negative sampling and Bayesian P
     Loss = \sum_{(u,i,j,C') \in D_T} \sigma(-(\hat{y}_{(u,i,C')} - \hat{y}_{(u,j,C')})) + \lambda_\Theta ||\Theta||^2
 \end{equation}
 where $\Theta$ denotes the trainable model parameters, which in this case are the 0th layer embeddings for items $e_{i}^{(0)}$ and users $e_{u}^{(0)}$, as well as the embeddings for side-information, $e_{us}$ and $e_{is}$, and item-context embeddings $e_{ic}$.\\
-$\lambda$ denotes the regularization coefficient, and $\sigma(\cdot)$ denotes the non-linear activation function, in this case, the softplus function.\\
+$\lambda$ denotes the regularization coefficient, and $\sigma(\cdot)$ denotes the non-linear activation function, in this case, the \texttt{softplus} function.\\
 The regularization term $\lambda_\Theta ||\Theta||^2$ is included to prevent overfitting.\\
 $D_T = \{(u,i,j,C'') | i \in I_{(u,C')} \wedge  j \in I \setminus I_{(u,C')}\}$ denotes the dataset of training tuples, where $I_{(u,C')}$ is the set of observed items that user $u$ has interacted with in context $C'$.
 $\hat{y}$ is the score prediction defined in \Cref{eq:is-score-pred} for respectively a positive interaction $(u,i,C')$ between a user $u$ and an item $i$ in context $C'$, and a negative interaction $(u,j,C')$ for the same user in the same context, where $j$ is an item the user has not interacted with.\\
 The positive interaction is an observed interaction between a user and an item, which can be found in the training set.
-We randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\
+An item that the same user has not interacted with in this given context is randomly sampled as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\
 \\\\
 The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
 For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating the parameter according to the gradient by a step size defined through the learning rate.
@@ -299,12 +298,11 @@ This section describes the second proposed model, CSGCN with Context in Adjacenc
 \subsection{Model intuition}\label{subsec:csgcn_adj_intuition}
 With the second proposed model, context is included in the convolution by adding context nodes to the graph, which will be used to represent interactions between users and items in a given context as a tuple $(u,i,C')$, implying that a user $u$ has interacted with item $i$ in context $C'$.
 The adjacency matrix will now include interactions, which contexts the users have interacted in, and the contexts in which items have been interacted with.
-This approach is unable to capture which specific context a given interaction occurred in.
-It only captures whether or not the user or item has had an interaction in the given context.
+This approach is unable to capture which specific context a given interaction occurred in, it only captures whether or not the user or item has had an interaction in the given context.
 This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single embedding instead of having an embedding for each context value and item pair.
 The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution, since they will be present as neighboring nodes to items and users in the graph.
-By including nodes for the contexts in the convolution, their representations are propagated with information about their neighbors, this being items and users that have interacted in that context, using a normalized sum aggregation.
-This means that with higher-order connectivity, items and users are propagated with information about other users and items that have interacted in the same contexts.
+By including nodes for the contexts in the convolution, their representations are propagated with information about their neighbors, being items and users that have interacted in that context, using a normalized sum aggregation.
+This means that through higher-order connectivity, items and users are propagated with information about other users and items that have interacted in the same contexts.
 Even though the intuition changes, the model architecture is almost the same as defined in \Cref{subsec:csgcn_is_model_architecture}.
 The difference is that the input graph to the convolution layers now includes context nodes, meaning they are also a part of the neighborhood aggregations.
 
@@ -317,8 +315,7 @@ $$E_I \subseteq \{ (x,y) | \: x \in I, \: y \in U \cup IS \cup C \}$$
 A new set of edges is also introduced for the context value nodes in $C$:
 $$E_C \subseteq \{ (x,y) | \: x \in U \cup I, \: y \in C \}$$
 The new set of edges $E_C$ has directed edges from items or users to context nodes, as well as self-connections for each context node.
-\\\\
-For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this gave better performance compared to also propagating information about neighbors to the context embeddings.
+For the convolution, we want to preserve the context's initial embeddings from the first layer through to the last layer, since we found that this performed better compared to also propagating information about neighbors to the context embeddings.
 Therefore, the transposed matrices of $UC$ and $IC$ are not inserted into the adjacency matrix.
 Instead, we add the identity matrix $I$ to the last quadrant such that the context embeddings are only propagated with information about themselves in each convolution.
 The matrix is seen in \Cref{csgcn_adj_adj_mat}.
@@ -341,7 +338,7 @@ For the graph convolution layer of CSGCN-ADJ, the context is incorporated into t
 \begin{equation}\label{eq:csgcn_adj_gc_layer_user}
      e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{ \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
 \end{equation}
-With this convolution, only the number of neighbors of the node that is being propagated information to is used for normalization.
+With this convolution, only the number of neighbors of the node that information is propagated to is used for normalization.
 As a result of context being added as nodes in the graph for CSGCN-ADJ, $\mathcal{N}_{u}$ also contains the contexts that user $u$ has interacted in and $\mathcal{N}_{i}$ also contains the contexts that item $i$ has interacted in.
 Because the identity matrix was added to the adjacency matrix under the context columns, the context embeddings retain their initial values throughout the convolution layer.
 
@@ -360,7 +357,7 @@ Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss functi
 
 \subsection{Implementing CSGCN-ADJ}
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS| + |C|) \times K}$, where $K$ is the embedding size and $C$ is the set of possible context values.
-The embedding matrix for the next layer after layer $l$ for CSGCN-ADJ is obtained by:
+The embedding matrix for the next layer $l+1$ after layer $l$ for CSGCN-ADJ is obtained by:
 \begin{equation}
     Emb^{(l+1)} = (D^{-\frac{1}{2}}A)Emb^{(l)}
 \end{equation}

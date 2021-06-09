@@ -1,7 +1,7 @@
 \section{Experiments}\label{sec:experiments}
 Experiments are conducted in this section in order to answer the following research questions:
 \begin{itemize}
-    \item \textbf{RQ1}: How do the CSGCN models compare to state-of-the-art methods for the task of context-aware list prediction?
+    \item \textbf{RQ1}: How do the CSGCN models compare to state-of-the-art methods for the task of context-aware recommendation list prediction?
     \item \textbf{RQ2}: Can the CSGCN models be used to make non-context specific recommendations?
     \item \textbf{RQ3}: Does side-information improve results for context-aware recommendations?
 \end{itemize}
@@ -52,7 +52,7 @@ However, it contains the following contexts:
 
 \subsubsection*{Yelp-NC and Yelp-ON}
 The two Yelp datasets, Yelp-NC and Yelp-ON, are subsets of the public Yelp dataset \cite{yelp}, where we take the subset of items located in respectively North Carolina (NC) and Ontario (ON).
-Both Yelp datasets have been pruned such that it includes only users with at least 10 interactions, to facilitate generating a stratified data split where each user in the test set is also in the training set.\\
+Both Yelp datasets have been pruned such that they include only users with at least 10 interactions, to facilitate generating a stratified data split where each user in the test set is also in the training set.\\
 We use the following side-information about users for both datasets:
 \begin{itemize}
     \item Yelping since (Year)
@@ -66,8 +66,8 @@ The contextual information is a timestamp.
 \subsection{Context dimension selection}
 When selecting context dimensions to use from the dataset, some of the context information can benefit from being discretized.
 This is the case for contexts such as a timestamp, as the information about the interaction is too specific for the model to be able to learn anything valuable from it.
-This is because there are often not enough interactions for a given context to be able to learn the effect that it has if it is provided in too much detail since it creates too much sparsity. 	 
-For timestamps, the problem would occur since each second or minute is modeled differently, meaning the context would only match for the exact same date and second.
+This is because there are often not enough interactions for a given context to be able to learn its effect if it is provided in too much detail, as that creates too much sparsity. 	 
+For timestamps, this problem would occur since each second or minute is modeled differently, meaning the context would only match for the exact same date and second.
 Therefore, we discretize context that can have too many different values to avoid these sparsity problems.
 Since most of the datasets include a timestamp as contextual information, we discretize these into the following context dimensions:
 \begin{itemize}
@@ -91,7 +91,7 @@ For the side-information, we use the dimensions mentioned in \Cref{subsec:experi
 The Yelp datasets provide a "yelping since" dimension, which is a timestamp for the creation of the user.
 This is discretized to include only the year that the user has been created.
 \\
-Additionally, the dimension "fans" is discretized into four groups:
+Additionally, the dimension "fans" is discretized into four intervals:
 \begin{itemize}
     \item $< 50$ fans
     \item $50 - 100$ fans
@@ -124,8 +124,8 @@ To compare the performance of the models in a non-context specific setting, we c
     %\item Factorization Machine \cite{fmrendle}
 \end{itemize}
 NGCF is a model proposed by Wang et al. as a way to utilize the GCN model proposed in \cite{KOrderConnectivity} for recommendation purposes.
-It makes use of all three parts of a GCN described in \Cref{sec:preliminaries}, and utilizes BPR loss with negative sampling to use it for a ranking purpose.
-LightGCN was later proposed by the same authors and is mainly focused on performing an ablation study similar to the one done in \cite{SimplifyingGCN}, where they remove the linear transformation and non-linear activation between layers to provide a simpler model, while still presenting competitive results.
+It makes use of all three parts of a GCN described in \Cref{sec:preliminaries}, and utilizes BPR loss with negative sampling for ranking purposes.
+LightGCN was later proposed by the same authors and is mainly focused on performing an ablation study similar to the one done in \cite{SimplifyingGCN}, where the linear transformation and non-linear activation between layers are removed to provide a simpler model, while still presenting competitive results.
 Both the CSGCN models and LightGCN extend the codebase of NGCF, so they are naturally included in the comparison to show that adding side-information and contextual information hopefully improves the accuracy of these methods.\\
 KGAT is a state-of-the-art graph-based method that utilizes side-information in the form of a knowledge graph.
 BPR utilizes implicit feedback to generate a personalized top-$k$ list of items using the proposed BPR-optimizer to train the model, providing a simpler method for comparison.
@@ -153,8 +153,8 @@ A single context cannot be guaranteed for the user for all ground truths, and th
 \\\\
 For the leave-one-out method, the newest interaction for each user is removed from the training set and used as the test set, as per \cite{CFM, BPR}.
 This means that when a top-$k$ list is produced for a user, only a single item amongst the recommended items can be relevant, and thus there is only one context within which the ground truth had occurred.
-This approach is largely inspired by sequential recommendation systems, where you leave out the newest interaction from each user and try to predict the next item in the sequence based on the sequence of the previous interactions by the user \cite{aggarwal2016recommender}.\\
-This approach limits the number of different metrics that can be used for this type of evaluation method due to the single interaction available for testing.
+This approach is largely inspired by sequential recommendation systems, where the newest interaction from each user is left out and the next item in the sequence is predicted based on the sequence of the previous interactions by the user \cite{aggarwal2016recommender}.\\
+This approach limits the number of different metrics that can be used for this evaluation method due to the single interaction available for testing.
 \\\\
 For comparisons we conduct an experiment using fold-out for models that produce a top-$k$ recommendation list and conduct a separate leave-one-out evaluation for models that produce a context-aware top-$k$ recommendation list. 
 The metrics used for the fold-out evaluation are Precision, Recall, and Normalized Discounted Cumulative Gain (NDCG), while the leave-one-out experiments report Hit Rate (HR) and Mean Reciprocal Rank (MRR).
@@ -175,7 +175,7 @@ Precision defines the proportion of relevant items among the predicted items, wh
     Recall@N(L) = \frac{1}{|U|} \sum\limits_{u \in U} \frac{|L(u) \cap T(u)|}{|T(u)|}
 \end{equation}
 Another metric to be used is NDCG \cite{dcgpaper}.
-Assuming each user $u$ has a gain $g_{ui}$ from being recommended item $i$, then the average DCG for a list of $J$ items is defined in \Cref{eqn:dcg}, where $i_j$ is the item at position $j$ in the list, and the logarithm base $b$ is $2$ to ensure all positions are discounted.
+Assuming each user $u$ has a gain $g_{ui}$ from being recommended item $i$, the average DCG for a list of $J$ items is defined in \Cref{eqn:dcg}, where $i_j$ is the item at position $j$ in the list, and the logarithm base $b$ is $2$ to ensure all positions are discounted.
 This metric rewards lists that frontload relevant items.
 \begin{equation}
     \label{eqn:dcg}
@@ -187,24 +187,24 @@ NDCG is defined in \Cref{eqn:ndcg}, where $iDCG$ is the ideal DCG, which is defi
     NDCG@N = \frac{DCG}{iDCG}
 \end{equation}
 MRR \cite{MRR} is employed for the leave-one-out evaluation, defined in \Cref{eqn:mrr}.
-For each user $u$ in $U$, MRR is calculated by finding the rank $r_u$ of the first relevant recommendation for each list, and then taking the mean of these ranks.
-For example, if we recommend three items to a user, and the third recommendation is relevant, we get a rank of $1/3$ for this user.
-If the recommendation for another user contains a relevant item as the first item of the list, we assign a score of $1/1$.
-With this, we get a final MRR@3 score of $(1/3 + 1/1) / 2 = 0.66$.
+For each user $u \in U$, MRR is calculated by finding the rank $r_u$ of the first relevant recommendation for each list, and then taking the mean of these ranks.
+For example, if three items are recommended to a user and the third recommendation is relevant, a rank of $1/3$ is attained for this user.
+If the recommendation for another user contains a relevant item as the first item of the list, a score of $1/1$ is attained.
+With this, the final MRR@3 score is $(1/3 + 1/1) / 2 = 0.66$.
 \begin{equation}
     \label{eqn:mrr}
     MRR@N = \frac{1}{|U|} \sum\limits_{u \in U}\frac{1}{r_u}
 \end{equation}
 The final metric used is HR.
 If a relevant item for a user appears in the top-$k$ list, the $HR(u)$ for that user is $1$, otherwise it is $0$.
-The final HR score is then calculated by taking the mean of all users' individual HR scores, as seen in \Cref{eqn:hr}.
+The final HR score is calculated by taking the mean of all users' individual HR scores, as seen in \Cref{eqn:hr}.
 \begin{equation}
     \label{eqn:hr}
     HR@N = \frac{1}{|U|} \sum\limits_{u \in U}HR(u)
 \end{equation}
 
 \subsection{Performance Comparison with Context (RQ1)}\label{subsec:rq1}
-For the first research question we want to examine how the CSGCN models compare to state-of-the-art methods within context-aware list prediction.
+For the first research question we want to examine how the CSGCN models compare to state-of-the-art methods within context-aware recommendation list prediction.
 To investigate this, the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a list is produced based on the context that this interaction took place in.
 For the tables investing results in all of the section pertaining to the research questions, \Cref{subsec:rq1,subsec:rq2,subsec:rq3}, we use the convention of highlighting the best performing method through bold text, and highlighting the second best performing method that is not either of the CSGCN methods through underlined text.
 \begin{table*}[]
@@ -243,7 +243,7 @@ Additionally, the runtime of CFM is significantly higher than any of the other m
 Running 300 epochs on an NVIDIA DGX-2 cloud takes several days, while CSGCN-ADJ can perform the same amount of epochs in just a matter of hours.
 Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has been run only once with the settings presented in the original paper.\\
 We are not able to fairly compare with the results presented in the CFM paper \cite{CFM}, since they perform a different split of the data to perform their leave-one-out evaluation.
-According to their paper, they take the latest interaction of each user - but looking at the actual datasets they provide, their test datasets are significantly larger than the number of users, meaning that their evaluation must be different from ours.
+According to their paper, they take the latest interaction of each user - but looking at the actual datasets they provide, their test datasets are significantly larger than the number of users, meaning that their evaluation must be different.
 \\
 In conclusion, the performance of the CSGCN models depends on the dataset characteristics, and the models perform significantly worse than simpler models on the Frappe dataset.
 
@@ -251,12 +251,12 @@ In conclusion, the performance of the CSGCN models depends on the dataset charac
 Since the CSGCN models use context to generate a top-$k$ list in each context for each user, we argue that this context information can be useful even for non-context-specific settings.
 Imagine that your system is recommending businesses to users, and you have a business that is only open on Christmas.
 On Christmas night, millions upon millions of users interact with this item, but it is never interacted with in any other context.
-In a regular RS this would be seen as a popular item, since a lot of users have interacted with it.
+In a regular RS this would be considered a popular item, since a lot of users have interacted with it.
 However, looking at the context, we are able to infer that it is only in this exact context it is popular.
 This leads to the item having a high likelihood of being recommended in exactly one context, but a low likelihood in any other.
-With this in mind, we will try to answer RQ2 about whether the models can be used to make non-context specific recommendations through aggregations by investigating various types of aggregations of the scores.
-The simplest solution would be to take the highest score for an item, regardless of the context that it was recommended for.
-However, this may prove problematic, since an item may score highly in a single context but very low in any other context, as in the example before.\\
+With this in mind, we will try to answer RQ2 about whether the models can be used to make non-context specific recommendations through aggregations by investigating various types of aggregations of the scores as well as through a performance comparison with several methods.
+The simplest solution to aggregate scores would be to take the highest score for an item, regardless of the context that it was recommended for.
+However, this may prove problematic, since an item may score highly in a single context but poorly in any other context, as in the example before.\\
 Instead, we propose to take an average score across all contexts.
 With this, the item that is only interacted with in exactly one context has its score lowered by a factor of the number of contexts observed.
 
@@ -313,7 +313,7 @@ With this, the item that is only interacted with in exactly one context has its 
                         & F1@50        & 0.2797       & 0.2782       & \textbf{0.2907} & 0.2608 & 0.1013          & 0.2819 & {\ul{0.2905}}    & 0.07\% \\ \bottomrule
 \end{tabular}%
 }
-\caption{Results for the aggregated results.}
+\caption{Results for the non-context-specific experiment.}
 \label{tab:aggregatedresults}
 \end{table*}
 The results for the non-context-specific recommendation task can be seen in \Cref{tab:aggregatedresults}.
@@ -384,13 +384,13 @@ All of these results are based on using the mean aggregator, but for the sake of
 \end{figure}
 \Cref{fig:aggregation_effect} shows how the choice of aggregation affects the CSGCN-IS model.
 This shows that using a mean aggregation function provides the best results, followed by the median.
-The simple solution of taking the lowest or highest score across the contexts is shown at the bottom of the graph.\\
+The simple solution of taking the lowest or highest score across the contexts performs the worst.\\
 This supports the previous assumption that while a single item might be more likely to be recommended in one context, it does not necessarily mean that it is a good recommendation overall, which is better captured through the mean or median aggregations.\\
 While the results are only shown for NDCG@20 for this dataset, they have proven consistent across all the metrics.
 
 \subsubsection*{Ablation study for non-contextual recommendation}
-To test whether context and side-information actually increase performance in a non-context specific setting, CSGCN-ADJ is run using different inputs for the datasets Yelp-NC and ML1M and the performance is measured with NDCG@20.
-First of all, CSGCN-ADJ is run with both side-information and context. 
+To test whether context and side-information actually increase performance in a non-context specific setting, CSGCN-ADJ is evaluated using different inputs for the datasets Yelp-NC and ML1M and the performance is measured with NDCG@20.
+First of all, CSGCN-ADJ is evaluated with both side-information and context. 
 Then side-information is removed, followed by removing context, and finally both context and side-information are removed.
 \begin{figure*}[t!]
     \captionsetup{justification=centering}
@@ -533,11 +533,11 @@ On \Cref{fig:ablation_study_non_context_2} the NDGC@20 results of ML1M are shown
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
 Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
 Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
-Side-information, however, was able to increase performance of the model in a non-context specific setting on YelpNC, but for ML1M, it only makes the results worse compared to having no extra input.
+Side-information, however, was able to increase performance of the model in a non-context specific setting on Yelp-NC, but for ML1M, it only makes the results worse compared to having no extra input.
 
 \subsection{Ablation study of model extensions (RQ3)}\label{subsec:rq3}
-To investigate whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.
-In the study, the CSGCN models were run with and without side-information to test the effect it has on the performance.
+To investigate whether side-information improves the results for context-aware recommendation, we performed an ablation study on the Yelp-NC dataset.
+In the study, the CSGCN models were evaluated with and without side-information to test the effect it has on the performance.
 Additionally, the experiment was conducted on the context input to examine how much it affects the performance in a context-specific setting.
 \begin{figure*}[t!]
     \captionsetup{justification=centering}
@@ -680,13 +680,13 @@ Additionally, the experiment was conducted on the context input to examine how m
     \caption{The performance on HR@20 of CSGCN-IS on the Yelp-NC dataset with different types of input.}
     \label{subfig:ablation_study_context_specific_2}
     \end{subfigure}
-    \caption{Ablation study for the input of CSGCN-ADJ and CSGCN-IS on Yelp-NC.}
+    \caption{Ablation study for the input of CSGCN-ADJ and CSGCN-IS on Yelp-NC in the context-specific setting.}
 \end{figure*}
 \Cref{subfig:ablation_study_context_specific_1} shows the HR@20 for CSGCN-ADJ on Yelp-NC with different combinations of input. 
-The results show that when side-information is included in the input for CSGCN-ADJ it does not change the performance much compared to excluding it.
+The results show that when side-information is included in the input for CSGCN-ADJ it does not influence the performance much compared to excluding it.
 Another interesting thing to note is how the model performs worse when context is included in the input, even though it is a context-specific setting.
 This could be because the CSGCN-ADJ model does not actually model context in a way that fits the definition of context defined in \Cref{subsec:define_context_sideinfo}.
-In CSGCN-ADJ, context can instead be viewed as a type of side-information, since it is modelled in a similar way.
+In CSGCN-ADJ, context can instead be viewed as a type of side-information since it is modelled in a similar way.
 Each user and item node is connected with the context value nodes of the contexts they have interacted in, just as they are connected to the nodes of their side-information values.
 \\\\
 \Cref{subfig:ablation_study_context_specific_2} shows HR@20 for CSGCN-IS on Yelp-NC with different inputs.
@@ -695,7 +695,8 @@ This shows that CSGCN-IS is able to use the side-information to better connect u
 We also see that for this model, including context in the input does make a significant different for the performance in a context-specific setting.
 This is because context is modelled with finer granularity than in CSGCN-ADJ, meaning that each item and context value combination has an embedding.
 The result of this finer granularity is that context can have different effects on the various items, resulting in more accurate context-specific recommendations.
+\\\\
 In general, side-information can have a slight effect on the results depending on the type of model.
 However, the context seems to have a lot larger effect on the performance of the models, as would be expected for context-aware recommendation.
-Additionally, it may be worth noting that the context used for these experiments is mainly based on discretized values from timestamps, which might not be a useful contextual dimension due to timezone differences.
+Additionally, it may be worth noting that the context used for these experiments is mainly based on discretized values from timestamps, which might not be a useful contextual dimension due to time zone differences.
 We do not see any overwhelming evidence that side-information is able to improve context-aware recommendations.
