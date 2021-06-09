@@ -46,7 +46,7 @@ Feature propagation averages features in the local neighborhood of a node, such 
 This is done for each node in the graph.
 The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding $x_0$ is updated by multiplying it with a weight $w_0$, thus becoming $x_1$.
 Doing this allows the network to find the best fitting set of parameters through the linear transformation by training through optimizing a loss function \cite{RecentConvNets}.
-Finally, a non-linear activation function such as \textit{ReLU} is applied to the output, allowing it to better fit real world datasets.
+Finally, a non-linear activation function such as \texttt{ReLU} is applied to the output, allowing it to better fit real-world datasets.
 \\\\
 While traditional GCN models contain all three components, several papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
 Wu et al. present the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs \cite{SimplifyingGCN}.
