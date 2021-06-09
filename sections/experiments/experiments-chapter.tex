@@ -206,7 +206,7 @@ The final HR score is then calculated by taking the mean of all users' individua
 \subsection{Performance Comparison with Context (RQ1)}\label{subsec:rq1}
 For the first research question we want to examine how the CSGCN models compare to state-of-the-art methods within context-aware list prediction.
 To investigate this, the leave-one-out method presented in \Cref{subsec:evalandmetrics} is used, such that a single interaction is left out for each user, and a list is produced based on the context that this interaction took place in.
-
+For the tables investing results in all of the section pertaining to the research questions, \Cref{subsec:rq1,subsec:rq2,subsec:rq3}, we use the convention of highlighting the best performing method through bold text, and highlighting the second best performing method that is not either of the CSGCN methods through underlined text.
 \begin{table*}[]
 \centering
 \resizebox{\textwidth}{!}{%
@@ -245,10 +245,9 @@ Due to the sheer amount of time required to fine-tune the hyperparameters, CFM h
 We are not able to fairly compare with the results presented in the CFM paper \cite{CFM}, since they perform a different split of the data to perform their leave-one-out evaluation.
 According to their paper, they take the latest interaction of each user - but looking at the actual datasets they provide, their test datasets are significantly larger than the number of users, meaning that their evaluation must be different from ours.
 \\
-In conclusion, the performance of the CSGCN models depends on the dataset characteristics.
-While the models perform significantly worse than simpler models on the Frappe dataset, we would argue that this dataset is not an accurate representation of a real world scenario.
+In conclusion, the performance of the CSGCN models depends on the dataset characteristics, and the models perform significantly worse than simpler models on the Frappe dataset.
 
-\subsection{Performance Comparison without Context (RQ2)}
+\subsection{Performance Comparison without Context (RQ2)}\label{subsec:rq2}
 Since the CSGCN models use context to generate a top-$k$ list in each context for each user, we argue that this context information can be useful even for non-context-specific settings.
 Imagine that your system is recommending businesses to users, and you have a business that is only open on Christmas.
 On Christmas night, millions upon millions of users interact with this item, but it is never interacted with in any other context.
@@ -536,7 +535,7 @@ Side-information and context are not able to improve the performance of CSGCN-AD
 Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
 Side-information, however, was able to increase performance of the model in a non-context specific setting on YelpNC, but for ML1M, it only makes the results worse compared to having no extra input.
 
-\subsection{Ablation study of model extensions (RQ3)}
+\subsection{Ablation study of model extensions (RQ3)}\label{subsec:rq3}
 To investigate whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.
 In the study, the CSGCN models were run with and without side-information to test the effect it has on the performance.
 Additionally, the experiment was conducted on the context input to examine how much it affects the performance in a context-specific setting.
