@@ -133,18 +133,6 @@ Since there are no interactions between users and users, the first quadrant is a
 This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between users and items and their side-information in the graph, allowing it to be used in order to gain higher-order connectivity in the convolution layers.\\
 It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
-\\\\
-The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, except for the adjacency matrix being modified as described above.
-Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS|) \times K}$, where $K$ is the embeddings size, then the embedding matrix for the next layer $l+1$ can be obtained by:
-\begin{equation}
-    Emb^{(l+1)} = (D^{-\frac{1}{2}}AD^{-\frac{1}{2}})Emb^{(l)}
-\end{equation}
-where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| \times (|U| + |I| + |US| + |IS|)$ degree matrix. 
-Finally, the embeddings from each layer are combined into the final embeddings that are used in the prediction.
-\begin{equation}\label{eq:layer_comb}
-    Emb = \sum_{l=0}^{L} \frac{1}{L} Emb^{(l)}
-\end{equation}
-The combination of the layers is seen on \Cref{eq:layer_comb}, and it shows that the final embeddings are an average of the embeddings from each layer.
 
 \subsection{Convolution layers}\label{subsec:csgcn_is_conv_layer}
 A major part of the model is the convolution layer where the user and item embeddings are being propagated with information about their neighbor nodes' representations by using an aggregation function, which in this case is a normalized sum.
@@ -290,6 +278,19 @@ However, there is no theory that explains how to decide which optimizer to use \
 Unlike simpler optimizers that maintain a single learning rate throughout training, such as stochastic gradient descent, Adam utilizes an adaptive per-parameter learning rate by estimating the mean and the variance of the gradient and the squared gradient \cite{AdamOptimizer}.
 Additionally, Adam is reliable for calculating gradients in sparse situations, which is an important property for RS, since they often deal with sparse data.
 
+\subsection{Implementing CSGCN-IS}
+The matrix form of CSGCN-IS is similar to the one described in \cite{LightGCN}, except for the adjacency matrix being modified as described above.
+Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS|) \times K}$, where $K$ is the embeddings size, then the embedding matrix for the next layer $l+1$ can be obtained by:
+\begin{equation}
+    Emb^{(l+1)} = (D^{-\frac{1}{2}}AD^{-\frac{1}{2}})Emb^{(l)}
+\end{equation}
+where $l$ is the current layer and $D$ is a $(|U| + |I| + |US| + |IS| \times (|U| + |I| + |US| + |IS|)$ degree matrix. 
+Finally, the embeddings from each layer are combined into the final embeddings that are used in the prediction.
+\begin{equation}\label{eq:layer_comb}
+    Emb = \sum_{l=0}^{L} \frac{1}{L} Emb^{(l)}
+\end{equation}
+The combination of the layers is seen on \Cref{eq:layer_comb}, and it shows that the final embeddings are an average of the embeddings from each layer.
+
 \section{CSGCN-ADJ}\label{sec:csgcn_adj}
 This section describes the second proposed model, CSGCN with Context in Adjacency Matrix (CSGCN-ADJ).
 
@@ -328,6 +329,34 @@ The matrix is seen in \Cref{csgcn_adj_adj_mat}.
     0 & 0 & 0 & 0 & I
     \end{bmatrix}
 \end{equation}
+
+\subsection{Convolution layers}\label{subsec:csgcn_adj_conv_layer}
+For the graph convolution layer of CSGCN-ADJ, the context is incorporated into the aggregation of neighbors seen in \Cref{eq:csgcn_adj_gc_layer_item,eq:csgcn_adj_gc_layer_user}
+\begin{equation}\label{eq:csgcn_adj_gc_layer_item}
+    e_{i}^{(l+1)}=\sum_{in\in \mathcal{N}_{i}}\frac{1}{\sqrt{|\mathcal{N}_{i}|} }e_{in}^{(l)}
+\end{equation}
+
+\begin{equation}\label{eq:csgcn_adj_gc_layer_user}
+     e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{ \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
+\end{equation}
+With this convolution, only the number of neighbors of the node that is being propagated information to is used for normalization.
+As a result of context being added as nodes in the graph for CSGCN-ADJ, $\mathcal{N}_{u}$ also contains the contexts that user $u$ has interacted in and $\mathcal{N}_{i}$ also contains the contexts that item $i$ has interacted in.
+Because the identity matrix was added to the adjacency matrix under the context columns, the context embeddings retain their initial values throughout the convolution layer.
+
+\subsection{Score prediction and training}\label{subsec:csgcn_adj_score_pred}
+For the score prediction of CSGCN-ADJ, we draw inspiration from factorization machines and use an FM-like predictor function that considers pair-wise interactions between users, items and context values to provide a recommendation.
+To do this, we use the prediction function defined in \Cref{eq:csgcn_adj_scorepred}:
+\begin{equation}\label{eq:csgcn_adj_scorepred}
+    \hat{y}_{uic} = e_u^Te_i + \sum_{c \in C'}e_u^Te_{c} + \sum_{c \in C'}e_i^Te_{c}
+\end{equation}
+Where $e_{c}$ is the embedding representation of the context value $c$, $e_i$ is the embedding of the item $i$ and $e_u$ is the embedding of the user $u$.
+In this predictor function, we calculate the pairwise interaction between each of the embeddings.
+The self-interactions are not calculated since they do not contribute to the score prediction.
+The embeddings used for items and users are the ones output by the convolution layer while the context embeddings are the initial values before convolution, since they are only propagated with information about themselves.
+\\
+Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.
+
+\subsection{Implementing CSGCN-ADJ}
 Let the embedding matrix for the 0th layer be $Emb^{(0)} \in \mathbb{R}^{(|U| + |I| + |US| + |IS| + |C|) \times K}$, where $K$ is the embedding size and $C$ is the set of possible context values.
 The embedding matrix for the next layer after layer $l$ for CSGCN-ADJ is obtained by:
 \begin{equation}
@@ -396,29 +425,3 @@ While this graph only shows the results for NDCG@20 on the Yelp-NC dataset, the 
     \label{fig:normalization_graph}
 \end{figure}
 The final embedding matrix after $l$ layers is obtained in the same way as CSGCN-IS where we take the mean of the nodes' representations at each layer.
-
-\subsection{Convolution layers}\label{subsec:csgcn_adj_conv_layer}
-For the graph convolution layer of CSGCN-ADJ, the context is incorporated into the aggregation of neighbors seen in \Cref{eq:csgcn_adj_gc_layer_item,eq:csgcn_adj_gc_layer_user}
-\begin{equation}\label{eq:csgcn_adj_gc_layer_item}
-    e_{i}^{(l+1)}=\sum_{in\in \mathcal{N}_{i}}\frac{1}{\sqrt{|\mathcal{N}_{i}|} }e_{in}^{(l)}
-\end{equation}
-
-\begin{equation}\label{eq:csgcn_adj_gc_layer_user}
-     e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{ \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
-\end{equation}
-With this convolution, only the number of neighbors of the node that is being propagated information to is used for normalization.
-As a result of context being added as nodes in the graph for CSGCN-ADJ, $\mathcal{N}_{u}$ also contains the contexts that user $u$ has interacted in and $\mathcal{N}_{i}$ also contains the contexts that item $i$ has interacted in.
-Because the identity matrix was added to the adjacency matrix under the context columns, the context embeddings retain their initial values throughout the convolution layer.
-
-\subsection{Score prediction and training}\label{subsec:csgcn_adj_score_pred}
-For the score prediction of CSGCN-ADJ, we draw inspiration from factorization machines and use an FM-like predictor function that considers pair-wise interactions between users, items and context values to provide a recommendation.
-To do this, we use the prediction function defined in \Cref{eq:csgcn_adj_scorepred}:
-\begin{equation}\label{eq:csgcn_adj_scorepred}
-    \hat{y}_{uic} = e_u^Te_i + \sum_{c \in C'}e_u^Te_{c} + \sum_{c \in C'}e_i^Te_{c}
-\end{equation}
-Where $e_{c}$ is the embedding representation of the context value $c$, $e_i$ is the embedding of the item $i$ and $e_u$ is the embedding of the user $u$.
-In this predictor function, we calculate the pairwise interaction between each of the embeddings.
-The self-interactions are not calculated since they do not contribute to the score prediction.
-The embeddings used for items and users are the ones output by the convolution layer while the context embeddings are the initial values before convolution, since they are only propagated with information about themselves.
-\\
-Training of CSGCN-ADJ is similar to that of CSGCN-IS, using the same loss function and the Adam optimizer.

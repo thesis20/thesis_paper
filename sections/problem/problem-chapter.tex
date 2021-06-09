@@ -25,7 +25,7 @@ $$c = winter$$
 \textbf{Side-information}:
 The side-information definition used is based on the description in \cite{SideInfoDefinition}, where different types of side-information include information such as user networks, user profiles, and item descriptors.
 For users, this could be information like their age or occupation, which may have an influence on their preferences.
-For items, it is information about the item such as the genre of a movie, which may be helpful when considering higher-order connectivity since it can help capture user preferences, such as a user displaying a preference for action movies.
+For items, it is information about the item such as the genre of a movie, which may be helpful since it can help capture user preferences, such as a user displaying a preference for action movies.
 % For side-information, the term \textit{field} is used to describe, for example, the category \textit{location}. Each field has a number of values, known as \textit{features}, where a value could be \textit{Denmark} for the field \textit{location}.
 % Side-information can thus be represented as one-hot or multi-hot feature vectors, depending on whether or not a field can have one or multiple features.
 % \begin{equation}
@@ -109,8 +109,10 @@ In graph-based CF RS, we typically represent data in the form of a bipartite gra
 This bipartite graph consists of two distinct sets of nodes: Users $U$ and items $I$, and a set of undirected edges $E$ that connect the user and item if they have interacted with each other.
 This graph can also be represented as an adjacency matrix, which is useful for the implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the embeddings of the graph nodes.
 This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.\\
-Finally, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the representations by the number of neighbors, to avoid exploding or vanishing gradients.
-This step can be repeated multiple times to gain higher-order connectivity, meaning that information is passed from neighboring nodes further away from the central node \cite{SimplifyingGCN, KOrderConnectivity}.
+This could however cause issues in terms of exploding or vanishing gradients, leading to scenarios where the method ends up unable to learn.
+To mitigate this, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the entries in the adjacency matrix by the number of neighbors, to ensure the gradients do not grow too large or small.
 The graph seen in \Cref{fig:bipartite-graph} can be extended to also include nodes that represent side-information, which are connected to the user and item nodes.
-If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution such that information can be passed from these nodes as well.\\\\
+If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution such that information can be passed from these nodes as well.
+Higher-order connectivity can be gained by repeatedly doing convolution operations in multiple layers, meaning information is passed from neighboring nodes further away from the central node \cite{SimplifyingGCN, KOrderConnectivity}, based on the number of layers.
+This allows the collaborative signal to be influenced by nodes that are further from the central node.\\\\
 With this preliminary knowledge in place, we will look at the two proposed models in the following sections.
