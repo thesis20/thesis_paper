@@ -15,11 +15,11 @@ To test the models on datasets with varying sizes and density, the following dat
 \scriptsize
 \begin{tabular}{lcccccc}\toprule
 \textbf{Dataset} &\textbf{User \#} &\textbf{Item \#} &\textbf{Interaction \#} &\textbf{Context \#} &\textbf{Sideinfo \#} \\\cmidrule{1-6}
-ML1m &6,040 &3,377 &999,416 &2 &4 \\\cmidrule{1-6}
+ML1m &6,040 &3,377 &999,416 &1 &4 \\\cmidrule{1-6}
 %ML100k &943 &1,682 &100,000 &4 &4 \\\cmidrule{1-6}
 Frappe &546 & 821 &85,541 &6 &1 \\\cmidrule{1-6}
-Yelp-NC &2,274 &2,140 &130,627 &1 &3 \\\cmidrule{1-6}
-Yelp-ON &5,185 &5,566 &332,291 &1 &3 \\\midrule
+Yelp-NC &2,274 &2,140 &130,627 &1 &4 \\\cmidrule{1-6}
+Yelp-ON &5,185 &5,566 &332,291 &1 &4 \\\midrule
 \bottomrule
 \end{tabular}
 \caption{Statistics of the datasets.}\label{tab:datasetstats}
@@ -64,6 +64,11 @@ For the Yelp-NC dataset, this is one or more of 80 different categories, and 75 
 The contextual information is a timestamp.
 
 \subsection{Context dimension selection}
+When selecting context dimensions to use from the dataset, some of the context information can benefit from being discretized.
+This is the case for contexts such as a timestamp, as the information about the interaction is too specific for the model to be able to learn anything valuable from it.
+This is because there are often not enough interactions for a given context to be able to learn the effect that it has if it is provided in too much detail since it creates too much sparsity. 	 
+For timestamps, the problem would occur since each second or minute is modeled differently, meaning the context would only match for the exact same date and second.
+Therefore, we discretize context that can have too many different values to avoid these sparsity problems.
 Since most of the datasets include a timestamp as contextual information, we discretize these into the following context dimensions:
 \begin{itemize}
     \item Month
@@ -105,7 +110,7 @@ In the experiments, the CSGCN models are compared against the following methods 
 \end{itemize}
 FM is a relatively simple model that models all interactions between variables using factorized parameters.
 It is often used for comparison in context-aware papers, since it is able to predict a score based on information about a given interaction including contextual information.
-CFM uses a combination of a CNN and an FM, which is similar to our method in that it is capable of producing a context-aware top-$k$ recommendation list.
+CFM uses a combination of a CNN and an FM, which is similar to CSGCN in that it is capable of producing a context-aware top-$k$ recommendation list.
 It is included since it is an alternative way to handle contextual information in CNNs.
 We also compare against NFM, which uses a multi-layer perceptron (MLP) on top of the factorization machine to learn higher-order interaction signals.
 \\\\
@@ -132,7 +137,7 @@ The learning rate is either set to the value presented in the respective papers,
 The batch size is set as 1024 for all datasets except Frappe, where it is set to 512 due to its size.
 The embedding size is set to 64, and for the models using regularization terms, this is searched between $[0.01, 0.001, 0.0001]$ if a default value is not provided.
 For CFM and NFM we follow the approach presented in the original papers and feed them with weights from a pretrained FM model which has run for 500 epochs with the settings presented in the CFM paper.
-All methods are run for a max of 1000 epochs with an early stopping mechanism triggered when the HR@20 or Recall@20 has not improved for 5 evaluations (100 consecutive steps), except for CFM which is run for 300 epochs based on the default values.
+All methods are run for a maximum of 1000 epochs with an early stopping mechanism triggered when the HR@20 or Recall@20 has not improved for 5 evaluations (100 consecutive steps), except for CFM which is run for 300 epochs based on the default values.
 
 
 \subsection{Evaluating the models}\label{subsec:evalandmetrics}
@@ -149,7 +154,7 @@ A single context cannot be guaranteed for the user for all ground truths, and th
 For the leave-one-out method, the newest interaction for each user is removed from the training set and used as the test set, as per \cite{CFM, BPR}.
 This means that when a top-$k$ list is produced for a user, only a single item amongst the recommended items can be relevant, and thus there is only one context within which the ground truth had occurred.
 This approach is largely inspired by sequential recommendation systems, where you leave out the newest interaction from each user and try to predict the next item in the sequence based on the sequence of the previous interactions by the user \cite{aggarwal2016recommender}.\\
-This approach limits the number of different metrics that can be used for this type of evaluation method.
+This approach limits the number of different metrics that can be used for this type of evaluation method due to the single interaction available for testing.
 \\\\
 For comparisons we conduct an experiment using fold-out for models that produce a top-$k$ recommendation list and conduct a separate leave-one-out evaluation for models that produce a context-aware top-$k$ recommendation list. 
 The metrics used for the fold-out evaluation are Precision, Recall, and Normalized Discounted Cumulative Gain (NDCG), while the leave-one-out experiments report Hit Rate (HR) and Mean Reciprocal Rank (MRR).
@@ -183,6 +188,9 @@ NDCG is defined in \Cref{eqn:ndcg}, where $iDCG$ is the ideal DCG, which is defi
 \end{equation}
 MRR \cite{MRR} is employed for the leave-one-out evaluation, defined in \Cref{eqn:mrr}.
 For each user $u$ in $U$, MRR is calculated by finding the rank $r_u$ of the first relevant recommendation for each list, and then taking the mean of these ranks.
+For example, if we recommend three items to a user, and the third recommendation is relevant, we get a rank of $1/3$ for this user.
+If the recommendation for another user contains a relevant item as the first item of the list, we assign a score of $1/1$.
+With this, we get a final MRR@3 score of $(1/3 + 1/1) / 2 = 0.66$.
 \begin{equation}
     \label{eqn:mrr}
     MRR@N = \frac{1}{|U|} \sum\limits_{u \in U}\frac{1}{r_u}
@@ -216,10 +224,10 @@ Dataset & Metric & FM & \multicolumn{1}{c}{NFM} & \multicolumn{1}{c}{CFM} & \mul
                         & HR@50  & 0.0133  & \ul{0.0152}  & 0.0133 & 0.0714 & \textbf{0.0997}  & 251.32\% \\
                         & MRR@20 & 0.0019  & \ul{0.0021}  & 0.0019 & 0.0091 & \textbf{0.0123}  & 485.71\% \\
                         & MRR@50 & 0.0020  & \ul{0.0023}  & 0.0021 & 0.0101 & \textbf{0.0137}  & 495.65\% \\ \hline
-\multirow{4}{*}{ML1M}   & HR@20  & 0.0874  & \ul{0.0937}  &        & 0.1402 & \textbf{0.1652}  & 76.31\% \\
-                        & HR@50  & 0.1856  & \ul{0.2005}  &        & 0.2603 & \textbf{0.2982}  & 48.73\% \\
-                        & MRR@20 & 0.0199  & \ul{0.0209}  &        & 0.0336 & \textbf{0.0372}  & 77.99\% \\
-                        & MRR@50 & 0.0229  & \ul{0.0242}  &        & 0.0373 & \textbf{0.0413}  & 70.66\%
+\multirow{4}{*}{ML1M}   & HR@20  & 0.0874  & 0.0937  & \ul{0.0974} & 0.1402 & \textbf{0.1652}  & 76.31\% \\
+                        & HR@50  & 0.1856  & \ul{0.2005}  & 0.1964 & 0.2603 & \textbf{0.2982}  & 48.73\% \\
+                        & MRR@20 & 0.0199  & \ul{0.0209}  & 0.0203 & 0.0336 & \textbf{0.0372}  & 77.99\% \\
+                        & MRR@50 & 0.0229  & \ul{0.0242}  & 0.0234 & 0.0373 & \textbf{0.0413}  & 70.66\%
 \end{tabular}%
 }
 \caption{Results for context-specific recommendations.}
@@ -234,15 +242,14 @@ Another interesting observation from the data is that even though CFM is run on 
 Additionally, the runtime of CFM is significantly higher than any of the other methods.
 Running 300 epochs on an NVIDIA DGX-2 cloud takes several days, while CSGCN-ADJ can perform the same amount of epochs in just a matter of hours.
 Due to the sheer amount of time required to fine-tune the hyperparameters, CFM has been run only once with the settings presented in the original paper.\\
-We are not able to fairly compare with the results presented in the CFM paper, since they perform a different split of the data to perform their leave-one-out evaluation.
+We are not able to fairly compare with the results presented in the CFM paper \cite{CFM}, since they perform a different split of the data to perform their leave-one-out evaluation.
 According to their paper, they take the latest interaction of each user - but looking at the actual datasets they provide, their test datasets are significantly larger than the number of users, meaning that their evaluation must be different from ours.
 \\
 In conclusion, the performance of the CSGCN models depends on the dataset characteristics.
 While the models perform significantly worse than simpler models on the Frappe dataset, we would argue that this dataset is not an accurate representation of a real world scenario.
 
 \subsection{Performance Comparison without Context (RQ2)}
-Since the CSGCN models use context to generate a top-$k$ list in each context for each user.
-We argue that this context information can be useful even for non-context-specific settings.
+Since the CSGCN models use context to generate a top-$k$ list in each context for each user, we argue that this context information can be useful even for non-context-specific settings.
 Imagine that your system is recommending businesses to users, and you have a business that is only open on Christmas.
 On Christmas night, millions upon millions of users interact with this item, but it is never interacted with in any other context.
 In a regular RS this would be seen as a popular item, since a lot of users have interacted with it.
@@ -527,7 +534,7 @@ On \Cref{fig:ablation_study_non_context_2} the NDGC@20 results of ML1M are shown
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
 Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
 Since both \Cref{fig:ablation_study_non_context_1,fig:ablation_study_non_context_2} show that the model is worse with context included, it can be concluded that context does not increase the performance of CSGCN-ADJ in a non-context specific setting.
-Side-information, however, is able to increase performance of the model in a non-context specific setting, but for this dataset the side-information does not provide any additional collaborative signal.
+Side-information, however, was able to increase performance of the model in a non-context specific setting on YelpNC, but for ML1M, it only makes the results worse compared to having no extra input.
 
 \subsection{Ablation study of model extensions (RQ3)}
 To investigate whether side-information improves the results for context-aware recommendations, we performed an ablation study on the Yelp-NC dataset.

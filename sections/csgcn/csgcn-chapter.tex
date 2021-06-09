@@ -17,24 +17,18 @@ A negative interaction is also sampled for the same user and context, which shou
 With this intuition, we will now detail how this is implemented in the CSGCN-IS model.
 
 \subsection{Model architecture}\label{subsec:csgcn_is_model_architecture}
-Based on the considerations made in \Cref{sec:foundational_knowledge}, the CSGCN models are based on the observations made in SGC \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
+Based on the considerations made in \Cref{sec:foundational_knowledge}, the CSGCN models are based on these observations made in SGC \cite{SimplifyingGCN} and the LightGCN model \cite{LightGCN} about simplifying the models to a linear model.
 To facilitate the model architecture, each node in the graph is represented by a low-dimensional vector, also called an embedding.
 By doing this, the model can learn the nodes' properties and capture them in the embeddings.
-The model consists of three parts:
-\begin{enumerate}
-    \item The convolution layers responsible for aggregating neighborhood information.
-    \item A layer combination operation where we stack the results of each layer on top of the initial embeddings for users and items
-    \item A prediction function
-\end{enumerate}
-First of all, the graph that is used as input to the model is constructed from the dataset.
-The graph can be represented by an adjacency matrix, and it is constructed by inserting a 1 for each user, item and side-information that are connected in their corresponding cell, and a 0 in every other cell.
-Each unique user, item and side-information are represented by an embedding.
-The context, which is not a part of the graph, is modelled by representing each context value and item combination by an embedding, as described in \Cref{subsec:csgcn_is_intuition}.
-The adjacency representation of the input graph facilitates the convolution operation by multiplying the adjacency matrix with the embeddings over several layers.
-Each multiplication produces a layer output with embeddings propagated with neighborhood information.
-These layer outputs are then combined together with the initial embeddings to produce final embeddings which are used in the prediction function.
-The output of the model is a top-$k$ list of recommendeded items for a user produced through the prediction function.
-The three parts of the model that are briefly presented in this section are further described throughout the next sections.
+The model consists of four parts: Input, graph convolution layers, layer combination, and a prediction function.\\
+The input is represented as a quadripartite graph consisting of users, items, user side-information, and item side-information.
+This graph is used as the input for the graph convolution layers, which serve to capture higher-order connectivities between the nodes in the graph.
+Each convolutional layer is stacked on top of the previous layer, such that each layer captures information from nodes that are further away from the central node.
+Having passed through $L$ convolution layers, we are left with an embedding representation of each node for each layer, which is then passed to the layer combination function, taking a weighted sum of each representation to generate a final representation for each node.\\
+Finally, these combined representations of users and items are passed to a prediction function along with a context embedding to calculate a score for the given user, item, and context combination as described in \Cref{subsec:csgcn_is_intuition}.\\
+These predicted scores are used to generate a top-$k$ list of recommended items for a user in the given context.\\
+In this section, we will further explain how each of these four parts of the model works.
+
 
 
 %\begin{figure}[hbt!]
@@ -135,7 +129,7 @@ $A$ consists of the rating sub-matrix $R$ and its transpose $R^T$, as well as su
     0 & IS^T & 0 & 0
     \end{bmatrix}
 \end{equation}
-Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $$|U|\times|U|$$ where $|U|$ is the amount of users in the dataset.
+Since there are no interactions between users and users, the first quadrant is a zero-matrix of size $|U|\times|U|$ where $|U|$ is the amount of users in the dataset.
 This goes for all the zero matrices seen on $A$, making it mostly sparse.
 Adding the side-information to the adjacency matrix allows us to express the connections between users and items and their side-information in the graph, allowing it to be used in order to gain higher-order connectivity in the convolution layers.\\
 It is worth noting that, unlike traditional GCNs, CSGCN does not utilize self-connections since the layer combination performed after the convolution layers captures the same effect as self-connections through the 0th layer \cite{LightGCN}.
@@ -249,8 +243,8 @@ The inputs to the layer is the adjacency matrix previously described.
      e_{u}^{(l+1)}=\sum_{un\in \mathcal{N}_{u}}\frac{1}{\sqrt{|\mathcal{N}_{un}|} \sqrt{|\mathcal{N}_{u}|}}e_{un}^{(l)}
 \end{equation}
 
-In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the convolution operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, including both items and user side-information nodes, and $\mathcal{N}_{i}$ are the neighboring nodes for item $i$.\\
-A neighbor-node is denoted as $un$ for user neighbors in $\mathcal{N}_{u}$, and $in$ for item neighbors in $\mathcal{N}_{i}$, and represents either a user or item side-information node for an $in$ node, and either an item or user side-information node for a $un$ node.
+In \Cref{eq:csgcn_is_gc_layer_item,eq:csgcn_is_gc_layer_user} the convolution operation is shown for respectively item and user embeddings, where $\mathcal{N}_{u}$ are the neighbor nodes for user $u$, where $\mathcal{N}_{u} \subseteq US \cup I$, and $\mathcal{N}_{i}$ are the neighbor nodes for item $i$ where $\mathcal{N}_{i} \subseteq IS \cup U$.\\
+A user neighbor node is denoted as $un \in \mathcal{N}_{u}$, and for item neighbors as $in \in \mathcal{N}_{i}$.
 $N_{un}$ denotes the set of neighbors for the neighbor $un$ of node $u$, and $N_{in}$ denotes the set of neighbors for the neighbor $in$ of node $i$.\\
 This means that when neighbor nodes' representations are being propagated, the normalization is done with both the number of neighbors for the central node and the number of neighbors of the neighbor node that is currently having its representation propagated.
 \\\\
@@ -283,11 +277,6 @@ $D_T = \{(u,i,j,C'') | i \in I_{(u,C')} \wedge  j \in I \setminus I_{(u,C')}\}$ 
 $\hat{y}$ is the score prediction defined in \Cref{eq:is-score-pred} for respectively a positive interaction $(u,i,C')$ between a user $u$ and an item $i$ in context $C'$, and a negative interaction $(u,j,C')$ for the same user in the same context, where $j$ is an item the user has not interacted with.\\
 The positive interaction is an observed interaction between a user and an item, which can be found in the training set.
 We randomly select an item that the same user has not interacted with in this given context as a negative sample, with the assumption that an unobserved interaction is equal to a negative interaction when working with implicit data.\\
-Using negative sampling for calculating loss is biased \cite{nonsampling,NegativeSampling}, and sensitive to the number of negative samples \cite{NCF}.
-Fluctuations in the sampled negative item can cause difficulties in converging, and even sampling more negative items can increase performance.\\
-Chen et al. \cite{nonsampling} propose to learn FM models without negative sampling to improve ranking performance for context-aware recommendation, and increase stability due to considering all samples in each parameter update.
-However, using negative sampling can be necessary since using non-sampling not only requires the method to look at each observed interaction from the dataset, but also to consider each non-observed interaction as a negative data point.
-Because of this consideration, CSGCN-IS uses negative sampling for training, and, due to employing BPR loss, only one negative sample is used.
 \\\\
 The model parameters are updated by optimizing the BPR loss function in \Cref{eq:loss-func}.
 For a specific model parameter, this is done by calculating the gradient of the loss function at each iteration with respect to the model parameter, and then updating the parameter according to the gradient by a step size defined through the learning rate.
@@ -306,11 +295,11 @@ This section describes the second proposed model, CSGCN with Context in Adjacenc
 
 \subsection{Model intuition}\label{subsec:csgcn_adj_intuition}
 With the second proposed model, context is included in the convolution by adding context nodes to the graph, which will be used to represent interactions between users and items in a given context as a tuple $(u,i,C')$, implying that a user $u$ has interacted with item $i$ in context $C'$.
-The adjacency matrix will now include interactions, what context the users have interacted in, and the context in which items have been interacted with.
-This approach is unable to capture which specific contexts the different interactions occurred in.
+The adjacency matrix will now include interactions, which contexts the users have interacted in, and the contexts in which items have been interacted with.
+This approach is unable to capture which specific context a given interaction occurred in.
 It only captures whether or not the user or item has had an interaction in the given context.
 This differs from \textit{CSGCN-IS} since we now model context in a similar fashion to side-information, where each context value has a single embedding instead of having an embedding for each context value and item pair.
-The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution.
+The intuition is that since context is now modeled similarly to side-information by the addition of nodes, it makes sense to include it in the convolution, since they will be present as neighboring nodes to items and users in the graph.
 By including nodes for the contexts in the convolution, their representations are propagated with information about their neighbors, this being items and users that have interacted in that context, using a normalized sum aggregation.
 This means that with higher-order connectivity, items and users are propagated with information about other users and items that have interacted in the same contexts.
 Even though the intuition changes, the model architecture is almost the same as defined in \Cref{subsec:csgcn_is_model_architecture}.
