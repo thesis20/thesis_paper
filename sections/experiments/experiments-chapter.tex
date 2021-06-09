@@ -528,7 +528,7 @@ Having only side-information as input achieves the best performance, but it is o
 Having both context and side-information actually degrades performance slightly, compared to just having side-information as the input, and having just context as input improves performance slightly.
 To conclude from the study on the Yelp-NC dataset, the usage of context is not able to provide better recommendations in a non-context-specific setting.
 Side-information, however, performs the best on NDCG@20 on this dataset, which suggests that side-information in CSGCN-ADJ is able to slightly improve results compared to having no extra input.
-\\
+\\\\
 On \Cref{fig:ablation_study_non_context_2} the NDGC@20 results of ML1M are shown for CSGCN-ADJ with different types of input. 
 For this dataset, the model that uses neither the context nor side-information for the input is actually the best performing version.
 Side-information and context are not able to improve the performance of CSGCN-ADJ on ML1M in a non-context-specific setting.
@@ -698,5 +698,5 @@ The result of this finer granularity is that context can have different effects 
 \\\\
 In general, side-information can have a slight effect on the results depending on the type of model.
 However, the context seems to have a lot larger effect on the performance of the models, as would be expected for context-aware recommendation.
-Additionally, it may be worth noting that the context used for these experiments is mainly based on discretized values based on timestamps, which might not be a useful contextual dimension due to time zone differences.
+Additionally, it may be worth noting that the context used for these experiments is mainly based on discretized values from timestamps, which might not be a useful contextual dimension due to time zone differences.
 We do not see any overwhelming evidence that side-information is able to improve context-aware recommendations.
