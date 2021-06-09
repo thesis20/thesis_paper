@@ -3,7 +3,8 @@
 This section will present some preliminary knowledge and defintions pertaining to the definition of context and side-information, the components of a GCN, how to represent data, and higher-order connectivity in graphs.
 
 \subsection{Defining side-information and context}\label{subsec:define_context_sideinfo}
-Sparsity issues are often encountered in CARS due to the addition of contextual dimensions that users only interact with a few of \cite{SparsityCARS}, leading to learning difficulties.
+Datasets used for RS are often very sparse, since not every user will interact with every available item, leading to learning issues.
+Sparsity issues are exacerbated in CARS due to the addition of contextual dimensions that users only interact with a few of \cite{SparsityCARS}.
 The use of side-information can help alleviate problems with CF in a sparse situation where the users and items do not have many interactions \cite{KGAT}.
 While GCN-based RS perform well on simple recommendation tasks that include only user-item interactions \cite{NGCF,LightGCN}, combining them with the utilization of context is largely unexplored to the best of our knowledge.
 However, side-information has been used in some GCN-based RS such as KGAT through the use of knowledge graphs \cite{KGAT}.\\
@@ -38,14 +39,14 @@ For items, it is information about the item such as the genre of a movie, which 
 GCNs are variants of convolutional neural networks (CNN) used on graph-based data \cite{KOrderConnectivity}.
 GCNs learn the feature representations of each node in a graph through multiple graph convolution layers.
 For layer $l$ of the graph convolution, the node representations that were output from the previous layer $l-1$ are used as input.
-For each layer, the representations of the nodes in the graph are averaged with the representations of their neighbor nodes.
-A nonlinear activation function is also applied at each layer to introduce non-linearity to the model \cite{KOrderConnectivity}.
+For each layer, the representations of the nodes in the graph are aggregated with the representations of their neighbor nodes.
+A nonlinear activation function is also traditionally applied at each layer to introduce non-linearity to the model \cite{KOrderConnectivity}.
 Representations are propagated with information about their neighbors in each graph convolution layer through three steps: feature propagation, linear transformation, and nonlinear activation.
 Feature propagation averages features in the local neighborhood of a node, such that the representation of each node becomes an aggregation of its neighbors' features.
 This is done for each node in the graph.
 The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where the embedding $x_0$ is updated by multiplying it with a weight $w_0$, thus becoming $x_1$.
 Doing this allows the network to find the best fitting set of parameters through the linear transformation by training through optimizing a loss function \cite{RecentConvNets}.
-Finally, a non-linear activation function such as \textit{ReLU} is applied to the output to introduce non-linearity to the model, allowing it to better fit real world datasets.
+Finally, a non-linear activation function such as \textit{ReLU} is applied to the output, allowing it to better fit real world datasets.
 \\\\
 While traditional GCN models contain all three components, several papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
 Wu et al. present the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs \cite{SimplifyingGCN}.
@@ -53,7 +54,7 @@ Instead, they were proposed in the recent years of neural networks where deep le
 To investigate whether this was useful, they present simple graph convolution (SGC), a simplified version of GCNs that could have preceded GCNs if the traditional path had been taken.
 This led them to remove the linear transformation and nonlinear activation, to reach a simplified linear model.
 Interestingly, they proved that not only does this not degrade performance of the models, it generally matches or improves both in terms of performance and speed \cite{SimplifyingGCN}.\\
-This signifies that the expressive power of GCNs originates primarily from the propagations done in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
+This signifies that the expressive power of GCNs originates primarily from propagation in the convolution layers, rather than the nonlinear feature extractions we know from traditional GCNs \cite{SimplifyingGCN}.
 \\
 Having defined GCNs, their applicability for RS tasks is now examined in terms of data and its representation.
 
@@ -68,7 +69,7 @@ A problem with implicit data, however, is that it does not directly encode wheth
 A common prediction task for implicit data is top-$k$ recommendation, where a list of $k$ items is produced for the user.
 
 \subsection{Data representation}
-In graph-based CF RS, we typically represent data in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
+In graph-based CF RS, data is typically represented in the form of a bipartite graph as seen on \Cref{fig:bipartite-graph}.
 \begin{figure}[h]
 \begin{tikzpicture}[thick,
     every node/.style={draw,circle},
@@ -107,12 +108,12 @@ In graph-based CF RS, we typically represent data in the form of a bipartite gra
 \label{fig:bipartite-graph}
 \end{figure}
 This bipartite graph consists of two distinct sets of nodes: Users $U$ and items $I$, and a set of undirected edges $E$ that connect the user and item if they have interacted with each other.
-This graph can also be represented as an adjacency matrix, which is useful for the implementation of a graph convolutional layer as it allows us to implement graph convolution through matrix multiplication between the adjacency matrix and the embeddings of the graph nodes.
+This graph can also be represented as an adjacency matrix, which is useful for the implementation of a graph convolutional layer as it allows for the implementation of graph convolution through matrix multiplication between the adjacency matrix and the embeddings of the graph nodes.
 This is the case since the values being multiplied with the representation are from the adjacency matrix that defines the neighbor nodes, thus aggregating the neighborhood.\\
-This could however cause issues in terms of exploding or vanishing gradients, leading to scenarios where the method ends up unable to learn.
+This could, however, cause issues in terms of exploding or vanishing gradients, leading to scenarios where the method ends up unable to learn.
 To mitigate this, a degree matrix consisting of the summation of row entries in the diagonal can be employed in order to normalize the entries in the adjacency matrix by the number of neighbors, to ensure the gradients do not grow too large or small.
 The graph seen in \Cref{fig:bipartite-graph} can be extended to also include nodes that represent side-information, which are connected to the user and item nodes.
 If side-information is represented as nodes in the graph, they can be included in the adjacency matrix and the graph convolution such that information can be passed from these nodes as well.
 Higher-order connectivity can be gained by repeatedly doing convolution operations in multiple layers, meaning information is passed from neighboring nodes further away from the central node \cite{SimplifyingGCN, KOrderConnectivity}, based on the number of layers.
-This allows the collaborative signal to be influenced by nodes that are further from the central node.\\\\
+a two layer GCN would, for example, be able to pass information from nodes two steps from the central node, allowing the collaborative signal to be influenced by nodes that are further from the central node.\\\\
 With this preliminary knowledge in place, we will look at the two proposed models in the following sections.

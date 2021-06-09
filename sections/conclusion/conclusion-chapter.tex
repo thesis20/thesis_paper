@@ -2,46 +2,46 @@
 In this paper, we have proposed two ways to include context and side-information in graph convolution neural networks.
 Through a series of experiments, we have attempted to answer the following research questions:
 \begin{itemize}
-    \item \textbf{RQ1}: How do the CSGCN models compare to state-of-the-art methods for the task of context-aware list prediction?
+    \item \textbf{RQ1}: How do the CSGCN models compare to state-of-the-art methods for the task of context-aware recommendation list prediction?
     \item \textbf{RQ2}: Can the CSGCN models be used to make non-context specific recommendations?
     \item \textbf{RQ3}: Does side-information improve results for context-aware recommendations?
 \end{itemize}
-While there are not many competing methods available for comparison in context-specific recommendation scenarios, we have shown that compared to both traditional factorization machines and deep learning versions of those, the CSGCN models outperform them across three of four real world datasets, ranging from an improvement of $70.66\%$ to $510.0\%$ using a leave-one-out evaluation approach.
+While there are not many competing methods available for comparison in context-specific recommendation scenarios, we have shown that compared to both traditional FMs and deep learning versions of those, the CSGCN models outperform them across three of four real world datasets, ranging from an improvement of $70.66\%$ to $510.0\%$ using a leave-one-out evaluation approach.
 On the Frappe dataset the CSGCN models are outperformed by $84.45\%$ to $1,473.37\%$.
 The large fluctuations in improvements and decreases are likely caused by the evaluation methodology where the models attempt to predict a single relevant item amongst every item in the dataset, as well as the small size of the Frappe dataset causing learning difficulties.\\\\
 To answer whether the models could be generalized to make non-context specific recommendations, we have shown how the context can be handled using a simple mean aggregator and used in a general recommendation scenario with competitive results compared to state-of-the-art methods.
 The CSGCN models improve performance in a range of $0.07\%$ to $10.01\%$, while being outperformed on Frappe once again and on the precision metric for ML1M, in a range of $0.04\%$ to $72.62\%$.
 The large decrease on Frappe is caused by the data split, which inadvertently facilitated the simple baseline Top Pop.
 Some items in Frappe are so popular that almost every 13th interaction in the dataset is with these items.
-While this is a perfect scenario for TopPop, it has proven to be a big challenge for more advanced methods such as the CSGCN models.
+While this is a perfect scenario for TopPop, it proved to be a challenge for more advanced methods such as the CSGCN models.
 \\
 Finally, an ablation study was performed to see how much side-information improves performance for context-aware recommendations.
 Through these experiments, we see that adding side-information does increase connectivity in the input graph, but it does not consequently improve or worsen recommendations.
 \\
-In summary, the CSGCN models show improvements over compared methods in both context-specific and non-context specific situations across most of the datasets used, and serves as a base for further research on using GCNs for context-specific recommendations.
+In summary, the CSGCN models show improvements over compared methods in both context-specific and non-context specific situations across most of the datasets used, and serve as a base for further research on using GCNs for context-specific recommendations.
 
 % Skriv noget om at future work kunne være info på edges? Evt hvordan vi har prøvet at implementere det
 % Double training objective
 %\todo[color=red]{x - Conclude upon the fun times}
 
 \subsection{Future work}
-The most prominent future work is further contemplation on how to express context in a way that is compatible with the GCN models.
+The most prominent future work is further contemplation on how to express context in a way that is compatible with GCN models.
 Our proposal is to look into ways to represent context as edge information in a feasible way.
-While writing this paper, we attempted to model it in a way such that there was an embedding for each (user,item,context) tuple.
+While writing this paper, we attempted to model it in a way such that there was an embedding for each $(user,\:item,\:context)$ tuple.
 However, this quickly proved infeasible since the number of embeddings explodes with just a few contexts available.
 \\
 The CSGCN models make use of negative sampling for calculating loss.
-While this is a regular way to handle BPR loss, it is known to be biased \cite{nonsampling,NegativeSampling}, and sensitive to the number of negative samples \cite{NCF}.
+While this is a regular way to handle BPR loss, it is known to be biased \cite{nonsampling,NegativeSampling} and sensitive to the number of negative samples \cite{NCF}.
 Fluctuations in the sampled negative item can cause difficulties in converging, and even sampling more negative items can increase performance.\\
 Chen et al. \cite{nonsampling} propose to learn FM models without negative sampling to improve ranking performance for context-aware recommendation, and increase stability due to considering all samples in each parameter update.
 However, using negative sampling can be necessary since using non-sampling not only requires the method to look at each observed interaction from the dataset, but also to consider each non-observed interaction as a negative data point.
 Because of this consideration, CSGCN-IS uses negative sampling for training, and, due to employing BPR loss, only one negative sample is used.
 For future work on the methods, it may be interesting to look into other ways to calculate the loss that are less reliant on hitting good samples.
 \\
-Additionally, throughout the experiments, it showed that not all contexts are equal in terms of importance.
+Additionally, throughout the experiments it was shown that not all contexts are equal in terms of importance.
 Due to this, it could be beneficial to include an attention mechanism that is able to learn the importance of each context or context combination for the convolution layer.
 This kind of attention idea could also be applied to layers.
-As we increase the amount of layers in a GCN, more noise will be introduced to the convolutions.
+More noise will be introduced to the convolutions as the amount of layers in a GCN is increased.
 To counter this, it may be beneficial to look into more advanced weighting mechanisms for layers, such that nodes further away from the root node are less influential in the layer combination operation.
 \\
 Finally, both CSGCN methods are based on the simplified models of GCNs which are gaining popularity.
