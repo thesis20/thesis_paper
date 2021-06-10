@@ -48,7 +48,7 @@ The next step is to use a linear transformation, such as $x_1 = x_0w_0$ where th
 Doing this allows the network to find the best fitting set of parameters through the linear transformation by training through optimizing a loss function \cite{RecentConvNets}.
 Finally, a non-linear activation function such as \texttt{ReLU} is applied to the output, allowing it to better fit real-world datasets.
 \\\\
-While traditional GCN models contain all three components, several papers \cite{SimplifyingGCN,LightGCN,HeteGCN} suggest that this is largely caused by the history of GCNs.
+While traditional GCN models contain all three components, several papers \cite{SimplifyingGCN,LightGCN} suggest that this is largely caused by the history of GCNs.
 Wu et al. present the idea that while most machine learning algorithms followed a clear path from an initial simple model to a more complex model through the needs of more expressivity, this was not the case of GCNs \cite{SimplifyingGCN}.
 Instead, they were proposed in the recent years of neural networks where deep learning had gained high popularity, and as such GCNs were built directly on top of a complex model.
 To investigate whether this was useful, they present simple graph convolution (SGC), a simplified version of GCNs that could have preceded GCNs if the traditional path had been taken.
